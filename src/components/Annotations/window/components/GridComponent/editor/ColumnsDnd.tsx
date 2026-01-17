@@ -117,6 +117,7 @@ export function ColumnsDnd({ settings, setSettings, setSelectedColumnId, selecte
           {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
             <div className={styles.droppable} {...provided.droppableProps} ref={provided.innerRef}>
               {(settings.cells?.length ?? 0) > 0 ? (
+                // @ts-ignore - react-beautiful-dnd types incompatible with React 18
                 <>
                   {settings.cells?.map((column, index) => (
                     // @ts-ignore - react-beautiful-dnd types incompatible with React 18

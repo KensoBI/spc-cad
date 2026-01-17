@@ -90,7 +90,6 @@
     "@grafana/schema": "^12.3.1",
     "@grafana/ui": "^12.3.1",
     "@tweenjs/tween.js": "^18",
-    "buffer": "^6.0.3",
     "css-element-queries": "^1.2.0",
     "eventemitter3": "2.0.3",
     "pako": "2.1.0",

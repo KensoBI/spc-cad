@@ -3,9 +3,8 @@ import { FeaturesEditor } from 'components/Editor/FeaturesEditor';
 import { ModelsEditor } from 'components/Editor/ModelsEditor';
 import { CadPanelOptions, defaults } from 'types/CadPanelOptions';
 import { CadPanel } from './CadPanel';
-import { withCheckToken } from 'utils/checkToken';
 
-export const plugin = new PanelPlugin<CadPanelOptions>(withCheckToken(CadPanel)).setPanelOptions((builder) => {
+export const plugin = new PanelPlugin<CadPanelOptions>(CadPanel).setPanelOptions((builder) => {
   builder.addCustomEditor({
     id: 'cadSettings',
     path: 'cadSettings',

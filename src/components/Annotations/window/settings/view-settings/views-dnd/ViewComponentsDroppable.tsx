@@ -82,6 +82,7 @@ function DroppableContent({ dropProvided, dropSnapshot, viewItem }: ContentProps
   return (
     <div className={styles.container} {...dropProvided.droppableProps} ref={dropProvided.innerRef}>
       {viewItem.components.length > 0 ? (
+        // @ts-ignore - react-beautiful-dnd types incompatible with React 18
         <>
           {viewItem.components.map((component: ViewComponent, index: number) => (
             // @ts-ignore - react-beautiful-dnd types incompatible with React 18
@@ -158,9 +159,9 @@ function OneComponentDraggable({
         <Icon name={viewComponentsMap[component.type].icon} className={styles.icon} /> {component.title}
       </div>
       <div>
-        <Button onClick={onEdit} icon="edit" variant="primary" size="sm" fill="text" />
-        <Button onClick={onCopy} icon="copy" variant="secondary" size="sm" fill="text" />
-        <Button onClick={onRemove} icon="trash-alt" variant="secondary" size="sm" fill="text" />
+        <Button onClick={onEdit} icon="edit" variant="primary" size="sm" fill="text" aria-label="Edit component" />
+        <Button onClick={onCopy} icon="copy" variant="secondary" size="sm" fill="text" aria-label="Copy component" />
+        <Button onClick={onRemove} icon="trash-alt" variant="secondary" size="sm" fill="text" aria-label="Remove component" />
       </div>
     </div>
   );

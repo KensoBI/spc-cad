@@ -94,7 +94,7 @@ export function ViewsDragAndDrop() {
               {views.map((view, index) => (
                 <SingleViewDraggable key={view.id} viewItem={view} index={index} />
               ))}
-              {provided.placeholder}
+              {provided.placeholder as React.ReactNode}
             </div>
           )}
         </Droppable>

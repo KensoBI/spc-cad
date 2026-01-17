@@ -3,3 +3,24 @@ services:
     extends:
       file: .config/docker-compose-base.yaml
       service: grafana
+    volumes:
+      - grafana_storage:/var/lib/grafana
+  
+  postgres:
+    image: kensobi/postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=kensobi
+      - POSTGRES_PASSWORD=kensobiuser
+    logging:
+      options:
+        max-size: 10m
+        max-file: "3"
+    ports:
+      - "5444:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+  grafana_storage:
