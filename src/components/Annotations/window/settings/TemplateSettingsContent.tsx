@@ -2,7 +2,7 @@ import { Button, IconButton, useStyles2 } from '@grafana/ui';
 import React from 'react';
 import { GrafanaTheme2 } from '@grafana/data';
 import { ColorMappingSettings } from './ColorMappingSettings';
-import { css } from 'emotion';
+import { css } from '@emotion/css';
 import { useTemplateSettings } from './TemplateSettings';
 import { FeatureTemplateSettings } from './FeatureTemplateSettings';
 import { ViewSettings } from './view-settings/ViewSettings';
@@ -73,7 +73,7 @@ export function TemplateSettingsContent({ tab, setTab }: Props) {
       ) : (
         <>
           <div className={styles.header}>
-            <IconButton name="angle-left" onClick={onPrevClick} />
+            <IconButton name="angle-left" onClick={onPrevClick} aria-label="Go back" />
             <div className="templateViewName">{viewHeaders[tab]}</div>
             <div>Template: {templateModel.template.templateName}</div>
           </div>

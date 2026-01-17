@@ -178,11 +178,11 @@ function Row({ feature, onStartStopEdit, onSave, isEditing, canSave, onPinWithNo
           {!isEditing && (
             <>
               <Tooltip content="Show the feature window with no position">
-                <IconButton name="credit-card" onClick={onPinWithNoPosition} />
+                <IconButton name="credit-card" aria-label="Show feature window" onClick={onPinWithNoPosition} />
               </Tooltip>
 
               <Tooltip content="Click on the scene to position the feature.">
-                <IconButton name="plus-circle" onClick={onStartStopEdit} />
+                <IconButton name="plus-circle" aria-label="Position feature" onClick={onStartStopEdit} />
               </Tooltip>
             </>
           )}

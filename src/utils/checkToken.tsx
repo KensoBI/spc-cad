@@ -69,7 +69,7 @@ function str2ab(str: string) {
   return buf;
 }
 
-async function verifySignature(text: string, signatureArrayBuffer: Buffer) {
+async function verifySignature(text: string, signatureBuffer: Uint8Array) {
   const publicKey = await importRsaPublicKey();
 
   const textBuffer = new TextEncoder().encode(text);
@@ -79,7 +79,7 @@ async function verifySignature(text: string, signatureArrayBuffer: Buffer) {
       hash: { name: 'SHA-256' },
     },
     publicKey,
-    signatureArrayBuffer,
+    signatureBuffer as unknown as BufferSource,
     textBuffer
   );
 }
@@ -108,10 +108,10 @@ export async function checkToken(): Promise<boolean> {
       return false;
     }
 
-    const signatureArrayBuffer = Buffer.from(parts[1], 'base64');
+    const signatureBuffer = new Uint8Array(Buffer.from(parts[1], 'base64'));
     const text = Buffer.from(parts[0], 'base64').toString('utf-8');
 
-    if (!(await verifySignature(text, signatureArrayBuffer))) {
+    if (!(await verifySignature(text, signatureBuffer))) {
       return false;
     }
 

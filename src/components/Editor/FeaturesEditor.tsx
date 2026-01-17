@@ -17,7 +17,7 @@ export function FeaturesEditor({ value, onChange, context }: Props) {
   return (
     <div>
       <InlineField label="Size" grow>
-        <Slider max={200} min={1} value={value.size} onChange={(newValue) => onChange({ ...value, size: newValue })} />
+        <Slider inputId="feature-size-slider" max={200} min={1} value={value.size} onChange={(newValue) => onChange({ ...value, size: newValue })} />
       </InlineField>
       <InlineColorField
         color={value.color}

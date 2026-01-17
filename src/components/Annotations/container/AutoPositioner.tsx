@@ -1,6 +1,6 @@
 import SceneViewModel from 'components/Scene/SceneViewModel';
 import React from 'react';
-import { Mesh, Vec2, Vector3 } from 'three';
+import { Mesh, Vector3 } from 'three';
 import { get2DCoords } from 'utils/cadUtils';
 import {
   Layout,
@@ -111,7 +111,7 @@ export class AutoPositionerEngine {
       if (!meshCoords) {
         continue;
       }
-      const desired: Vec2 = {
+      const desired = {
         x: meshCoords.x + 30,
         y: meshCoords.y + 30,
       };
@@ -158,7 +158,7 @@ export class AutoPositionerEngine {
     return get2DCoords(position, camera, this.panelSize.width, this.panelSize.height);
   }
 
-  calculatePosition(elToMove: Box, layout: Layout, meshCoords2D: Vector3, desired: Vec2) {
+  calculatePosition(elToMove: Box, layout: Layout, meshCoords2D: Vector3, desired: { x: number; y: number }) {
     layout = moveElement(layout, elToMove, desired.x, desired.y, true, true, 'vertical');
 
     //check if it was moved

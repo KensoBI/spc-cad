@@ -114,6 +114,7 @@ export function CellSettings({ cell, setCell }: Props) {
                     <Button
                       onClick={() => setCell({ ...cell, suffix: undefined })}
                       icon="times"
+                      aria-label="Clear suffix"
                       variant="secondary"
                       size="sm"
                       fill="text"

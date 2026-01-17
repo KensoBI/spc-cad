@@ -404,12 +404,12 @@ export class MeshLoader {
     return undefined;
   }
 
-  private gzipInflator(content: ArrayBuffer, toString: boolean) {
+  private gzipInflator(content: ArrayBuffer, toString: boolean): ArrayBuffer | string {
     if (toString) {
       return inflate(content, { to: 'string' });
     } else {
       const result = inflate(content);
-      return result.buffer;
+      return result.buffer as ArrayBuffer;
     }
   }
 

@@ -11,6 +11,7 @@ type HorizontalSliderProps = {
 export function HorizontalSlider({ steps, currentValue, onAfterChange, marks }: HorizontalSliderProps) {
   return (
     <Slider
+      inputId="horizontal-slider"
       min={0}
       max={steps}
       step={1}

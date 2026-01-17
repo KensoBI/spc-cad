@@ -11,7 +11,7 @@ import { ViewComponent, ViewItem } from 'types/ViewComponentSettings';
 import { useDraggableInPortal } from '../../../../../../utils/useDraggablePortal';
 import { GrafanaTheme2 } from '@grafana/data';
 import { Button, Icon, useStyles2 } from '@grafana/ui';
-import { css, cx } from 'emotion';
+import { css, cx } from '@emotion/css';
 import { COMPONENTS_DROPPABLE_TYPE, viewComponentsMap } from '../constants';
 import { useEditedViewComponent, ViewComponentIds } from '../EditedViewComponentProvider';
 import { useSetViews } from '../useSetViews';
@@ -25,6 +25,7 @@ type Props = {
 
 export function ViewComponentsDroppable({ viewItem }: Props) {
   return (
+    // @ts-ignore - react-beautiful-dnd types incompatible with React 18
     <Droppable droppableId={viewItem.id} type={COMPONENTS_DROPPABLE_TYPE} ignoreContainerClipping={false}>
       {(dropProvided: DroppableProvided, dropSnapshot: DroppableStateSnapshot) => (
         <DroppableContent dropProvided={dropProvided} dropSnapshot={dropSnapshot} viewItem={viewItem} />
@@ -83,6 +84,7 @@ function DroppableContent({ dropProvided, dropSnapshot, viewItem }: ContentProps
       {viewItem.components.length > 0 ? (
         <>
           {viewItem.components.map((component: ViewComponent, index: number) => (
+            // @ts-ignore - react-beautiful-dnd types incompatible with React 18
             <Draggable key={component.id} draggableId={component.id} index={index}>
               {renderDraggable((provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
                 <OneComponentDraggable

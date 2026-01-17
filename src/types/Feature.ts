@@ -1,4 +1,4 @@
-import { Field, Vector } from '@grafana/data';
+import { Field } from '@grafana/data';
 import { Position } from './Position';
 import { PositionMode } from './PositionMode';
 import { Dictionary } from 'lodash';
@@ -22,8 +22,8 @@ export type Feature = {
         [field: string]: any;
       };
       timeseries?: {
-        time: Field<string, Vector<number>>;
-        values: Field<string, Vector<any>>;
+        time: Field<number>;
+        values: Field<any>;
       };
     };
   };

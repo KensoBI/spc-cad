@@ -29,6 +29,7 @@ export function LinkSettingsComponent({ link, setLink }: Props) {
               style={{ visibility: link != null ? 'visible' : 'hidden' }}
               onClick={() => setLink(undefined)}
               icon="times"
+              aria-label="Clear link"
               variant="secondary"
               size="sm"
               fill="text"
@@ -39,6 +40,7 @@ export function LinkSettingsComponent({ link, setLink }: Props) {
               <Button
                 onClick={() => setLink({ url: link?.url ?? '', openInNewTab: !(link?.openInNewTab ?? true) })}
                 icon={link?.openInNewTab ? 'external-link-alt' : 'link'}
+                aria-label={link?.openInNewTab ? 'Open in new tab' : 'Open in current tab'}
                 variant={link?.openInNewTab ? 'success' : 'primary'}
                 size="sm"
                 fill="text"

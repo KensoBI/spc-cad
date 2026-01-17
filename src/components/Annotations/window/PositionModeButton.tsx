@@ -63,7 +63,7 @@ function TolltipButton({ mode, featureModel }: TooltipButtonProps) {
   const panelProps = usePanelProps();
   const { onOptionsChange, options } = panelProps;
 
-  const mouseEvents = useSameCoordsClick(
+  const mouseEvents = useSameCoordsClick<SVGElement>(
     React.useCallback(() => {
       const resetOverrides = () => {
         onOptionsChange({

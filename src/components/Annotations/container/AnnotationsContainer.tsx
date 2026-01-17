@@ -3,7 +3,7 @@ import { Windows } from './Windows';
 import { usePanelSize } from 'utils/usePanelSize';
 import { AutoPositionerEngine, AutoPositionerContext } from './AutoPositioner';
 import { LabelContainer } from './LabelContainer';
-import RGL, { Layout as GridLayout } from 'react-grid-layout';
+import { Layout } from 'react-grid-layout';
 import { LineContainerRefProvider } from './useLine';
 import { useSceneViewModel } from 'components/Scene/SceneViewModelProvider';
 import { WindowProps } from '../window/Window';
@@ -43,8 +43,8 @@ function useRequestAnimationFrame(engine: AutoPositionerEngine) {
 type AnnotationsProviderProps = React.PropsWithChildren<{
   labels: Array<React.ReactElement<LabelProps>>;
   windows: Array<React.ReactElement<WindowProps>>;
-  layout: GridLayout[];
-  onLayoutChange: (layout: RGL.Layout[]) => void;
+  layout: Layout;
+  onLayoutChange: (layout: Layout) => void;
 }>;
 
 export function AnnotationsContainer({ labels, windows, layout, onLayoutChange }: AnnotationsProviderProps) {

@@ -88,6 +88,7 @@ function Title({ titleColor }: Pick<LinkTitleProps, 'titleColor'>) {
                 fill="text"
                 size="sm"
                 icon="edit"
+                aria-label="Edit view"
               />
             </div>
           </MenuItem>

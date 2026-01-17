@@ -305,7 +305,7 @@ export default class SceneViewModel {
       .to({ t: 1 }, tweenDuration)
       .easing(TWEEN.Easing.Quadratic.Out)
       .onUpdate(() => {
-        Quaternion.slerp(qa, qb, qm, o.t);
+        qm.slerpQuaternions(qa, qb, o.t);
         this._camera.quaternion.set(qm.x, qm.y, qm.z, qm.w).normalize();
       })
       .onComplete(() => {

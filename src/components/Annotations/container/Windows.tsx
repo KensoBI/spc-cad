@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
-import RGL from 'react-grid-layout';
-import { css } from 'emotion';
+import GridLayout, { Layout } from 'react-grid-layout';
+import { css } from '@emotion/css';
 import { useStyles2 } from '@grafana/ui';
 import { useAutoPositioner } from './AutoPositioner';
 import { useLine } from './useLine';
@@ -64,8 +64,8 @@ function WindowContainer({ children, color, uid }: React.PropsWithChildren<Windo
 
 type WindowsProps = {
   elements: Array<React.ReactElement<WindowProps>>;
-  layout: RGL.Layout[];
-  onLayoutChange: (layout: RGL.Layout[]) => void;
+  layout: Layout;
+  onLayoutChange: (layout: Layout) => void;
 };
 
 export function Windows({ elements, layout, onLayoutChange }: WindowsProps) {
@@ -73,20 +73,27 @@ export function Windows({ elements, layout, onLayoutChange }: WindowsProps) {
   const { width, height } = usePanelSize();
   const [_, setEditedWindow] = useEditedWindow();
   return (
-    <RGL
+    <GridLayout
       style={{ position: 'absolute', height, pointerEvents: 'none' }}
       layout={layout}
-      containerPadding={[0, 0]}
-      useCSSTransforms={true}
-      margin={[LAYOUT_GRID_CELL_VMARGIN, LAYOUT_GRID_CELL_VMARGIN]}
-      cols={LAYOUT_GRID_COLUMN_COUNT}
-      rowHeight={LAYOUT_GRID_CELL_HEIGHT}
-      compactType={null}
+      gridConfig={{
+        cols: LAYOUT_GRID_COLUMN_COUNT,
+        rowHeight: LAYOUT_GRID_CELL_HEIGHT,
+        margin: [LAYOUT_GRID_CELL_VMARGIN, LAYOUT_GRID_CELL_VMARGIN] as const,
+        containerPadding: [0, 0] as const,
+        maxRows: Infinity,
+      }}
+      compactor={undefined}
       onLayoutChange={onLayoutChange}
       onDrag={() => setEditedWindow(undefined)}
       onResize={() => setEditedWindow(undefined)}
-      draggableHandle=".box-drag-handle"
-      draggableCancel=".no-drag"
+      dragConfig={{
+        handle: '.box-drag-handle',
+        cancel: '.no-drag',
+        enabled: true,
+        bounded: false,
+        threshold: 3,
+      }}
       width={width}
     >
       {elements.map((el) => (
@@ -96,7 +103,7 @@ export function Windows({ elements, layout, onLayoutChange }: WindowsProps) {
           </WindowContainer>
         </div>
       ))}
-    </RGL>
+    </GridLayout>
   );
 }
 

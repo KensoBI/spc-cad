@@ -26,17 +26,17 @@ export class SameCoordsClick {
   }
 }
 
-type CallbackType = (e: React.MouseEvent<HTMLElement>) => void
+type CallbackType<T extends Element = Element> = (e: React.MouseEvent<T>) => void
 
-export function useSameCoordsClick(callback?: CallbackType) {
+export function useSameCoordsClick<T extends Element = Element>(callback?: CallbackType<T>) {
   const isClickRef = React.useRef(new SameCoordsClick());
 
-  const onMouseDown = React.useCallback((e: React.MouseEvent<HTMLElement>) => {
+  const onMouseDown = React.useCallback((e: React.MouseEvent<T>) => {
     isClickRef.current.onMouseDown(e);
   }, []);
 
   const onClick = React.useCallback(
-    (e: React.MouseEvent<HTMLElement>) => {
+    (e: React.MouseEvent<T>) => {
       if (isClickRef.current.isClick(e)) {
         e.stopPropagation();
         callback?.(e);

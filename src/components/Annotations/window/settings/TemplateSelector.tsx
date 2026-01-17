@@ -82,6 +82,7 @@ export function TemplateSelector() {
                     variant="secondary"
                     fill="text"
                     size="sm"
+                    aria-label="Rename template"
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
@@ -114,7 +115,7 @@ export function TemplateSelector() {
                 }
               }}
               prefix={
-                <Button icon="check" variant="success" fill="text" size="sm" onClick={() => setRenameMode(false)} />
+                <Button icon="check" variant="success" fill="text" size="sm" aria-label="Confirm rename" onClick={() => setRenameMode(false)} />
               }
             />
           )}

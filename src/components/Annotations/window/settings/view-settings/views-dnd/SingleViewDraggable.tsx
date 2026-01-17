@@ -5,7 +5,7 @@ import { useDraggableInPortal } from '../../../../../../utils/useDraggablePortal
 import { ViewComponentsDroppable } from './ViewComponentsDroppable';
 import { GrafanaTheme2 } from '@grafana/data';
 import { Button, ClickOutsideWrapper, Icon, Input, useStyles2 } from '@grafana/ui';
-import { css, cx } from 'emotion';
+import { css, cx } from '@emotion/css';
 import { useSameCoordsClick } from 'utils/sameCoordsClick';
 import { Popover, usePopoverTrigger } from 'components/popover/Popover';
 import { PopoverContainer } from 'components/popover/PopoverContainer';
@@ -59,6 +59,7 @@ export function SingleViewDraggable({ index, viewItem }: Props) {
 
   return (
     <>
+      {/* @ts-ignore - react-beautiful-dnd types incompatible with React 18 */}
       <Draggable draggableId={viewItem.id} index={index} isDragDisabled={isEditing}>
         {renderDraggable((provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
           <DraggableContent
@@ -147,7 +148,7 @@ function DraggableContent({ provided, snapshot, isEditing, setIsEditing, viewIte
           {!isEditing ? (
             <>
               {viewItem.title}
-              <Button {...editNameProps} icon="edit" variant="primary" size="sm" fill="text" />
+              <Button {...editNameProps} icon="edit" variant="primary" size="sm" fill="text" aria-label="Edit name" />
             </>
           ) : (
             <ClickOutsideWrapper onClick={() => setIsEditing(false)}>
@@ -164,7 +165,7 @@ function DraggableContent({ provided, snapshot, isEditing, setIsEditing, viewIte
                 }}
                 ref={viewNameInputRef}
                 suffix={
-                  <Button onClick={() => setIsEditing(false)} icon="check" variant="success" size="sm" fill="text" />
+                  <Button onClick={() => setIsEditing(false)} icon="check" variant="success" size="sm" fill="text" aria-label="Confirm name" />
                 }
               />
             </ClickOutsideWrapper>
@@ -173,8 +174,8 @@ function DraggableContent({ provided, snapshot, isEditing, setIsEditing, viewIte
         <div>
           {!isEditing ? (
             <>
-              <Button {...addViewComponentProps} icon="plus-circle" variant="success" size="sm" fill="text" />
-              <Button {...onRemoveProps} icon="trash-alt" variant="destructive" size="sm" fill="text" />
+              <Button {...addViewComponentProps} icon="plus-circle" variant="success" size="sm" fill="text" aria-label="Add view component" />
+              <Button {...onRemoveProps} icon="trash-alt" variant="destructive" size="sm" fill="text" aria-label="Remove view" />
             </>
           ) : null}
         </div>

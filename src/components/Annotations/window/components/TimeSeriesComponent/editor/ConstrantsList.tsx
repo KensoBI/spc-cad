@@ -1,7 +1,7 @@
 import React from 'react';
 import { TimeseriesSettings } from 'types/ViewComponentSettings';
 import { GrafanaTheme2 } from '@grafana/data';
-import { css } from 'emotion';
+import { css } from '@emotion/css';
 import { Button, useStyles2 } from '@grafana/ui';
 import { difference } from 'lodash';
 import { Popover, usePopoverTrigger } from 'components/popover/Popover';
@@ -111,6 +111,7 @@ export function ConstantsList({ availableFields, settings, setSettings }: Props)
                 icon="trash-alt"
                 variant="destructive"
                 fill="text"
+                aria-label="Remove constant"
               />
             </div>
           </div>

@@ -41,6 +41,7 @@ export function ModelsEditor({ value, onChange }: { value: CadSettings[]; onChan
               variant="destructive"
               fill="text"
               icon={'times'}
+              aria-label="Remove model"
               onClick={() => {
                 onChange(value.filter((_, i) => i !== index));
               }}

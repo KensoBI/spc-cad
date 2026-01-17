@@ -202,6 +202,7 @@ export function GenericColorMapping({ update, rows, constLeftSide }: Props) {
               fill="outline"
               variant="destructive"
               icon="trash-alt"
+              aria-label="Delete color mapping"
               onClick={() => {
                 update(rows?.filter((_, i) => i !== index));
               }}
@@ -211,6 +212,7 @@ export function GenericColorMapping({ update, rows, constLeftSide }: Props) {
               fill="outline"
               variant="primary"
               icon="arrow-up"
+              aria-label="Move up"
               style={{ visibility: index === 0 ? 'hidden' : 'visible' }}
               onClick={() => {
                 const colors = rows ?? [];

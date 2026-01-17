@@ -1,6 +1,6 @@
 import { Button, useStyles2 } from '@grafana/ui';
 import React from 'react';
-import { css, cx } from 'emotion';
+import { css, cx } from '@emotion/css';
 import {
   DragDropContext,
   Droppable,
@@ -9,6 +9,8 @@ import {
   Draggable,
   DraggableProvided,
   DraggableStateSnapshot,
+  DroppableProvided,
+  DroppableStateSnapshot,
 } from 'react-beautiful-dnd';
 import { useDraggableInPortal } from 'utils/useDraggablePortal';
 import { reorder } from 'utils/reorder';
@@ -85,13 +87,15 @@ export function ColumnsDnd({ settings, setSettings, setSelectedColumnId, selecte
 
   return (
     <div className={styles.container}>
+      {/* @ts-ignore - react-beautiful-dnd types incompatible with React 18 */}
       <DragDropContext onDragEnd={onDragEnd} onDragStart={() => setIsDragging(true)}>
         <div className={styles.dndButtons}>
           <div>
             <h6>Columns</h6>
           </div>
+          {/* @ts-ignore - react-beautiful-dnd types incompatible with React 18 */}
           <Droppable droppableId={REMOVE_GRID_COLUMN_ID} type={GRID_COLUMNS_TYPE} direction="horizontal">
-            {(provided, snapshot) => (
+            {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
               <div
                 className={cx({
                   [styles.deletingDroppable]: true,
@@ -105,15 +109,17 @@ export function ColumnsDnd({ settings, setSettings, setSelectedColumnId, selecte
               </div>
             )}
           </Droppable>
-          <Button onClick={onAddColumn} icon="plus-circle" variant="success" size="sm" fill="text" />
+          <Button onClick={onAddColumn} icon="plus-circle" variant="success" size="sm" fill="text" aria-label="Add column" />
         </div>
 
+        {/* @ts-ignore - react-beautiful-dnd types incompatible with React 18 */}
         <Droppable droppableId={GRID_COLUMNS_DROPPABLE_ID} type={GRID_COLUMNS_TYPE} direction="horizontal">
-          {(provided, snapshot) => (
+          {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
             <div className={styles.droppable} {...provided.droppableProps} ref={provided.innerRef}>
               {(settings.cells?.length ?? 0) > 0 ? (
                 <>
                   {settings.cells?.map((column, index) => (
+                    // @ts-ignore - react-beautiful-dnd types incompatible with React 18
                     <Draggable key={`${column.id}-${index}`} draggableId={column.id} index={index}>
                       {renderDraggable((provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
                         <div

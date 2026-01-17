@@ -1,5 +1,4 @@
 import {
-  ArrayVector,
   dateTime,
   Field,
   FieldColorModeId,
@@ -10,14 +9,13 @@ import {
   TimeRange,
   toDataFrame,
   toFixed,
-  Vector,
 } from '@grafana/data';
 import {
   Alert,
   GraphFieldConfig,
   GraphGradientMode,
   GraphThresholdsStyleConfig,
-  GraphTresholdsStyleMode,
+  GraphThresholdsStyleMode,
   LegendDisplayMode,
   LineInterpolation,
   PanelContextProvider,
@@ -36,8 +34,8 @@ import { cloneDeep } from 'lodash';
 
 type Props = {
   dataFrameName: string;
-  timeField?: Field<string, Vector<number>>;
-  valueField?: Field<string, Vector<any>>;
+  timeField?: Field<number>;
+  valueField?: Field<any>;
   limits?: {
     up?: {
       value: number;
@@ -97,7 +95,7 @@ export function SpcChart(props: Props) {
     const addConstantField = (value: number, name: string, color: string) => {
       fields.push({
         name: name,
-        values: new ArrayVector(valField.values.toArray().map(() => value)),
+        values: valField.values.map(() => value),
         config: {
           color: {
             mode: FieldColorModeId.Fixed,
@@ -163,7 +161,7 @@ export function SpcChart(props: Props) {
     const hasTresholds = thresholds.steps.length > 0;
 
     const thresholdsStyle: GraphThresholdsStyleConfig = {
-      mode: GraphTresholdsStyleMode.Area,
+      mode: GraphThresholdsStyleMode.Area,
     };
 
     const custom: GraphFieldConfig = {
@@ -233,8 +231,8 @@ export function SpcChart(props: Props) {
   );
 
   const timeRangeFromData: TimeRange = React.useMemo(() => {
-    const start = timeField?.values.get(0);
-    const stop = timeField?.values.get(timeField?.values.length - 1);
+    const start = timeField?.values[0];
+    const stop = timeField?.values[timeField?.values.length - 1];
     if (start == null || stop == null || start === stop) {
       return timeRange;
     }

@@ -1,17 +1,16 @@
-import { ArrayVector, Field, Vector } from '@grafana/data';
+import { Field } from '@grafana/data';
 import { Dictionary, keyBy, omit } from 'lodash';
 import { CadDsEntity, ScanItem } from 'types/CadSettings';
 import { Feature } from 'types/Feature';
 
-type VectorField = Field<string, Vector<any>>;
 type ColumnsDict = {
-  feature?: VectorField;
-  control?: VectorField;
-  nominal?: VectorField;
-  partid?: VectorField;
-  featuretype?: VectorField;
+  feature?: Field;
+  control?: Field;
+  nominal?: Field;
+  partid?: Field;
+  featuretype?: Field;
 } & {
-  [key: string]: VectorField;
+  [key: string]: Field;
 };
 type DataFrameRecord = {
   [key in keyof ColumnsDict]: any;
@@ -43,13 +42,13 @@ export class MappedFeatures extends Map<string, Feature> {
 
 function getRecord(columns: ColumnsDict, i: number) {
   return Object.keys(columns).reduce((acc, key) => {
-    acc[key] = columns[key].values.get(i);
+    acc[key] = columns[key].values[i];
     return acc;
   }, {} as DataFrameRecord);
 }
 
 export function loadFeaturesByControl(
-  fields: Array<Field<string, Vector<any>>>,
+  fields: Field[],
   refId: string,
   mappedFeatures: MappedFeatures
 ) {
@@ -74,27 +73,27 @@ export function loadFeaturesByControl(
   }
 }
 
-function noNulls(timeVector: Vector<any>, valuesVector: Vector<any>) {
-  const t = new ArrayVector<number>();
-  const v = new ArrayVector<any>();
-  for (let i = 0; i < timeVector.length; i++) {
-    if (timeVector.get(i) != null && valuesVector.get(i) != null) {
-      t.add(timeVector.get(i));
-      v.add(valuesVector.get(i));
+function noNulls(timeArray: any[], valuesArray: any[]) {
+  const t: number[] = [];
+  const v: any[] = [];
+  for (let i = 0; i < timeArray.length; i++) {
+    if (timeArray[i] != null && valuesArray[i] != null) {
+      t.push(timeArray[i]);
+      v.push(valuesArray[i]);
     }
   }
   return { t, v };
 }
 
 export function loadTimeseries(
-  fields: Array<Field<string, Vector<any>>>,
+  fields: Field[],
   refId: string,
   mappedFeatures: MappedFeatures,
   meta?: Dictionary<any>
 ) {
-  const timeVector = fields?.[0];
-  if (timeVector == null || timeVector.name !== 'Time') {
-    console.warn('alert-danger', [`Timeseries data - missing Time vector in ${refId}.`]);
+  const timeField = fields?.[0];
+  if (timeField == null || timeField.name !== 'Time') {
+    console.warn('alert-danger', [`Timeseries data - missing Time field in ${refId}.`]);
     return;
   }
 
@@ -108,9 +107,9 @@ export function loadTimeseries(
     if (feature == null) {
       continue;
     }
-    const { t, v } = noNulls(timeVector.values, fields[i].values);
+    const { t, v } = noNulls(timeField.values, fields[i].values);
     const timeseries = {
-      time: { ...timeVector, values: t },
+      time: { ...timeField, values: t },
       values: { ...fields[i], values: v },
     };
     feature.characteristics[controlName] = {
@@ -123,31 +122,31 @@ export function loadTimeseries(
   }
 }
 
-export function loadCadLinks(fields: Array<Field<string, Vector<any>>>, refId: string) {
+export function loadCadLinks(fields: Field[], refId: string) {
   const linksField = fields.find((field) => field.name === 'links');
   if (linksField == null) {
-    console.warn('alert-danger', [`CadLinks data - missing 'links' vector in ${refId}.`]);
+    console.warn('alert-danger', [`CadLinks data - missing 'links' field in ${refId}.`]);
     return [];
   }
 
   const colorsField = fields.find((field) => field.name === 'colors');
   if (colorsField == null) {
-    console.warn('alert-danger', [`CadLinks data - missing 'colors' vector in ${refId}.`]);
+    console.warn('alert-danger', [`CadLinks data - missing 'colors' field in ${refId}.`]);
     return [];
   }
   if (colorsField.values.length !== linksField.values.length) {
-    console.warn('alert-danger', [`CadLinks data - vectors: 'colors' & 'links' are not even; in ${refId}.`]);
+    console.warn('alert-danger', [`CadLinks data - fields: 'colors' & 'links' are not even; in ${refId}.`]);
     return [];
   }
 
   const cadEntities: CadDsEntity[] = [];
   for (let i = 0; i < colorsField.values.length; i++) {
-    const link = linksField.values.get(i);
+    const link = linksField.values[i];
     if (typeof link !== 'string' || link === '') {
       continue;
     }
     cadEntities.push({
-      color: colorsField.values.get(i),
+      color: colorsField.values[i],
       path: link,
     });
   }
@@ -155,30 +154,30 @@ export function loadCadLinks(fields: Array<Field<string, Vector<any>>>, refId: s
   return cadEntities;
 }
 
-export function loadScanLinks(fields: Array<Field<string, Vector<any>>>, refId: string) {
+export function loadScanLinks(fields: Field[], refId: string) {
   const linksField = fields.find((field) => field.name === 'links');
   if (linksField == null) {
-    console.warn('alert-danger', [`ScanLinks data - missing 'links' vector in ${refId}.`]);
+    console.warn('alert-danger', [`ScanLinks data - missing 'links' field in ${refId}.`]);
     return [];
   }
 
   const timesField = fields.find((field) => field.name === 'times');
   if (timesField == null) {
-    console.warn('alert-danger', [`ScanLinks data - missing 'times' vector in ${refId}.`]);
+    console.warn('alert-danger', [`ScanLinks data - missing 'times' field in ${refId}.`]);
     return [];
   }
   if (timesField.values.length !== linksField.values.length) {
-    console.warn('alert-danger', [`ScanLinks data - vectors: 'times' & 'links' are not even; in ${refId}.`]);
+    console.warn('alert-danger', [`ScanLinks data - fields: 'times' & 'links' are not even; in ${refId}.`]);
     return [];
   }
 
   const scanItems: ScanItem[] = [];
   for (let i = 0; i < linksField.values.length; i++) {
-    const link = linksField.values.get(i);
+    const link = linksField.values[i];
     if (typeof link !== 'string' || link === '') {
       continue;
     }
-    const time = timesField.values.get(i);
+    const time = timesField.values[i];
     if (typeof time !== 'string' || time === '') {
       continue;
     }

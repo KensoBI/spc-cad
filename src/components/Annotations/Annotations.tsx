@@ -3,7 +3,7 @@ import { AnnotationSettings, GridPos } from 'types/Annotation';
 import { usePanelProps } from 'utils/PanelPropsProvider';
 import { Label } from './label/Label';
 import { AnnotationsContainer } from './container';
-import RGL from 'react-grid-layout';
+import { Layout, LayoutItem } from 'react-grid-layout';
 import { isEqual, keyBy } from 'lodash';
 import { Window } from './window/Window';
 import { FeatureModel, FeatureModelAnnotated } from 'types/AnnotationModel';
@@ -64,11 +64,11 @@ export function Annotations({ featureModels }: AnnotationsProps) {
   }, [windows]);
 
   const onLayoutChange = React.useCallback(
-    (layout: RGL.Layout[]) => {
+    (layout: Layout) => {
       if (options.annotations == null) {
         return;
       }
-      const mappedLayout = keyBy(layout, (l) => l.i);
+      const mappedLayout = keyBy(layout, (l: LayoutItem) => l.i);
       const newAnnotations = options.annotations.map((an) => {
         if (an.display === 'window' && !isEqualLayout(an.gridPos, mappedLayout?.[an.uid])) {
           an.gridPos = mappedLayout?.[an.uid];

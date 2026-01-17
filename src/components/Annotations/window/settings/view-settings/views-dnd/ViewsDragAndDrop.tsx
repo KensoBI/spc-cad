@@ -1,8 +1,8 @@
 import { GrafanaTheme2 } from '@grafana/data';
 import { useStyles2 } from '@grafana/ui';
 import React from 'react';
-import { css } from 'emotion';
-import { DragDropContext, Droppable, DropResult, ResponderProvided } from 'react-beautiful-dnd';
+import { css } from '@emotion/css';
+import { DragDropContext, Droppable, DropResult, ResponderProvided, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
 import { SingleViewDraggable } from './SingleViewDraggable';
 import { COMPONENTS_DROPPABLE_TYPE, VIEWS_DROPPABLE_ID, VIEWS_DROPPABLE_TYPE } from '../constants';
 import { useTemplateSettings } from '../../TemplateSettings';
@@ -85,9 +85,11 @@ export function ViewsDragAndDrop() {
 
   return (
     <div className={styles.container}>
+      {/* @ts-ignore - react-beautiful-dnd types incompatible with React 18 */}
       <DragDropContext onDragEnd={onDragEnd}>
+        {/* @ts-ignore - react-beautiful-dnd types incompatible with React 18 */}
         <Droppable droppableId={VIEWS_DROPPABLE_ID} type={VIEWS_DROPPABLE_TYPE} direction="vertical">
-          {(provided, snapshot) => (
+          {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
             <div className={styles.droppable} {...provided.droppableProps} ref={provided.innerRef}>
               {views.map((view, index) => (
                 <SingleViewDraggable key={view.id} viewItem={view} index={index} />
