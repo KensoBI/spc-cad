@@ -1,0 +1,37 @@
+version: '3.7'
+
+services:
+  grafana:
+    image: kensobi/kensobi:latest
+    container_name: 'kensobi-cad-panel'
+    ports:
+      - 3000:3000/tcp
+    volumes:
+      - ./dist:/var/lib/grafana/plugins/kensobi-cad-panel
+      - kensobi_storage:/var/lib/grafana
+      #- ./provisioning:/etc/grafana/provisioning
+    environment:
+      - TERM=linux
+      - GF_LOG_LEVEL=debug
+      - GF_DATAPROXY_LOGGING=true
+      - GF_DEFAULT_APP_MODE=development
+      - GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS=kensobi-feature-datasource,kensobi-admin-app
+      - GF_INSTALL_PLUGINS=https://cdn.kensobi.com/plugins/dev/kensobi-admin-app.zip;kensobi-app,https://cdn.kensobi.com/plugins/dev/kensobi-feature-datasource.zip;kensobi-feature-datasource
+  postgres:
+    image: kensobi/postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=kensobi
+      - POSTGRES_PASSWORD=kensobiuser
+    logging:
+      options:
+        max-size: 10m
+        max-file: "3"
+    ports:
+      - "5444:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  kensobi_storage:
+  postgres_data:
