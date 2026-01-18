@@ -1,93 +1,121 @@
 # KensoBI CAD Panel
 
-Welcome to KensoBI CAD Panel! This plugin lets you add CAD objects to your dashboards and enhance them with features and annotations.
+[![License](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](./LICENSE)
+[![Grafana](https://img.shields.io/badge/Grafana-7.0%2B-orange.svg)](https://grafana.com)
+
+A Grafana panel plugin for visualizing 3D CAD models, point clouds, and metrology data within Grafana dashboards. Designed for quality control, manufacturing inspection, and metrology data visualization workflows.
+
+![CAD Panel Overview](src/img/logo.svg)
 
 ## Features
-- **Import CAD Objects:** Add STL and 3MF files to your dashboards.
-- **Point Cloud Support:** Use point clouds with CAD data sources.
-- **Custom Annotations:** Add characters, tables, and grids to your CAD objects.
-- **Custom Views:** Create unique views for each feature.
-- **Color Coding:** Apply different colors to features for easy identification.
-- **Feature Templates:** Customize feature annotations based on feature types.
+
+- **Import CAD Models** - Load STL, 3MF, and PLY files directly into dashboards
+- **Point Cloud Visualization** - Display scan data with gradient coloring based on deviation values
+- **Feature Annotations** - Add labels, tables, and time-series charts to geometric features
+- **Template System** - 13 built-in templates for different feature types (point, circle, cylinder, etc.)
+- **Color Coding** - Apply conditional colors to features based on measurement data
+- **Interactive 3D View** - Rotate, pan, and zoom with trackball camera controls
+- **Scan Timeline** - Playback scan sequences over time
+
+## Documentation
+
+Full documentation is available in [docs/cad.md](./docs/cad.md), covering:
+
+- Adding CAD models (from URL or data source)
+- Supported file formats (STL, 3MF, PLY, ASC)
+- Features and characteristics configuration
+- Annotations and the annotation editor
+- Built-in templates (13 feature types)
+- Point clouds and scan timelines
+- 3D navigation and panel options
 
 ## Prerequisites
-Before using KensoBI CAD Panel, make sure you have:
 
-- **Kenso Admin App:**  Install and enable the KensoBI Admin App in your KensoBI instance.
-- **Valid License:** Enter a valid license in the KensoBI Admin App.
+- **Grafana** version 7.0 or higher
+- **KensoBI Admin App** installed and enabled
+- **Valid KensoBI License**
 
-## Building the plugin
+## Quick Start
 
+1. Install the plugin (see [Installation](./docs/cad-panel/installation.md))
+2. Create a new panel and select "CAD" visualization
+3. Add a CAD model path in panel options
+4. Configure your data query with feature positions
+5. Click features to create annotations
 
-### Frontend
+## Supported File Formats
 
-1. Install dependencies
+| Format | Extension | Description |
+|--------|-----------|-------------|
+| STL | `.stl` | Stereolithography (binary/ASCII) |
+| 3MF | `.3mf` | 3D Manufacturing Format |
+| PLY | `.ply` | Polygon File Format |
+| ASC | `.asc` | ASCII Point Cloud |
 
-   ```bash
-   yarn install
-   ```
+All formats support gzip compression (`.gz`).
 
-2. Build plugin in development mode and run in watch mode
+## Development
 
-   ```bash
-   yarn run dev
-   ```
+### Prerequisites
 
-3. Build plugin in production mode
+- Node.js >= 22 (< 25)
+- Yarn 1.22+
+- Docker and Docker Compose
 
-   ```bash
-   yarn run build
-   ```
+### Setup
 
-4. Run the tests (using Jest)
+```bash
+# Install dependencies
+yarn install
 
-   ```bash
-   # Runs the tests and watches for changes, requires git init first
-   yarn run test
+# Start development mode with watch
+yarn dev
 
-   # Exits after running all the tests
-   yarn run test:ci
-   ```
+# Start local Grafana server (separate terminal)
+yarn server
 
-5. Spin up a Grafana instance and run the plugin inside it (using Docker)
+# Open http://localhost:3000 (admin/admin)
+```
 
-   ```bash
-   yarn run server
-   ```
+### Available Commands
 
-6. Run the E2E tests (using Cypress)
+| Command | Description |
+|---------|-------------|
+| `yarn dev` | Build in development mode with watch |
+| `yarn build` | Build for production |
+| `yarn test` | Run tests with watch mode |
+| `yarn test:ci` | Run tests once (CI mode) |
+| `yarn lint` | Run ESLint |
+| `yarn lint:fix` | Run ESLint with auto-fix |
+| `yarn e2e` | Run end-to-end tests |
+| `yarn server` | Start local Grafana Docker instance |
 
-   ```bash
-   # Spins up a Grafana instance first that we tests against
-   yarn run server
+### Project Structure
 
-   # Starts the tests
-   yarn run e2e
-   ```
-
-7. Run the linter
-
-   ```bash
-   yarn run lint
-
-   # or
-
-   yarn run lint:fix
-   ```
+```
+src/
+├── CadPanel.tsx              # Main panel component
+├── module.ts                 # Plugin entry point
+├── components/
+│   ├── Scene/               # 3D rendering (Three.js)
+│   ├── Annotations/         # Feature annotations
+│   └── Editor/              # Panel option editors
+├── feature/data/            # Data processing
+├── templates/               # Template system
+├── types/                   # TypeScript definitions
+└── utils/                   # Utility functions
+```
 
 ## Getting Help
 
-If you have any questions or feedback, you can:
-
-- Ask a question on the [KensoBI Discord channel](https://discord.gg/cVKKh7trXU).
-- [Send an email](mailto:support@kensobi.com)  to report bugs, issues, and feature suggestions.
-
-Your feedback is always welcome!
+- [KensoBI Discord](https://discord.gg/cVKKh7trXU) - Community support
+- [Email Support](mailto:support@kensobi.com) - Bug reports and feature requests
+- [KensoBI Website](https://kensobi.com) - Documentation and resources
 
 ## License
 
-This software is distributed under the [End-User License Agreement (EULA)](./LICENSE).
+This software is distributed under the [GNU Affero General Public License v3.0](./LICENSE).
 
-## Notes
+## Copyright
 
-Copyright (c) 2023 [Kenso Software](https://kensobi.com)
+Copyright (c) 2023-2025 [Kenso Software](https://kensobi.com)

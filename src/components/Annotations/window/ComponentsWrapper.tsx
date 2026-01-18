@@ -78,6 +78,7 @@ const getStyles = (theme: GrafanaTheme2) => {
     container: css`
       min-height: 50px;
       overflow-y: auto;
+      overflow-x: hidden;
 
       &:has(.grid-container) {
         min-height: 32px;

@@ -74,7 +74,7 @@ const getStyles = (theme: GrafanaTheme2) => {
       display: flex;
       width: 100%;
       cursor: pointer;
-      align-items: baseline;
+      align-items: center;
       border-radius: ${theme.spacing(0.5)};
 
       &:hover {
@@ -120,13 +120,12 @@ const getStyles = (theme: GrafanaTheme2) => {
       align-items: center;
     `,
     closeLink: css`
-      height: 20px;
+      display: flex;
+      align-items: center;
       &:hover {
         color: #bd2130;
         cursor: pointer;
       }
-      visibility: visible;
-      opacity: 1;
     `,
   };
 };

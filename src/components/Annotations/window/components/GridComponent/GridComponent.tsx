@@ -74,8 +74,10 @@ const getStyles = (theme: GrafanaTheme2) => {
     gridContainer: css`
       height: ${GRID_COMPONENT_CELL_HEIGHT}px;
       display: flex;
+      min-width: 0;
       & > * {
         flex: 1;
+        min-width: 0;
         line-height: ${GRID_COMPONENT_CELL_HEIGHT}px;
         background-color: rgba(124, 124, 124, 0.1);
         text-align: center;
