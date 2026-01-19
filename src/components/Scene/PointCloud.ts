@@ -1,5 +1,5 @@
 import { Camera, Group, Mesh, MeshLambertMaterial, Object3D, Raycaster, Scene, SphereGeometry, Vector2 } from 'three';
-import { SetPointCloudModeCallback } from 'types/CadPanelOptions';
+import { SetPointCloudModeCallback } from 'types/SpcCadOptions';
 import { isMesh, isMeshLambertMaterial, isPoints } from './typeCheckers';
 import { MeshLoader } from './MeshLoader';
 import { gradientColors } from './gradientColors';

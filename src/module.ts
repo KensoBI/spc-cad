@@ -1,10 +1,10 @@
 import { PanelPlugin } from '@grafana/data';
 import { FeaturesEditor } from 'components/Editor/FeaturesEditor';
 import { ModelsEditor } from 'components/Editor/ModelsEditor';
-import { CadPanelOptions, defaults } from 'types/CadPanelOptions';
-import { CadPanel } from './CadPanel';
+import { SpcCadOptions, defaults } from 'types/SpcCadOptions';
+import { SpcCad } from './SpcCad';
 
-export const plugin = new PanelPlugin<CadPanelOptions>(CadPanel).setPanelOptions((builder) => {
+export const plugin = new PanelPlugin<SpcCadOptions>(SpcCad).setPanelOptions((builder) => {
   builder.addCustomEditor({
     id: 'cadSettings',
     path: 'cadSettings',

@@ -18,7 +18,7 @@ import {
 } from 'three';
 import { ThreeMFLoader } from 'three/examples/jsm/loaders/3MFLoader';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
-import { CadLoadingProgressCallback } from 'types/CadPanelOptions';
+import { CadLoadingProgressCallback } from 'types/SpcCadOptions';
 import { CadSettings } from 'types/CadSettings';
 import { CustomPLYLoader } from './CustomPlyLoader';
 import { gradientColors, gradientColorsInShader } from './gradientColors';

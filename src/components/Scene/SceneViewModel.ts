@@ -34,7 +34,7 @@ import {
   defaults,
   SceneSettingsActionCallback,
   SetPointCloudModeCallback,
-} from 'types/CadPanelOptions';
+} from 'types/SpcCadOptions';
 import { FeatureModel } from 'types/AnnotationModel';
 import { SameCoordsClick } from 'utils/sameCoordsClick';
 import { MeshLoader, OnObject3dLoaded } from './MeshLoader';

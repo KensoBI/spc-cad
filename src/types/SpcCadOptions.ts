@@ -7,7 +7,7 @@ export type SceneSettingsActionCallback = (state: SceneSettings) => void;
 export type CadLoadingProgressCallback = (loaded: number, finished: boolean, errors?: string[]) => void;
 export type SetPointCloudModeCallback = React.Dispatch<React.SetStateAction<PointCloudState>>;
 
-export type CadPanelOptions = {
+export type SpcCadOptions = {
   boxTemplates?: AnnotationTemplate[];
   annotations?: AnnotationSettings[];
   sceneSettings: SceneSettings;
@@ -16,7 +16,7 @@ export type CadPanelOptions = {
   featureOverrides?: FeatureOverridesMap;
 };
 
-export const defaults: CadPanelOptions = {
+export const defaults: SpcCadOptions = {
   boxTemplates: [],
   annotations: [],
   sceneSettings: {

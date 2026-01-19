@@ -1,5 +1,5 @@
-import { CadPanelProps } from 'types/CadPanelProps';
+import { SpcCadProps } from 'types/SpcCadProps';
 
-export function isPanelEditing(props: CadPanelProps) {
+export function isPanelEditing(props: SpcCadProps) {
   return props.data.request?.app === 'panel-editor';
 }

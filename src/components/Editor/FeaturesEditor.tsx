@@ -3,16 +3,16 @@ import { InlineField, Slider } from '@grafana/ui';
 import { FeatureSettings } from 'types/CadSettings';
 import { InlineColorField } from 'components/InlineColorField';
 import { StandardEditorProps } from '@grafana/data';
-import { CadPanelOptions } from 'types/CadPanelOptions';
+import { SpcCadOptions } from 'types/SpcCadOptions';
 import SceneViewModel from 'components/Scene/SceneViewModel';
 import { UnpositionedFeatures } from 'components/UnpositionedFeatures';
 import { TransferableFeature } from 'types/Feature';
 
-type Props = StandardEditorProps<FeatureSettings, any, CadPanelOptions>;
+type Props = StandardEditorProps<FeatureSettings, any, SpcCadOptions>;
 
 export function FeaturesEditor({ value, onChange, context }: Props) {
   const sceneViewModel = context.instanceState?.scene as SceneViewModel | undefined;
-  const onOptionsChange = context.instanceState?.onOptionsChange as (opts: CadPanelOptions) => void | undefined;
+  const onOptionsChange = context.instanceState?.onOptionsChange as (opts: SpcCadOptions) => void | undefined;
   const unpositionedFeatures = context.instanceState?.unpositionedFeatures as TransferableFeature[] | undefined;
   return (
     <div>

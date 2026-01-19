@@ -8,7 +8,7 @@ import { Position } from 'types/Position';
 import { AnnotationSettings } from 'types/Annotation';
 import { assign } from 'lodash';
 import { LAYOUT_DEFAULT_WINDOW_SPAN } from 'constants/global';
-import { CadPanelOptions } from 'types/CadPanelOptions';
+import { SpcCadOptions } from 'types/SpcCadOptions';
 import SceneViewModel from './Scene/SceneViewModel';
 
 type Edited = {
@@ -24,8 +24,8 @@ function startEditing(feature: TransferableFeature): Edited {
 
 type Props = {
   features: TransferableFeature[];
-  options: CadPanelOptions;
-  onOptionsChange: (options: CadPanelOptions) => void;
+  options: SpcCadOptions;
+  onOptionsChange: (options: SpcCadOptions) => void;
   sceneViewModel: SceneViewModel;
 };
 

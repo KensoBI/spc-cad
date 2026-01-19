@@ -6,7 +6,7 @@ import { AnnotationSettings } from 'types/Annotation';
 import { Annotations } from 'components/Annotations/Annotations';
 import { usePanelContext, useStyles2 } from '@grafana/ui';
 
-import { CadPanelProps } from 'types/CadPanelProps';
+import { SpcCadProps } from 'types/SpcCadProps';
 import { Scene } from 'components/Scene/Scene';
 import { parseData } from 'feature/data/parseData';
 import { PanelPropsProvider } from 'utils/PanelPropsProvider';
@@ -15,11 +15,11 @@ import { SceneViewModelProvider } from 'components/Scene/SceneViewModelProvider'
 import { useGetTemplateModels } from 'templates/useGetTemplateModels';
 import { TemplateModelsProvider } from 'templates/TemplateModelsProvider';
 import { getAvailableColumns } from 'feature/data/getAvailableColumns';
-import { CadLoadingProgressCallback } from 'types/CadPanelOptions';
+import { CadLoadingProgressCallback } from 'types/SpcCadOptions';
 import { usePointCloudState } from 'components/pointCloudState';
 import { transferableFeature } from 'types/Feature';
 
-export function CadPanel(props: CadPanelProps) {
+export function SpcCad(props: SpcCadProps) {
   const { width, height, data, options, onOptionsChange } = props;
   const { annotations, boxTemplates } = options;
   const styles = useStyles2(getStyles);

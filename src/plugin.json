@@ -1,16 +1,16 @@
 {
   "$schema": "https://raw.githubusercontent.com/grafana/grafana/master/docs/sources/developers/plugins/plugin.schema.json",
   "type": "panel",
-  "name": "CAD",
-  "id": "kensobi-cad-panel",
+  "name": "SPC CAD",
+  "id": "kensobi-spccad-panel",
   "info": {
-    "description": "KensoBI CAD panel",
+    "description": "KensoBI SPC CAD panel",
     "author": {
       "name": "Kenso Software",
       "url": "https://kensobi.com"
     },
     "keywords": [
-      "CAD","KensoBI", "Metrology","pointcloud","characteristic", "feature", "model", "3d", "stl", "3mf"
+      "CAD","KensoBI", "SPC", "Metrology","pointcloud","characteristic", "feature", "model", "3d", "stl", "3mf"
     ],
     "logos": {
       "small": "img/logo.svg",
