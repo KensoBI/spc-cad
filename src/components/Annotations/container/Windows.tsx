@@ -1,7 +1,10 @@
 import React from 'react';
 import _ from 'lodash';
-import GridLayout, { Layout } from 'react-grid-layout';
+import ReactGridLayout, { Layout } from 'react-grid-layout';
 import { css } from '@emotion/css';
+
+// Cast to work around type incompatibility between @types/react-grid-layout and React 18
+const GridLayout = ReactGridLayout as unknown as React.ComponentType<ReactGridLayout.ReactGridLayoutProps>;
 import { useStyles2 } from '@grafana/ui';
 import { useAutoPositioner } from './AutoPositioner';
 import { useLine } from './useLine';
@@ -64,8 +67,8 @@ function WindowContainer({ children, color, uid }: React.PropsWithChildren<Windo
 
 type WindowsProps = {
   elements: Array<React.ReactElement<WindowProps>>;
-  layout: Layout;
-  onLayoutChange: (layout: Layout) => void;
+  layout: Layout[];
+  onLayoutChange: (layout: Layout[]) => void;
 };
 
 export function Windows({ elements, layout, onLayoutChange }: WindowsProps) {
@@ -76,24 +79,17 @@ export function Windows({ elements, layout, onLayoutChange }: WindowsProps) {
     <GridLayout
       style={{ position: 'absolute', height, pointerEvents: 'none' }}
       layout={layout}
-      gridConfig={{
-        cols: LAYOUT_GRID_COLUMN_COUNT,
-        rowHeight: LAYOUT_GRID_CELL_HEIGHT,
-        margin: [LAYOUT_GRID_CELL_VMARGIN, LAYOUT_GRID_CELL_VMARGIN] as const,
-        containerPadding: [0, 0] as const,
-        maxRows: Infinity,
-      }}
-      compactor={undefined}
+      containerPadding={[0, 0]}
+      useCSSTransforms={true}
+      margin={[LAYOUT_GRID_CELL_VMARGIN, LAYOUT_GRID_CELL_VMARGIN]}
+      cols={LAYOUT_GRID_COLUMN_COUNT}
+      rowHeight={LAYOUT_GRID_CELL_HEIGHT}
+      compactType={null}
       onLayoutChange={onLayoutChange}
       onDrag={() => setEditedWindow(undefined)}
       onResize={() => setEditedWindow(undefined)}
-      dragConfig={{
-        handle: '.box-drag-handle',
-        cancel: '.no-drag',
-        enabled: true,
-        bounded: false,
-        threshold: 3,
-      }}
+      draggableHandle=".box-drag-handle"
+      draggableCancel=".no-drag"
       width={width}
     >
       {elements.map((el) => (

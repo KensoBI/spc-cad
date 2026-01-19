@@ -133,7 +133,7 @@ function Title({ titleColor }: Pick<LinkTitleProps, 'titleColor'>) {
 
   return (
     <>
-      <div {...conditionalMouseEvents} className={styles.viewsDropdownContainer}>
+      <div {...conditionalMouseEvents} className={`${styles.viewsDropdownContainer} no-drag`}>
         {isLink ? <LinkTitle link={link!} title={title} titleColor={titleColor} /> : <BasicTitle title={title} />}
         {selectedView != null && (
           <span>

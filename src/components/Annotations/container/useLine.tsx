@@ -17,22 +17,26 @@ export function LineContainerRefProvider({
 
 export function useLine(color?: string) {
   const styles = useStyles2(getStyles);
-  const [posStyles, setPosStyles] = React.useState<React.CSSProperties>({});
+  const lineRef = React.useRef<HTMLDivElement>(null);
   const { options } = usePanelProps();
   const defaultColor = options.featureSettings.color;
 
   const onChange = React.useCallback((x1: number, y1: number, x2: number, y2: number) => {
+    const line = lineRef.current;
+    if (!line) {
+      return;
+    }
+
     const length = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
     const angle = (Math.atan2(y2 - y1, x2 - x1) * 180) / Math.PI;
+    const hidden = (x1 === 0 && y1 === 0) || (x2 === 0 && y2 === 0) || length === 0;
 
-    setPosStyles({
-      transform: `rotate(${angle}deg)`,
-      width: length,
-      top: y1,
-      left: x1,
-      opacity: 1,
-      display: (x1 === 0 && y1 === 0) || (x2 === 0 && y2 === 0) || length === 0 ? 'none' : 'block',
-    });
+    line.style.transform = `rotate(${angle}deg)`;
+    line.style.width = `${length}px`;
+    line.style.top = `${y1}px`;
+    line.style.left = `${x1}px`;
+    line.style.opacity = hidden ? '0' : '1';
+    line.style.display = hidden ? 'none' : 'block';
   }, []);
 
   const wrapperElement = React.useContext(Context);
@@ -41,7 +45,7 @@ export function useLine(color?: string) {
     linePortalNode:
       wrapperElement.current != null
         ? createPortal(
-            <div className={styles.line} style={{ backgroundColor: color ?? defaultColor, ...posStyles }} />,
+            <div ref={lineRef} className={styles.line} style={{ backgroundColor: color ?? defaultColor }} />,
             wrapperElement.current
           )
         : null,

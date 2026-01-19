@@ -154,7 +154,11 @@ export class AutoPositionerEngine {
     if (!camera || !mesh) {
       return undefined;
     }
-    const position = new Vector3().copy(mesh.position);
+    // Ensure camera matrices are up to date before projecting
+    camera.updateMatrixWorld();
+    mesh.updateMatrixWorld();
+    const position = new Vector3();
+    mesh.getWorldPosition(position);
     return get2DCoords(position, camera, this.panelSize.width, this.panelSize.height);
   }
 

@@ -80,6 +80,7 @@ export default class SceneViewModel {
   onSceneSettingsChange?: SceneSettingsActionCallback;
   onMeshClicked?: MeshClickedCallback;
   onRaycastAll?: RaycastAllCallback;
+  onAfterRender?: () => void;
 
   constructor(
     settings: SceneSettings,
@@ -431,6 +432,8 @@ export default class SceneViewModel {
     if (this._renderer) {
       this._renderer.render(this._scene, this._camera);
     }
+
+    this.onAfterRender?.();
   }
 
   updateSceneSettings = _.debounce(() => {

@@ -3,7 +3,7 @@ import { Windows } from './Windows';
 import { usePanelSize } from 'utils/usePanelSize';
 import { AutoPositionerEngine, AutoPositionerContext } from './AutoPositioner';
 import { LabelContainer } from './LabelContainer';
-import { Layout } from 'react-grid-layout';
+import RGL from 'react-grid-layout';
 import { LineContainerRefProvider } from './useLine';
 import { useSceneViewModel } from 'components/Scene/SceneViewModelProvider';
 import { WindowProps } from '../window/Window';
@@ -24,27 +24,27 @@ function useSetSceneViewModel(engine: AutoPositionerEngine) {
   }, [engine, sceneViewModel]);
 }
 
-function useRequestAnimationFrame(engine: AutoPositionerEngine) {
+function useSyncWithSceneRender(engine: AutoPositionerEngine) {
+  const sceneViewModel = useSceneViewModel();
   React.useEffect(() => {
-    let frame: number | undefined = undefined;
-    const animate = () => {
+    if (!sceneViewModel) {
+      return;
+    }
+    const updatePosition = () => {
       engine.updatePosition();
-      frame = requestAnimationFrame(animate);
     };
-    frame = requestAnimationFrame(animate);
+    sceneViewModel.onAfterRender = updatePosition;
     return () => {
-      if (frame) {
-        cancelAnimationFrame(frame);
-      }
+      sceneViewModel.onAfterRender = undefined;
     };
-  }, [engine]);
+  }, [engine, sceneViewModel]);
 }
 
 type AnnotationsProviderProps = React.PropsWithChildren<{
   labels: Array<React.ReactElement<LabelProps>>;
   windows: Array<React.ReactElement<WindowProps>>;
-  layout: Layout;
-  onLayoutChange: (layout: Layout) => void;
+  layout: RGL.Layout[];
+  onLayoutChange: (layout: RGL.Layout[]) => void;
 }>;
 
 export function AnnotationsContainer({ labels, windows, layout, onLayoutChange }: AnnotationsProviderProps) {
@@ -53,7 +53,7 @@ export function AnnotationsContainer({ labels, windows, layout, onLayoutChange }
 
   useOnPanelResize(engine.current);
   useSetSceneViewModel(engine.current);
-  useRequestAnimationFrame(engine.current);
+  useSyncWithSceneRender(engine.current);
 
   return (
     <AutoPositionerContext.Provider value={engine}>
