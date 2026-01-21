@@ -11,7 +11,8 @@ services:
     restart: unless-stopped
     environment:
       - POSTGRES_USER=kensobi
-      - POSTGRES_PASSWORD=kensobiuser
+      - POSTGRES_PASSWORD=kensobi
+      - POSTGRES_DB=kensobi
     logging:
       options:
         max-size: 10m
@@ -20,6 +21,7 @@ services:
       - "5444:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./provisioning/sql-init:/docker-entrypoint-initdb.d
 
 volumes:
   postgres_data:

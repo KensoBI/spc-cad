@@ -94,7 +94,7 @@ yarn server
 
 ```
 src/
-├── CadPanel.tsx              # Main panel component
+├── SpcCad.tsx              # Main panel component
 ├── module.ts                 # Plugin entry point
 ├── components/
 │   ├── Scene/               # 3D rendering (Three.js)
