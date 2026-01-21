@@ -11,6 +11,7 @@ To use the CAD panel, you first need to have a CAD file in STL or 3MF file forma
 - [CAD Panel](#cad-panel)
   - [Adding CAD Models](#adding-cad-models)
     - [From URL](#from-url)
+    - [Upload File](#upload-file)
     - [From CAD Data Source](#from-cad-data-source)
   - [Supported File Formats](#supported-file-formats)
   - [Features and Characteristics](#features-and-characteristics)
@@ -40,14 +41,27 @@ To use the CAD panel, you first need to have a CAD file in STL or 3MF file forma
 
 ## Adding CAD Models
 
+There are three ways to add CAD models to the panel:
+
 ### From URL
 
 1. Create new dashboard by clicking on the `+` sign in the top header and `New Dashboard`.
 2. Press `Add a new panel`.
 3. Select CAD panel from `Visualizations` menu.
-4. Click on `+Add` to add a link to your CAD object or select model from CAD datasource.
+4. Click on `Add URL` to add a link to your CAD object.
 
 ![New CAD panel with CAD URL](./img/add-cad-panel.gif)
+
+### Upload File
+
+You can upload CAD files directly from your computer:
+
+1. Select CAD panel from `Visualizations` menu.
+2. In the panel options under **CAD**, click `Upload`.
+3. Select a CAD file from your computer (STL, 3MF, PLY, or ASC format).
+4. The file will be embedded in the dashboard and can be shared with other users.
+
+**Note:** Maximum upload size is 5MB. For larger files, use URL or CAD Data Source options.
 
 ### From CAD Data Source
 
@@ -338,7 +352,8 @@ Located in panel options under **CAD**:
 
 | Setting | Description |
 |---------|-------------|
-| **Models** | Add/remove CAD file paths or URLs |
+| **Add URL** | Add a CAD model from a URL |
+| **Upload** | Upload a CAD file directly (max 5MB, embedded in dashboard) |
 | **Model Color** | Color picker for each model |
 
 ### Feature Settings

@@ -105,7 +105,9 @@ export class MeshLoader {
 
     const { images, meshes } = notEmptyCadSettings.reduce<ImagesAndMeshes>(
       (acc, settings) => {
-        if (this.matchImageExtension(settings.path)) {
+        // Use fileName for Base64 files, otherwise use path
+        const pathForExtension = settings.source === 'base64' && settings.fileName ? settings.fileName : settings.path;
+        if (this.matchImageExtension(pathForExtension)) {
           acc.images.push(settings);
         } else {
           acc.meshes.push(settings);
@@ -121,7 +123,9 @@ export class MeshLoader {
 
     //init loaders, start loading and wait for all to finish
     for (const settings of meshes) {
-      const { ext, compression } = this.findExtension(settings.path);
+      // Use fileName for Base64 files, otherwise use path
+      const pathForExtension = settings.source === 'base64' && settings.fileName ? settings.fileName : settings.path;
+      const { ext, compression } = this.findExtension(pathForExtension);
 
       if (!ext) {
         errors.push(settings.path);
@@ -156,6 +160,38 @@ export class MeshLoader {
     compression?: Compression
   ) {
     return new Promise<Object3D>((resolve, reject) => {
+      // Handle Base64 data URLs
+      if (settings.path.startsWith('data:')) {
+        try {
+          let content: string | ArrayBuffer;
+
+          if (responseType === ARRAY_BUFFER_RESPONSE_TYPE) {
+            content = this.base64ToArrayBuffer(settings.path);
+          } else {
+            content = this.base64ToString(settings.path);
+          }
+
+          if (compression) {
+            content = compression.inflator(content as ArrayBuffer, responseType === TEXT_RESPONSE_TYPE);
+          }
+
+          const mesh = parse(content);
+          if (!mesh) {
+            reject('Could not parse mesh');
+            return;
+          }
+
+          this.progressDict[settings.path] = 1.0;
+          this.cadLoadingProgressCallback(1.0, false);
+
+          resolve(mesh);
+        } catch (error) {
+          reject(`Failed to decode Base64 file: ${error}`);
+        }
+        return;
+      }
+
+      // Handle URL loading
       const loader = new FileLoader();
       loader.setResponseType(compression ? ARRAY_BUFFER_RESPONSE_TYPE : responseType);
       const onLoad = (content: string | ArrayBuffer) => {
@@ -181,6 +217,23 @@ export class MeshLoader {
 
       loader.load(settings.path, onLoad, onProgress, reject);
     });
+  }
+
+  private base64ToArrayBuffer(dataUrl: string): ArrayBuffer {
+    const base64 = dataUrl.split(',')[1];
+    const binaryString = atob(base64);
+    const bytes = new Uint8Array(binaryString.length);
+
+    for (let i = 0; i < binaryString.length; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+
+    return bytes.buffer;
+  }
+
+  private base64ToString(dataUrl: string): string {
+    const base64 = dataUrl.split(',')[1];
+    return atob(base64);
   }
 
   parseStlMesh(content: string | ArrayBuffer) {

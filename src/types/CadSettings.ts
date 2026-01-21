@@ -19,6 +19,8 @@ export type CadSettings = {
   id: number;
   path: string;
   color: string;
+  source?: 'url' | 'base64';
+  fileName?: string;
 };
 
 export type SceneSettings = {
