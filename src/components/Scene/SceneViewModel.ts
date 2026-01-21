@@ -28,6 +28,7 @@ import {
 } from 'three/src/Three';
 import * as TWEEN from '@tweenjs/tween.js';
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls';
+import { ViewHelper } from 'three/examples/jsm/helpers/ViewHelper';
 //import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import {
   CadLoadingProgressCallback,
@@ -74,6 +75,9 @@ export default class SceneViewModel {
   private sameCoordsClick = new SameCoordsClick();
   private pointCloud: PointCloud;
   private tmpPoint: Mesh;
+  private _viewHelper: ViewHelper | null = null;
+  private _viewHelperVisible = false;
+  private _clock = new THREE.Clock();
   //callbacks
   cadLoadingProgressCallback: CadLoadingProgressCallback;
 
@@ -121,6 +125,8 @@ export default class SceneViewModel {
     this._cadContainer.addEventListener('mousemove', this.onMouseMove.bind(this), false);
     this._cadContainer.addEventListener('mouseup', this.onMouseUp.bind(this), false);
     this._cadContainer.addEventListener('mousedown', this.onMouseDown.bind(this), false);
+    this._cadContainer.addEventListener('mouseenter', this.onMouseEnter.bind(this), false);
+    this._cadContainer.addEventListener('mouseleave', this.onMouseLeave.bind(this), false);
   }
 
   private onMouseMove(event: { clientX: number; clientY: number }) {
@@ -159,6 +165,14 @@ export default class SceneViewModel {
     this.pointCloud.hideSelectedPoint();
   }
 
+  private onMouseEnter() {
+    this.showViewHelper();
+  }
+
+  private onMouseLeave() {
+    this.hideViewHelper();
+  }
+
   private initializeScene() {
     if (this._cadContainer === null) {
       console.warn('CAD container not set!');
@@ -175,6 +189,7 @@ export default class SceneViewModel {
 
     this._renderer = new WebGLRenderer({ antialias: true, alpha: true });
     this._renderer.setSize(this._containerWidth, this._containerHeight);
+    this._renderer.autoClear = false; // Required for ViewHelper to render properly
     this._cadContainer.appendChild(this._renderer.domElement);
 
     // Add object picking
@@ -214,6 +229,14 @@ export default class SceneViewModel {
     c.target.setY(this._settings.targetY);
     c.target.setZ(this._settings.targetZ);
     this._cadControls = c;
+
+    // Initialize ViewHelper for orientation gizmo
+    this._viewHelper = new ViewHelper(this._camera, this._renderer.domElement);
+    this._viewHelper.controls = this._cadControls;
+    if (this._viewHelper.controls) {
+      this._viewHelper.controls.center = this._cadControls.target;
+    }
+
   }
 
   initialize(): Promise<void> {
@@ -363,6 +386,13 @@ export default class SceneViewModel {
     this._animationFrameId = requestAnimationFrame(this.animateScene.bind(this));
     if (this._containerHeight > 0 && this._containerWidth > 0) {
       this._cadControls.update();
+
+      // Update ViewHelper animation if animating
+      const delta = this._clock.getDelta();
+      if (this._viewHelper && this._viewHelper.animating) {
+        this._viewHelper.update(delta);
+      }
+
       this.renderScene();
     }
   }
@@ -430,7 +460,14 @@ export default class SceneViewModel {
     }
 
     if (this._renderer) {
+      // Clear manually since autoClear is disabled for ViewHelper
+      this._renderer.clear();
       this._renderer.render(this._scene, this._camera);
+
+      // Render ViewHelper gizmo if visible
+      if (this._viewHelper && this._viewHelperVisible) {
+        this._viewHelper.render(this._renderer);
+      }
     }
 
     this.onAfterRender?.();
@@ -753,6 +790,9 @@ export default class SceneViewModel {
     if (this._cadContainer !== null) {
       this._cadContainer.removeEventListener('mousemove', this.onMouseMove.bind(this), false);
       this._cadContainer.removeEventListener('mouseup', this.onMouseUp.bind(this), false);
+      this._cadContainer.removeEventListener('mousedown', this.onMouseDown.bind(this), false);
+      this._cadContainer.removeEventListener('mouseenter', this.onMouseEnter.bind(this), false);
+      this._cadContainer.removeEventListener('mouseleave', this.onMouseLeave.bind(this), false);
     }
     this.disposeSpheres();
     this.removeAllModels();
@@ -778,6 +818,7 @@ export default class SceneViewModel {
 
     this._cadControls = null;
     this._scene = null;
+    this._viewHelper = null;
   }
 
   getMeshForFeature(uid: string): Mesh {
@@ -861,6 +902,14 @@ export default class SceneViewModel {
     if (this.tmpPoint.parent != null) {
       this._scene.remove(this.tmpPoint);
     }
+  }
+
+  showViewHelper() {
+    this._viewHelperVisible = true;
+  }
+
+  hideViewHelper() {
+    this._viewHelperVisible = false;
   }
 }
 
