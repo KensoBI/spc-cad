@@ -190,11 +190,9 @@ export function TitleBar({ titleColor, headerColor, onCloseClick, onUnPin }: Tit
           <TemplateSettingsButton />
           <PositionModeButton />
           {posMode !== 'noPosition' && (
-            <>
-              <i {...onUnPinMouseEvents} className="fa fa-thumb-tack box-pinned onHover" />
-              <i {...onCloseClickMouseEvents} className="fa fa-times close-link onHover" />
-            </>
+            <i {...onUnPinMouseEvents} className="fa fa-thumb-tack box-pinned onHover" />
           )}
+          <i {...onCloseClickMouseEvents} className="fa fa-times close-link onHover" />
         </div>
       </div>
     </div>

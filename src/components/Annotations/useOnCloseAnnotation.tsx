@@ -1,7 +1,7 @@
 import React from 'react';
 import { usePanelProps } from 'utils/PanelPropsProvider';
 
-export function useOnCloseAnnotation(uid: string) {
+export function useOnCloseAnnotation(uid: string, positionMode?: string) {
   const { options, onOptionsChange } = usePanelProps();
 
   return React.useCallback(() => {
@@ -11,7 +11,19 @@ export function useOnCloseAnnotation(uid: string) {
     }
     an.gridPos = undefined;
     an.display = 'hide';
-    options.annotations = [...options.annotations];
-    onOptionsChange(options);
-  }, [onOptionsChange, options, uid]);
+
+    // For unpositioned features (noPosition), remove the feature override
+    // so they return to the Unpositioned Features list
+    let featureOverrides = options.featureOverrides;
+    if (positionMode === 'noPosition' && featureOverrides && featureOverrides[uid]) {
+      const { [uid]: _, ...rest } = featureOverrides;
+      featureOverrides = Object.keys(rest).length > 0 ? rest : undefined;
+    }
+
+    onOptionsChange({
+      ...options,
+      annotations: [...options.annotations],
+      featureOverrides,
+    });
+  }, [onOptionsChange, options, uid, positionMode]);
 }

@@ -30,7 +30,7 @@ const isComponent = (c: JSX.Element | null): c is JSX.Element => {
 export function Window({ featureModel }: WindowProps) {
   const { height } = useWindowSize();
   const styles = useStyles2(getStyles);
-  const onCloseAnnotation = useOnCloseAnnotation(featureModel.feature.uid);
+  const onCloseAnnotation = useOnCloseAnnotation(featureModel.feature.uid, featureModel.feature.positionMode);
   const onUnPin = useOnUnPin(featureModel.feature.uid);
   const windowViewId = useWindowViewValue(featureModel.annotation);
 
