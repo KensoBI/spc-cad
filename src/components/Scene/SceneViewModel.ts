@@ -28,7 +28,7 @@ import {
 } from 'three/src/Three';
 import * as TWEEN from '@tweenjs/tween.js';
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls';
-import { ViewHelper } from 'three/examples/jsm/helpers/ViewHelper';
+import { ViewHelper } from './ViewHelper';
 //import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import {
   CadLoadingProgressCallback,
@@ -77,6 +77,8 @@ export default class SceneViewModel {
   private tmpPoint: Mesh;
   private _viewHelper: ViewHelper | null = null;
   private _viewHelperVisible = false;
+  private _viewHelperContainer: HTMLDivElement | null = null;
+  private _viewHelperClickHandler: ((event: PointerEvent) => void) | null = null;
   private _clock = new THREE.Clock();
   //callbacks
   cadLoadingProgressCallback: CadLoadingProgressCallback;
@@ -127,6 +129,8 @@ export default class SceneViewModel {
     this._cadContainer.addEventListener('mousedown', this.onMouseDown.bind(this), false);
     this._cadContainer.addEventListener('mouseenter', this.onMouseEnter.bind(this), false);
     this._cadContainer.addEventListener('mouseleave', this.onMouseLeave.bind(this), false);
+    //this._cadContainer.addEventListener('pointerup', this.onPointerUp.bind(this),false );
+    //this._cadContainer.addEventListener('pointerup', this.onPointerUp.bind(this),false );
   }
 
   private onMouseMove(event: { clientX: number; clientY: number }) {
@@ -171,6 +175,12 @@ export default class SceneViewModel {
 
   private onMouseLeave() {
     this.hideViewHelper();
+  }
+
+  private onPointerUp(event: PointerEvent) {
+    if (this._viewHelper) {
+      this._viewHelper.handleClick(event);
+    }
   }
 
   private initializeScene() {
@@ -230,13 +240,43 @@ export default class SceneViewModel {
     c.target.setZ(this._settings.targetZ);
     this._cadControls = c;
 
+
+
     // Initialize ViewHelper for orientation gizmo
     this._viewHelper = new ViewHelper(this._camera, this._renderer.domElement);
-    this._viewHelper.controls = this._cadControls;
-    if (this._viewHelper.controls) {
-      this._viewHelper.controls.center = this._cadControls.target;
-    }
+    this._viewHelper.center.copy(this._cadControls.target);
+    this._viewHelper.setLabels('X', 'Y', 'Z');
 
+
+        // Create ViewHelper container div with absolute positioning
+    this._viewHelperContainer = document.createElement('div');
+    this._viewHelperContainer.id = 'viewHelper';
+    this._viewHelperContainer.style.position = 'absolute';
+    this._viewHelperContainer.style.right = '0';
+    this._viewHelperContainer.style.bottom = '0';
+    this._viewHelperContainer.style.height = '128px';
+    this._viewHelperContainer.style.width = '128px';
+    this._viewHelperContainer.style.pointerEvents = 'none';
+    this._cadContainer.appendChild(this._viewHelperContainer);
+
+    // Attach pointerup listener to the renderer canvas for ViewHelper interaction
+    this._viewHelperClickHandler = (event: PointerEvent) => {
+      if (!this._viewHelper || !this._viewHelperVisible || !this._renderer) {
+        return;
+      }
+
+      // Check if click is within ViewHelper bounds (bottom-right 128x128 area)
+      const rect = this._renderer.domElement.getBoundingClientRect();
+      const dim = 128; // ViewHelper size
+      const offsetX = rect.left + (this._renderer.domElement.offsetWidth - dim);
+      const offsetY = rect.top + (this._renderer.domElement.offsetHeight - dim);
+
+      // Check if click is within the bottom-right corner
+      if (event.clientX >= offsetX && event.clientY >= offsetY) {
+        this._viewHelper.handleClick(event);
+      }
+    };
+    this._renderer.domElement.addEventListener('pointerup', this._viewHelperClickHandler);
   }
 
   initialize(): Promise<void> {
@@ -794,6 +834,12 @@ export default class SceneViewModel {
       this._cadContainer.removeEventListener('mouseenter', this.onMouseEnter.bind(this), false);
       this._cadContainer.removeEventListener('mouseleave', this.onMouseLeave.bind(this), false);
     }
+
+    // Remove ViewHelper click handler
+    if (this._renderer && this._viewHelperClickHandler) {
+      this._renderer.domElement.removeEventListener('pointerup', this._viewHelperClickHandler);
+      this._viewHelperClickHandler = null;
+    }
     this.disposeSpheres();
     this.removeAllModels();
 
@@ -819,6 +865,11 @@ export default class SceneViewModel {
     this._cadControls = null;
     this._scene = null;
     this._viewHelper = null;
+
+    if (this._viewHelperContainer && this._cadContainer) {
+      this._cadContainer.removeChild(this._viewHelperContainer);
+    }
+    this._viewHelperContainer = null;
   }
 
   getMeshForFeature(uid: string): Mesh {
