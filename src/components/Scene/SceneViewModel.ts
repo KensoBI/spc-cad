@@ -19,14 +19,11 @@ import {
   Group,
   DirectionalLight,
   Vector3,
-  Euler,
-  Quaternion,
   Box3,
   Mesh,
   MeshLambertMaterial,
   Camera,
 } from 'three/src/Three';
-import * as TWEEN from '@tweenjs/tween.js';
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls';
 import { ViewHelper } from './ViewHelper';
 //import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -69,7 +66,6 @@ export default class SceneViewModel {
   private _animationFrameId = 0;
   private _settings: SceneSettings;
   private _settings0: SceneSettings;
-  private _isTweening = false;
   private _cadSettings: CadSettings[] = [];
   private _featureSettings: FeatureSettings;
   private sameCoordsClick = new SameCoordsClick();
@@ -291,11 +287,7 @@ export default class SceneViewModel {
   }
 
   private applySettings(settings: Readonly<SceneSettings>) {
-    const origPosition = new Vector3().copy(this._camera.position); // original position
-    const origRotation = new Euler().copy(this._camera.rotation); // original rotation
-
     this._camera.position.set(settings.cameraX, settings.cameraY, settings.cameraZ);
-    //move to destination and capture rotation
     this._camera.up.setX(settings.upX);
     this._camera.up.setY(settings.upY);
     this._camera.up.setZ(settings.upZ);
@@ -303,71 +295,7 @@ export default class SceneViewModel {
     this._cadControls.target.setY(settings.targetY);
     this._cadControls.target.setZ(settings.targetZ);
     this._camera.updateProjectionMatrix();
-
     this._camera.lookAt(this._cadControls.target);
-    const dstRot = new Euler().copy(this._camera.rotation);
-
-    // reset original position and rotation
-    this._camera.position.set(origPosition.x, origPosition.y, origPosition.z);
-    this._camera.rotation.set(origRotation.x, origRotation.y, origRotation.z);
-
-    this._isTweening = true;
-    const tweenDuration = 1200;
-    //tween individually, something gets messed up when done all at once
-    new TWEEN.Tween(this._camera.position)
-      .to(
-        {
-          x: settings.cameraX,
-          y: settings.cameraY,
-          z: settings.cameraZ,
-        },
-        tweenDuration
-      )
-      .easing(TWEEN.Easing.Quadratic.Out)
-      .start();
-
-    new TWEEN.Tween(this._cadControls.target)
-      .to(
-        {
-          x: settings.targetX,
-          y: settings.targetY,
-          z: settings.targetZ,
-        },
-        tweenDuration
-      )
-      .easing(TWEEN.Easing.Quadratic.Out)
-      .start();
-
-    new TWEEN.Tween(this._camera.up)
-      .to(
-        {
-          x: settings.upX,
-          y: settings.upY,
-          z: settings.upZ,
-        },
-        tweenDuration
-      )
-      .easing(TWEEN.Easing.Quadratic.Out)
-      .start();
-
-    const qa = new Quaternion().copy(this._camera.quaternion); // src quaternion
-    const qb = new Quaternion().setFromEuler(dstRot).normalize(); // dst quaternion
-    const qm = new Quaternion();
-    this._camera.quaternion.set(qm.x, qm.y, qm.z, qm.w).normalize();
-
-    const o = { t: 0 };
-    new TWEEN.Tween(o)
-      .to({ t: 1 }, tweenDuration)
-      .easing(TWEEN.Easing.Quadratic.Out)
-      .onUpdate(() => {
-        qm.slerpQuaternions(qa, qb, o.t);
-        this._camera.quaternion.set(qm.x, qm.y, qm.z, qm.w).normalize();
-      })
-      .onComplete(() => {
-        this._camera.updateProjectionMatrix();
-        this._isTweening = false;
-      })
-      .start();
   }
 
   updateContainerSize(width: number, height: number) {
@@ -416,12 +344,24 @@ export default class SceneViewModel {
 
     this._animationFrameId = requestAnimationFrame(this.animateScene.bind(this));
     if (this._containerHeight > 0 && this._containerWidth > 0) {
-      this._cadControls.update();
+      const delta = this._clock.getDelta();
 
       // Update ViewHelper animation if animating
-      const delta = this._clock.getDelta();
       if (this._viewHelper && this._viewHelper.animating) {
         this._viewHelper.update(delta);
+        // Sync TrackballControls target with ViewHelper center during animation
+        this._cadControls.target.copy(this._viewHelper.center);
+        // Update camera lookAt to maintain correct orientation during animation
+        this._camera.lookAt(this._viewHelper.center);
+        // Don't update TrackballControls while ViewHelper is animating
+        // to prevent conflicts between the two control systems
+      } else {
+        // Only update TrackballControls when ViewHelper is not animating
+        this._cadControls.update();
+        // Keep ViewHelper center in sync with TrackballControls target
+        if (this._viewHelper) {
+          this._viewHelper.center.copy(this._cadControls.target);
+        }
       }
 
       this.renderScene();
@@ -429,51 +369,48 @@ export default class SceneViewModel {
   }
 
   private renderScene() {
-    TWEEN.update();
-    if (!this._isTweening) {
-      let settingsChanged = false;
-      if (this._settings.targetX.toPrecision(4) !== this._cadControls.target.x.toPrecision(4)) {
-        this._settings.targetX = this._cadControls.target.x;
-        settingsChanged = true;
-      }
-      if (this._settings.targetY.toPrecision(4) !== this._cadControls.target.y.toPrecision(4)) {
-        this._settings.targetY = this._cadControls.target.y;
-        settingsChanged = true;
-      }
-      if (this._settings.targetZ.toPrecision(4) !== this._cadControls.target.z.toPrecision(4)) {
-        this._settings.targetZ = this._cadControls.target.z;
-        settingsChanged = true;
-      }
+    let settingsChanged = false;
+    if (this._settings.targetX.toPrecision(4) !== this._cadControls.target.x.toPrecision(4)) {
+      this._settings.targetX = this._cadControls.target.x;
+      settingsChanged = true;
+    }
+    if (this._settings.targetY.toPrecision(4) !== this._cadControls.target.y.toPrecision(4)) {
+      this._settings.targetY = this._cadControls.target.y;
+      settingsChanged = true;
+    }
+    if (this._settings.targetZ.toPrecision(4) !== this._cadControls.target.z.toPrecision(4)) {
+      this._settings.targetZ = this._cadControls.target.z;
+      settingsChanged = true;
+    }
 
-      if (this._settings.cameraX.toPrecision(4) !== this._camera.position.x.toPrecision(4)) {
-        this._settings.cameraX = this._camera.position.x;
-        settingsChanged = true;
-      }
-      if (this._settings.cameraY.toPrecision(4) !== this._camera.position.y.toPrecision(4)) {
-        this._settings.cameraY = this._camera.position.y;
-        settingsChanged = true;
-      }
-      if (this._settings.cameraZ.toPrecision(4) !== this._camera.position.z.toPrecision(4)) {
-        this._settings.cameraZ = this._camera.position.z;
-        settingsChanged = true;
-      }
+    if (this._settings.cameraX.toPrecision(4) !== this._camera.position.x.toPrecision(4)) {
+      this._settings.cameraX = this._camera.position.x;
+      settingsChanged = true;
+    }
+    if (this._settings.cameraY.toPrecision(4) !== this._camera.position.y.toPrecision(4)) {
+      this._settings.cameraY = this._camera.position.y;
+      settingsChanged = true;
+    }
+    if (this._settings.cameraZ.toPrecision(4) !== this._camera.position.z.toPrecision(4)) {
+      this._settings.cameraZ = this._camera.position.z;
+      settingsChanged = true;
+    }
 
-      if (this._settings.upX.toPrecision(4) !== this._camera.up.x.toPrecision(4)) {
-        this._settings.upX = this._camera.up.x;
-        settingsChanged = true;
-      }
-      if (this._settings.upY.toPrecision(4) !== this._camera.up.y.toPrecision(4)) {
-        this._settings.upY = this._camera.up.y;
-        settingsChanged = true;
-      }
-      if (this._settings.upZ.toPrecision(4) !== this._camera.up.z.toPrecision(4)) {
-        this._settings.upZ = this._camera.up.z;
-        settingsChanged = true;
-      }
+    if (this._settings.upX.toPrecision(4) !== this._camera.up.x.toPrecision(4)) {
+      this._settings.upX = this._camera.up.x;
+      settingsChanged = true;
+    }
+    if (this._settings.upY.toPrecision(4) !== this._camera.up.y.toPrecision(4)) {
+      this._settings.upY = this._camera.up.y;
+      settingsChanged = true;
+    }
+    if (this._settings.upZ.toPrecision(4) !== this._camera.up.z.toPrecision(4)) {
+      this._settings.upZ = this._camera.up.z;
+      settingsChanged = true;
+    }
 
-      if (settingsChanged) {
-        this.updateSceneSettings();
-      }
+    if (settingsChanged) {
+      this.updateSceneSettings();
     }
 
     if (this._raycaster && this._characteristicGroup && this._cadContainer !== null) {
@@ -955,5 +892,4 @@ export default class SceneViewModel {
   }
 }
 
-//calc zeby wszytko ladnie zmiescic
 //http://stackoverflow.com/questions/17558085/three-js-orthographic-camera
