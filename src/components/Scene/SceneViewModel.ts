@@ -129,8 +129,6 @@ export default class SceneViewModel {
     this._cadContainer.addEventListener('mousedown', this.onMouseDown.bind(this), false);
     this._cadContainer.addEventListener('mouseenter', this.onMouseEnter.bind(this), false);
     this._cadContainer.addEventListener('mouseleave', this.onMouseLeave.bind(this), false);
-    //this._cadContainer.addEventListener('pointerup', this.onPointerUp.bind(this),false );
-    //this._cadContainer.addEventListener('pointerup', this.onPointerUp.bind(this),false );
   }
 
   private onMouseMove(event: { clientX: number; clientY: number }) {
@@ -175,12 +173,6 @@ export default class SceneViewModel {
 
   private onMouseLeave() {
     this.hideViewHelper();
-  }
-
-  private onPointerUp(event: PointerEvent) {
-    if (this._viewHelper) {
-      this._viewHelper.handleClick(event);
-    }
   }
 
   private initializeScene() {
@@ -246,7 +238,6 @@ export default class SceneViewModel {
     this._viewHelper = new ViewHelper(this._camera, this._renderer.domElement);
     this._viewHelper.center.copy(this._cadControls.target);
     this._viewHelper.setLabels('X', 'Y', 'Z');
-
 
         // Create ViewHelper container div with absolute positioning
     this._viewHelperContainer = document.createElement('div');
