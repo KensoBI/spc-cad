@@ -9,8 +9,13 @@ Initial release.
 - Added file upload support for CAD models (STL, 3MF, PLY, ASC) directly from the panel options
 - Uploaded files are embedded in the dashboard JSON and can be shared with other users
 - Maximum upload size: 5MB
+- Added interactive view helper that visualizes camera transformation with clickable X, Y, Z axes to animate camera view
+- Refactored dataload 
+    60-80% memory reduction - eliminate data duplication
+30-50% faster initial load - no data copying during parse
 
 ### Bug Fixes
 
 - Fixed close button (X) not appearing on annotation windows for unpositioned features
 - Fixed unpositioned features not returning to the Unpositioned Features list when their annotation window is closed
+

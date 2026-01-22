@@ -1,5 +1,5 @@
-import { Field } from '@grafana/data';
-import { Dictionary, keyBy, omit } from 'lodash';
+import { DataFrame, Field } from '@grafana/data';
+import { Dictionary, keyBy } from 'lodash';
 import { CadDsEntity, ScanItem } from 'types/CadSettings';
 import { Feature } from 'types/Feature';
 
@@ -50,7 +50,8 @@ function getRecord(columns: ColumnsDict, i: number) {
 export function loadFeaturesByControl(
   fields: Field[],
   refId: string,
-  mappedFeatures: MappedFeatures
+  mappedFeatures: MappedFeatures,
+  dataFrame: DataFrame
 ) {
   const columns: ColumnsDict = keyBy(fields, (column) => column.name.toLowerCase());
 
@@ -58,6 +59,16 @@ export function loadFeaturesByControl(
     console.warn('alert-danger', [`Feature or Control or Nominal column is missing in query ${refId}.`]);
     return;
   }
+
+  // Create field map once for this DataFrame
+  const fieldMap = new Map<string, number>();
+  fields.forEach((field, index) => {
+    const name = field.name.toLowerCase();
+    if (!metaColumns.includes(name)) {
+      fieldMap.set(name, index);
+    }
+  });
+
   const length = columns.feature.values.length;
   //assert that fields.every(field => field.values.length === length) is true
 
@@ -66,23 +77,14 @@ export function loadFeaturesByControl(
     const feature = mappedFeatures.getOrDefault(record, refId);
 
     if (!!record.control) {
+      // NEW: Store DataFrame reference instead of copying data
       feature.characteristics[`${record.control}`] = {
-        table: omit(record, metaColumns),
+        dataFrame,
+        rowIndex: i,
+        fieldMap,
       };
     }
   }
-}
-
-function noNulls(timeArray: any[], valuesArray: any[]) {
-  const t: number[] = [];
-  const v: any[] = [];
-  for (let i = 0; i < timeArray.length; i++) {
-    if (timeArray[i] != null && valuesArray[i] != null) {
-      t.push(timeArray[i]);
-      v.push(valuesArray[i]);
-    }
-  }
-  return { t, v };
 }
 
 export function loadTimeseries(
@@ -107,14 +109,15 @@ export function loadTimeseries(
     if (feature == null) {
       continue;
     }
-    const { t, v } = noNulls(timeField.values, fields[i].values);
-    const timeseries = {
-      time: { ...timeField, values: t },
-      values: { ...fields[i], values: v },
-    };
+
+    // NEW: Store Field references directly, no filtering yet
     feature.characteristics[controlName] = {
       ...(feature.characteristics?.[controlName] ?? {}),
-      timeseries,
+      timeseries: {
+        timeField,
+        valueField: fields[i],
+        // validIndices computed lazily on first access
+      },
     };
     if (meta != null && Object.keys(meta).length > 0) {
       feature.meta = { ...(feature.meta ?? {}), ...meta };

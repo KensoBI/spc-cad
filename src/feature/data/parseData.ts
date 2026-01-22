@@ -4,6 +4,7 @@ import { Feature } from 'types/Feature';
 import { CadDsEntity, ScanItem, FeatureOverridesMap } from 'types/CadSettings';
 import { Position, isPosition } from 'types/Position';
 import { PositionMode } from 'types/PositionMode';
+import { CharacteristicAccessor } from 'types/CharacteristicData';
 function setUid(feature: Feature) {
   feature.uid = [feature.id].join('');
 }
@@ -66,10 +67,19 @@ function featurePosition(feature: Feature, overrides: FeatureOverridesMap): [Pos
     return [ov.position, 'customPosition'];
   }
 
+  // NEW: Use CharacteristicAccessor for x/y/z nominal values
+  const xChar = feature.characteristics.x;
+  const yChar = feature.characteristics.y;
+  const zChar = feature.characteristics.z;
+
+  const xAccessor = xChar ? new CharacteristicAccessor(xChar) : undefined;
+  const yAccessor = yChar ? new CharacteristicAccessor(yChar) : undefined;
+  const zAccessor = zChar ? new CharacteristicAccessor(zChar) : undefined;
+
   const pos = {
-    x: Number(feature.characteristics.x?.table?.nominal),
-    y: Number(feature.characteristics.y?.table?.nominal),
-    z: Number(feature.characteristics.z?.table?.nominal),
+    x: Number(xAccessor?.get('nominal')),
+    y: Number(yAccessor?.get('nominal')),
+    z: Number(zAccessor?.get('nominal')),
   };
 
   if (isNaN(pos.x) || isNaN(pos.y) || isNaN(pos.z)) {
@@ -91,7 +101,8 @@ export function parseData(data: DataFrame[], overrides: FeatureOverridesMap): Pa
 
   const mappedFeatures = new MappedFeatures();
   for (const df of tables) {
-    loadFeaturesByControl(df.fields, df.refId as string, mappedFeatures);
+    // NEW: Pass entire DataFrame
+    loadFeaturesByControl(df.fields, df.refId as string, mappedFeatures, df);
   }
   for (const df of timeseries) {
     loadTimeseries(df.fields, df.refId as string, mappedFeatures, df.meta);

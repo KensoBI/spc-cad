@@ -4,6 +4,7 @@ import React from 'react';
 import { FeatureModelAnnotated } from 'types/AnnotationModel';
 import { defaultTableSettings, TableSettings } from 'types/ViewComponentSettings';
 import { useWindowSize } from '../../../container/Windows';
+import { CharacteristicAccessor } from 'types/CharacteristicData';
 
 type Props = { featureModel: FeatureModelAnnotated; settings: TableSettings };
 
@@ -24,41 +25,48 @@ export function TableComponent({ featureModel, settings }: Props) {
   }, [settings.rows]);
 
   const dataFrame = React.useMemo(() => {
+    // Collect all unique columns across all characteristics
     const dataColumns = new Set<string>();
-    for (const ch in featureModel.feature.characteristics) {
-      for (const dataKey in featureModel.feature.characteristics[ch].table) {
-        if (visibleColumn(dataKey)) {
-          dataColumns.add(dataKey);
+    const controlsArray = Object.keys(featureModel.feature.characteristics);
+
+    for (const control of controlsArray) {
+      const charData = featureModel.feature.characteristics[control];
+      const accessor = new CharacteristicAccessor(charData);
+      const columns = accessor.getColumns();
+
+      for (const columnName of columns) {
+        if (visibleColumn(columnName)) {
+          dataColumns.add(columnName);
         }
       }
     }
 
     const dataColumnsArray = [...dataColumns];
 
+    // Build fields for each column
     const fields = [
-      { name: 'control', type: FieldType.string, values: [] },
-      ...dataColumnsArray.map((characteristic) => ({
-        name: characteristic,
+      {
+        name: 'control',
+        type: FieldType.string,
+        values: controlsArray.filter(visibleRow),
+        config: {},
+      },
+      ...dataColumnsArray.map((columnKey) => ({
+        name: columnKey,
         type: FieldType.number,
-        values: [],
+        values: controlsArray
+          .filter(visibleRow)
+          .map((control) => {
+            const charData = featureModel.feature.characteristics[control];
+            const accessor = new CharacteristicAccessor(charData);
+            const value = accessor.get(columnKey);
+            return !isNaN(value) ? value : '';
+          }),
+        config: {},
       })),
     ];
-    const data = new MutableDataFrame({
-      fields,
-    });
 
-    for (const control in featureModel.feature.characteristics) {
-      if (!visibleRow(control)) {
-        continue;
-      }
-      const row = [control];
-      const rowData = featureModel.feature.characteristics[control];
-      for (const columnKey of dataColumnsArray) {
-        const value = rowData?.table?.[columnKey];
-        row.push(!isNaN(value) ? value : '');
-      }
-      data.appendRow(row);
-    }
+    const data = new MutableDataFrame({ fields });
 
     const frame = applyFieldOverrides({
       data: [data],

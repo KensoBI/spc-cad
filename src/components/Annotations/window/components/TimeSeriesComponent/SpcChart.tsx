@@ -30,7 +30,6 @@ import React from 'react';
 import { usePanelProps } from 'utils/PanelPropsProvider';
 import { AnnotationsPlugin, isAnnotationEntityArray } from './AnnotationPlugin';
 import { AxisPropsReflection } from './AxisPropsReflection';
-import { cloneDeep } from 'lodash';
 
 type Props = {
   dataFrameName: string;
@@ -89,8 +88,9 @@ export function SpcChart(props: Props) {
       return undefined;
     }
 
-    const valField = cloneDeep(valueField);
-    const fields = [cloneDeep(timeField)];
+    // NEW: Shallow spread instead of cloneDeep
+    const valField = { ...valueField };
+    const fields = [{ ...timeField }];
 
     const addConstantField = (value: number, name: string, color: string) => {
       fields.push({

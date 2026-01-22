@@ -1,7 +1,6 @@
-import { Field } from '@grafana/data';
 import { Position } from './Position';
 import { PositionMode } from './PositionMode';
-import { Dictionary } from 'lodash';
+import { CharacteristicData } from './CharacteristicData';
 
 export type Feature = {
   uid: string;
@@ -16,16 +15,9 @@ export type Feature = {
     calculationType?: string;
     [key: string]: any;
   };
+  // Updated: Store CharacteristicData instead of plain objects
   characteristics: {
-    [characteristic: string]: {
-      table: {
-        [field: string]: any;
-      };
-      timeseries?: {
-        time: Field<number>;
-        values: Field<any>;
-      };
-    };
+    [characteristic: string]: CharacteristicData;
   };
 };
 
@@ -33,31 +25,33 @@ export type InfoField = {
   name: string;
   type: string;
 };
+
+/**
+ * Note: transferableFeature is deprecated with DataFrame-centric refactor.
+ * CharacteristicData stores DataFrame references which cannot be serialized.
+ * If serialization is needed, a new approach will be required.
+ */
 export function transferableFeature(feature: Feature) {
   return {
     ...feature,
     characteristics: {
-      ...Object.entries(feature.characteristics).reduce((acc, [characteristic, { table, timeseries }]) => {
-        if (timeseries) {
+      ...Object.entries(feature.characteristics).reduce((acc, [characteristic, charData]) => {
+        if (charData.timeseries) {
           acc[characteristic] = {
-            table: { ...table },
-            timeseries:
-              timeseries != null
-                ? {
-                    time: {
-                      name: timeseries.time.name,
-                      type: timeseries.time.type,
-                    },
-                    values: {
-                      name: timeseries.values.name,
-                      type: timeseries.values.type,
-                    },
-                  }
-                : undefined,
+            timeseries: {
+              time: {
+                name: charData.timeseries.timeField.name,
+                type: charData.timeseries.timeField.type,
+              },
+              values: {
+                name: charData.timeseries.valueField.name,
+                type: charData.timeseries.valueField.type,
+              },
+            },
           };
         }
         return acc;
-      }, {} as Dictionary<{ table: Dictionary<any>; timeseries?: { time: InfoField; values: InfoField } }>),
+      }, {} as Record<string, { timeseries?: { time: InfoField; values: InfoField } }>),
     },
   };
 }

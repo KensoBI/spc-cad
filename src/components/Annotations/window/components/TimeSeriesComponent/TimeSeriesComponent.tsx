@@ -13,6 +13,7 @@ import {
 import { useFindViewComponentByIndexes, useSetViewComponent } from '../../settings/useUpdateAnnotationTemplate';
 import { TemplateModel } from 'types/Annotation';
 import { TIMESERIES_SAMPLE_LABEL } from 'constants/global';
+import { CharacteristicAccessor } from 'types/CharacteristicData';
 
 type Props = {
   featureModel: FeatureModelAnnotated;
@@ -41,29 +42,37 @@ export function TimeSeriesComponent({ featureModel, settings, viewComponentIds, 
     [controlName, featureModel.feature.characteristics]
   );
 
+  const accessor = React.useMemo(
+    () => (characteristic ? new CharacteristicAccessor(characteristic) : undefined),
+    [characteristic]
+  );
+
   const limits = React.useMemo(
     () => ({
       up:
-        limitConfig?.up != null
-          ? { value: characteristic?.table?.[limitConfig.up.name], color: limitConfig.up.color }
+        limitConfig?.up != null && accessor
+          ? { value: accessor.get(limitConfig.up.name), color: limitConfig.up.color }
           : undefined,
       down:
-        limitConfig?.down != null
-          ? { value: characteristic?.table?.[limitConfig.down.name], color: limitConfig.down.color }
+        limitConfig?.down != null && accessor
+          ? { value: accessor.get(limitConfig.down.name), color: limitConfig.down.color }
           : undefined,
     }),
-    [characteristic?.table, limitConfig]
+    [accessor, limitConfig]
   );
 
   const constants = React.useMemo(() => {
+    if (!accessor) {
+      return undefined;
+    }
     return constantsConfig
       ?.map((config) => ({
         title: config.title,
-        value: characteristic?.table?.[config.name],
+        value: accessor.get(config.name),
         color: config.color,
       }))
       ?.filter((c) => c.value != null);
-  }, [characteristic?.table, constantsConfig]);
+  }, [accessor, constantsConfig]);
 
   const [containerRef, setContainerRef] = React.useState<HTMLElement | null>(null);
 
@@ -121,13 +130,17 @@ export function TimeSeriesComponent({ featureModel, settings, viewComponentIds, 
     [setSettings, settings]
   );
 
+  const timeseriesFields = React.useMemo(() => {
+    return accessor?.getTimeseriesFields();
+  }, [accessor]);
+
   return (
     <div ref={setContainerRef} className={`timeseries-container ${styles.container}`}>
       {width && height ? (
         <SpcChart
           dataFrameName={controlName}
-          timeField={characteristic?.timeseries?.time}
-          valueField={characteristic?.timeseries?.values}
+          timeField={timeseriesFields?.time}
+          valueField={timeseriesFields?.values}
           calculationType={featureModel.feature.meta?.calculationType}
           limits={limits}
           constants={constants}

@@ -7,6 +7,7 @@ import { css } from 'emotion';
 import { StyledCell } from './StyledCell';
 import { toNumber } from 'lodash';
 import { GRID_COMPONENT_CELL_HEIGHT, GRID_DEFAULT_DECIMALS, PRINT_COLOR_ADJUST } from 'constants/global';
+import { CharacteristicAccessor } from 'types/CharacteristicData';
 
 type Props = { featureModel: FeatureModelAnnotated; settings: GridSettings };
 
@@ -48,11 +49,14 @@ type DynamicCellProps = {
 
 function DynamicCell({ settings, featureModel, formatters }: DynamicCellProps) {
   const value = React.useMemo(() => {
-    const row = featureModel.feature.characteristics?.[settings.control];
-    if (row == null) {
+    const charData = featureModel.feature.characteristics?.[settings.control];
+    if (charData == null) {
       return undefined;
     }
-    const value = row.table?.[settings.column];
+
+    // NEW: Use accessor instead of .table
+    const accessor = new CharacteristicAccessor(charData);
+    const value = accessor.get(settings.column);
 
     const asNumber = toNumber(value);
 
