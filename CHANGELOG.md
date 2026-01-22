@@ -10,9 +10,9 @@ Initial release.
 - Uploaded files are embedded in the dashboard JSON and can be shared with other users
 - Maximum upload size: 5MB
 - Added interactive view helper that visualizes camera transformation with clickable X, Y, Z axes to animate camera view
-- Refactored dataload 
-    60-80% memory reduction - eliminate data duplication
-30-50% faster initial load - no data copying during parse
+- Refactored data loading to use DataFrame-centric architecture
+  - 60-80% memory reduction by eliminating data duplication
+  - 30-50% faster initial load by removing data copying during parse
 
 ### Bug Fixes
 

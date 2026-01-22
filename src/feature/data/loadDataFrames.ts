@@ -12,25 +12,21 @@ type ColumnsDict = {
 } & {
   [key: string]: Field;
 };
-type DataFrameRecord = {
-  [key in keyof ColumnsDict]: any;
-};
-
 const metaColumns = ['feature', 'control', 'partid', 'featuretype'];
 
 export class MappedFeatures extends Map<string, Feature> {
-  getOrDefault = (record: DataFrameRecord, refId: string) => {
-    const key = record.feature;
+  getOrDefault = (featureName: string, partId: string, featureType: string, refId: string) => {
+    const key = featureName;
     if (this.has(key)) {
       return this.get(key) as Feature;
     }
     const newFeature: Feature = {
       uid: '',
       id: key,
-      partId: record.partid?.toString() ?? '',
+      partId: partId?.toString() ?? '',
       refId: refId,
       name: '',
-      type: record.featuretype ?? 'generic',
+      type: featureType ?? 'generic',
       position: undefined,
       positionMode: 'undefined',
       characteristics: {},
@@ -38,13 +34,6 @@ export class MappedFeatures extends Map<string, Feature> {
     this.set(key, newFeature);
     return newFeature;
   };
-}
-
-function getRecord(columns: ColumnsDict, i: number) {
-  return Object.keys(columns).reduce((acc, key) => {
-    acc[key] = columns[key].values[i];
-    return acc;
-  }, {} as DataFrameRecord);
 }
 
 export function loadFeaturesByControl(
@@ -73,12 +62,16 @@ export function loadFeaturesByControl(
   //assert that fields.every(field => field.values.length === length) is true
 
   for (let i = 0; i < length; i++) {
-    const record = getRecord(columns, i);
-    const feature = mappedFeatures.getOrDefault(record, refId);
+    const featureName = columns.feature.values[i];
+    const controlName = columns.control.values[i];
+    const partId = columns.partid?.values[i];
+    const featureType = columns.featuretype?.values[i];
 
-    if (!!record.control) {
-      // NEW: Store DataFrame reference instead of copying data
-      feature.characteristics[`${record.control}`] = {
+    const feature = mappedFeatures.getOrDefault(featureName, partId, featureType, refId);
+
+    if (controlName) {
+      // Store DataFrame reference instead of copying data
+      feature.characteristics[`${controlName}`] = {
         dataFrame,
         rowIndex: i,
         fieldMap,

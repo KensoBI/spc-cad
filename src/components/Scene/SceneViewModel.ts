@@ -551,7 +551,7 @@ export default class SceneViewModel {
     if (cadSettingsToLoad.length > 0) {
       this.loadMeshes(cadSettingsToLoad);
     }
-    this._cadSettings = _.cloneDeep(cadSettings);
+    this._cadSettings = cadSettings.map(setting => ({ ...setting }));
   }
 
   private loadMeshes(cadSettings: CadSettings[]) {
@@ -679,12 +679,10 @@ export default class SceneViewModel {
   }
 
   loadFeatures(features: Feature[]) {
-    const featuresToLoad = _.cloneDeep(features);
-
     this.removeAllSpheres();
-    if (featuresToLoad.length > 0) {
-      for (let i = 0; i < featuresToLoad.length; i++) {
-        const characteristicMesh = this.createMeshForCharacteristic(featuresToLoad[i]);
+    if (features.length > 0) {
+      for (let i = 0; i < features.length; i++) {
+        const characteristicMesh = this.createMeshForCharacteristic(features[i]);
         if (characteristicMesh != null) {
           this._characteristicGroup.add(characteristicMesh);
         }
