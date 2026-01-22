@@ -20,10 +20,13 @@ export function useLine(color?: string) {
   const lineRef = React.useRef<HTMLDivElement>(null);
   const { options } = usePanelProps();
   const defaultColor = options.featureSettings.color;
+  const pendingUpdate = React.useRef<{ x1: number; y1: number; x2: number; y2: number } | null>(null);
 
   const onChange = React.useCallback((x1: number, y1: number, x2: number, y2: number) => {
     const line = lineRef.current;
     if (!line) {
+      // Store the update to apply once the ref is available
+      pendingUpdate.current = { x1, y1, x2, y2 };
       return;
     }
 
@@ -36,8 +39,16 @@ export function useLine(color?: string) {
     line.style.top = `${y1}px`;
     line.style.left = `${x1}px`;
     line.style.opacity = hidden ? '0' : '1';
-    line.style.display = hidden ? 'none' : 'block';
   }, []);
+
+  // Apply pending update when ref becomes available
+  React.useEffect(() => {
+    if (lineRef.current && pendingUpdate.current) {
+      const { x1, y1, x2, y2 } = pendingUpdate.current;
+      pendingUpdate.current = null;
+      onChange(x1, y1, x2, y2);
+    }
+  });
 
   const wrapperElement = React.useContext(Context);
 
