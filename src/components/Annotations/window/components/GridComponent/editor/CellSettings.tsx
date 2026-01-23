@@ -167,29 +167,30 @@ function CheracteristicSelectors({ cell, setCell }: CharacteristicSelectorsProps
   const availableColumns = useAvailableColumns();
 
   const characteristicOptions = React.useMemo(() => {
-    return sortBy(Object.keys(availableColumns)).map((ch) => ({
-      value: ch,
-      label: ch,
+    return sortBy(Object.entries(availableColumns), ([_, char]) => char.displayName).map(([chId, char]) => ({
+      value: chId,
+      label: char.displayName,
     }));
   }, [availableColumns]);
 
   const columnOptions = React.useMemo(() => {
-    if (cell.value.dynamic?.control == null) {
+    if (cell.value.dynamic?.characteristic_id == null) {
       return [];
     }
-    return [...(availableColumns?.[cell.value.dynamic.control] ?? [])].map((key) => ({
+    const char = availableColumns?.[cell.value.dynamic.characteristic_id];
+    return [...(char?.columns ?? [])].map((key) => ({
       value: key,
       label: key,
     }));
-  }, [availableColumns, cell.value.dynamic?.control]);
+  }, [availableColumns, cell.value.dynamic?.characteristic_id]);
 
-  const setValues = (control?: string, column?: string) => {
+  const setValues = (characteristic_id?: string, column?: string) => {
     setCell({
       ...cell,
       value: {
         ...cell.value,
         dynamic: {
-          control: control ?? cell.value.dynamic?.control ?? '',
+          characteristic_id: characteristic_id ?? cell.value.dynamic?.characteristic_id ?? '',
           column: column ?? cell.value.dynamic?.column ?? '',
         },
       },
@@ -198,9 +199,9 @@ function CheracteristicSelectors({ cell, setCell }: CharacteristicSelectorsProps
 
   return (
     <div>
-      <InlineField label="Control" grow>
+      <InlineField label="Characteristic" grow>
         <Select
-          value={cell.value.dynamic?.control}
+          value={cell.value.dynamic?.characteristic_id}
           options={characteristicOptions}
           placeholder=""
           onChange={(newValue) => {

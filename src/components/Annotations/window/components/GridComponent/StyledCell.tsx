@@ -20,9 +20,9 @@ export function StyledCell({ children, featureModel, gridCell, className }: Reac
     return colorMapping.map((el) => ({
       ...el,
       column: gridCell.value.dynamic?.column ?? '',
-      control: gridCell.value.dynamic?.control ?? '',
+      characteristic_id: gridCell.value.dynamic?.characteristic_id ?? '',
     }));
-  }, [colorMapping, gridCell.value.dynamic?.column, gridCell.value.dynamic?.control]);
+  }, [colorMapping, gridCell.value.dynamic?.column, gridCell.value.dynamic?.characteristic_id]);
 
   const staticLeftValue = React.useMemo(() => {
     return gridCell.staticText ? gridCell.value.static ?? '' : undefined;

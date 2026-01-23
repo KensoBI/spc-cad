@@ -10,6 +10,9 @@ export type CharacteristicData = {
   rowIndex?: number;
   fieldMap?: Map<string, number>; // column name → field index
 
+  // Display name for UI labels (fallback to characteristic_id if not provided)
+  displayName?: string;
+
   // Timeseries data - direct Field references with lazy filtering
   timeseries?: {
     timeField: Field<number>;
@@ -62,6 +65,14 @@ export class CharacteristicAccessor {
    */
   getColumns(): string[] {
     return this.data.fieldMap ? Array.from(this.data.fieldMap.keys()) : [];
+  }
+
+  /**
+   * Get the display name for this characteristic.
+   * Returns displayName if set, otherwise returns undefined.
+   */
+  getDisplayName(): string | undefined {
+    return this.data.displayName;
   }
 
   /**

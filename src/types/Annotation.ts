@@ -49,14 +49,14 @@ export type GridPos = {
 };
 
 export type DynamicReferenceValue = {
-  control: string;
+  characteristic_id: string;
   column: string;
 };
 
 export type ConditionalStyle = {
   operator: string;
   isStatic: boolean;
-  control: string;
+  characteristic_id: string;
   column: string;
   value: {
     static?: string;
@@ -73,7 +73,7 @@ export type LinkSettings = {
 export type BoxView = {
   id: number;
   name: string;
-  control: string;
+  characteristic_id: string;
   type: string;
   tableHeaders?: string[];
   showTableHeaders?: boolean;

@@ -1,6 +1,6 @@
 import { Position } from './Position';
 import { PositionMode } from './PositionMode';
-import { CharacteristicData } from './CharacteristicData';
+import { CharacteristicData, CharacteristicAccessor } from './CharacteristicData';
 
 export type Feature = {
   uid: string;
@@ -20,6 +20,22 @@ export type Feature = {
     [characteristic: string]: CharacteristicData;
   };
 };
+
+/**
+ * Helper function to find a characteristic by its display name.
+ * Useful for finding x, y, z characteristics by name.
+ */
+export function findCharacteristicByName(feature: Feature, name: string): CharacteristicData | undefined {
+  const nameLower = name.toLowerCase();
+  for (const charData of Object.values(feature.characteristics)) {
+    const accessor = new CharacteristicAccessor(charData);
+    const displayName = accessor.getDisplayName()?.toLowerCase();
+    if (displayName === nameLower) {
+      return charData;
+    }
+  }
+  return undefined;
+}
 
 export type InfoField = {
   name: string;

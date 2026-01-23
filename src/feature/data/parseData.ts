@@ -1,6 +1,6 @@
 import { DataFrame, FieldType } from '@grafana/data';
 import { loadCadLinks, loadFeaturesByControl, loadScanLinks, loadTimeseries, MappedFeatures } from './loadDataFrames';
-import { Feature } from 'types/Feature';
+import { Feature, findCharacteristicByName } from 'types/Feature';
 import { CadDsEntity, ScanItem, FeatureOverridesMap } from 'types/CadSettings';
 import { Position, isPosition } from 'types/Position';
 import { PositionMode } from 'types/PositionMode';
@@ -18,7 +18,7 @@ function hasColumn(df: DataFrame, name: string) {
 }
 
 function isFeaturesTable(df: DataFrame) {
-  return hasColumn(df, 'feature') && hasColumn(df, 'control') && hasColumn(df, 'nominal');
+  return hasColumn(df, 'feature') && hasColumn(df, 'characteristic_id') && hasColumn(df, 'nominal');
 }
 
 function isCadTable(df: DataFrame) {
@@ -67,10 +67,10 @@ function featurePosition(feature: Feature, overrides: FeatureOverridesMap): [Pos
     return [ov.position, 'customPosition'];
   }
 
-  // NEW: Use CharacteristicAccessor for x/y/z nominal values
-  const xChar = feature.characteristics.x;
-  const yChar = feature.characteristics.y;
-  const zChar = feature.characteristics.z;
+  // Find x, y, z characteristics by name (not by key)
+  const xChar = findCharacteristicByName(feature, 'x');
+  const yChar = findCharacteristicByName(feature, 'y');
+  const zChar = findCharacteristicByName(feature, 'z');
 
   const xAccessor = xChar ? new CharacteristicAccessor(xChar) : undefined;
   const yAccessor = yChar ? new CharacteristicAccessor(yChar) : undefined;

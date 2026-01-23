@@ -27,10 +27,10 @@ export function TableComponent({ featureModel, settings }: Props) {
   const dataFrame = React.useMemo(() => {
     // Collect all unique columns across all characteristics
     const dataColumns = new Set<string>();
-    const controlsArray = Object.keys(featureModel.feature.characteristics);
+    const characteristicIdsArray = Object.keys(featureModel.feature.characteristics);
 
-    for (const control of controlsArray) {
-      const charData = featureModel.feature.characteristics[control];
+    for (const characteristicId of characteristicIdsArray) {
+      const charData = featureModel.feature.characteristics[characteristicId];
       const accessor = new CharacteristicAccessor(charData);
       const columns = accessor.getColumns();
 
@@ -46,18 +46,22 @@ export function TableComponent({ featureModel, settings }: Props) {
     // Build fields for each column
     const fields = [
       {
-        name: 'control',
+        name: 'characteristic',
         type: FieldType.string,
-        values: controlsArray.filter(visibleRow),
+        values: characteristicIdsArray.filter(visibleRow).map((characteristicId) => {
+          const charData = featureModel.feature.characteristics[characteristicId];
+          const accessor = new CharacteristicAccessor(charData);
+          return accessor.getDisplayName() || characteristicId;
+        }),
         config: {},
       },
       ...dataColumnsArray.map((columnKey) => ({
         name: columnKey,
         type: FieldType.number,
-        values: controlsArray
+        values: characteristicIdsArray
           .filter(visibleRow)
-          .map((control) => {
-            const charData = featureModel.feature.characteristics[control];
+          .map((characteristicId) => {
+            const charData = featureModel.feature.characteristics[characteristicId];
             const accessor = new CharacteristicAccessor(charData);
             const value = accessor.get(columnKey);
             return !isNaN(value) ? value : '';

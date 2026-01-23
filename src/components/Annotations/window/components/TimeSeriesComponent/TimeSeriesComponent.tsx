@@ -27,7 +27,7 @@ export function TimeSeriesComponent({ featureModel, settings, viewComponentIds, 
 
   const settingsWithDefaults = React.useMemo(() => defaults(settings, defaultTimeseriesSettings), [settings]);
 
-  const controlName = settingsWithDefaults.controlName;
+  const characteristicId = settingsWithDefaults.characteristicId;
   const constantsConfig = settingsWithDefaults.constantsConfig;
   const limitConfig = settingsWithDefaults.limitConfig;
   const lineWidth = settingsWithDefaults.lineWidth;
@@ -38,8 +38,8 @@ export function TimeSeriesComponent({ featureModel, settings, viewComponentIds, 
   const decimals = settingsWithDefaults.decimals;
 
   const characteristic = React.useMemo(
-    () => featureModel.feature.characteristics[controlName],
-    [controlName, featureModel.feature.characteristics]
+    () => featureModel.feature.characteristics[characteristicId],
+    [characteristicId, featureModel.feature.characteristics]
   );
 
   const accessor = React.useMemo(
@@ -138,7 +138,7 @@ export function TimeSeriesComponent({ featureModel, settings, viewComponentIds, 
     <div ref={setContainerRef} className={`timeseries-container ${styles.container}`}>
       {width && height ? (
         <SpcChart
-          dataFrameName={controlName}
+          dataFrameName={characteristicId}
           timeField={timeseriesFields?.time}
           valueField={timeseriesFields?.values}
           calculationType={featureModel.feature.meta?.calculationType}

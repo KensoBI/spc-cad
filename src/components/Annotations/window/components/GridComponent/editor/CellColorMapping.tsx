@@ -20,7 +20,7 @@ export function CellColorMapping({ setCell, cell }: Props) {
     return cell.staticText
       ? '"' + (cell.value.static ?? 'value') + '"'
       : cell.value.dynamic
-      ? `${cell.value.dynamic.control}(${cell.value.dynamic.column})`
+      ? `${cell.value.dynamic.characteristic_id}(${cell.value.dynamic.column})`
       : 'value';
   }, [cell.staticText, cell.value.dynamic, cell.value.static]);
 

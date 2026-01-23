@@ -5,14 +5,15 @@ import { Feature } from 'types/Feature';
 
 type ColumnsDict = {
   feature?: Field;
-  control?: Field;
+  characteristic_id?: Field;
+  characteristic_name?: Field;
   nominal?: Field;
   partid?: Field;
   featuretype?: Field;
 } & {
   [key: string]: Field;
 };
-const metaColumns = ['feature', 'control', 'partid', 'featuretype'];
+const metaColumns = ['feature', 'characteristic_id', 'characteristic_name', 'partid', 'featuretype'];
 
 export class MappedFeatures extends Map<string, Feature> {
   getOrDefault = (featureName: string, partId: string, featureType: string, refId: string) => {
@@ -44,8 +45,8 @@ export function loadFeaturesByControl(
 ) {
   const columns: ColumnsDict = keyBy(fields, (column) => column.name.toLowerCase());
 
-  if (!columns.feature || !columns.control || !columns.nominal) {
-    console.warn('alert-danger', [`Feature or Control or Nominal column is missing in query ${refId}.`]);
+  if (!columns.feature || !columns.characteristic_id || !columns.nominal) {
+    console.warn('alert-danger', [`Feature or Characteristic_id or Nominal column is missing in query ${refId}.`]);
     return;
   }
 
@@ -63,19 +64,24 @@ export function loadFeaturesByControl(
 
   for (let i = 0; i < length; i++) {
     const featureName = columns.feature.values[i];
-    const controlName = columns.control.values[i];
+    const characteristicId = columns.characteristic_id.values[i];
+    const characteristicName = columns.characteristic_name?.values[i];
     const partId = columns.partid?.values[i];
     const featureType = columns.featuretype?.values[i];
 
     const feature = mappedFeatures.getOrDefault(featureName, partId, featureType, refId);
 
-    if (controlName) {
+    if (characteristicId) {
       // Store DataFrame reference instead of copying data
-      feature.characteristics[`${controlName}`] = {
+      const charData = {
         dataFrame,
         rowIndex: i,
         fieldMap,
+        displayName: characteristicName || characteristicId.toString(),
       };
+
+      // Store ONLY by characteristic_id (single source of truth - no duplicates)
+      feature.characteristics[`${characteristicId}`] = charData;
     }
   }
 }
@@ -86,34 +92,63 @@ export function loadTimeseries(
   mappedFeatures: MappedFeatures,
   meta?: Dictionary<any>
 ) {
-  const timeField = fields?.[0];
-  if (timeField == null || timeField.name !== 'Time') {
-    console.warn('alert-danger', [`Timeseries data - missing Time field in ${refId}.`]);
+  const columns: ColumnsDict = keyBy(fields, (column) => column.name.toLowerCase());
+
+  if (!columns.time || !columns.characteristic_id || !columns.value) {
+    console.warn('alert-danger', [`Time or Characteristic_id or Value column is missing in timeseries query ${refId}.`]);
     return;
   }
 
-  for (let i = 1; i < fields.length; i++) {
-    const featureName = fields[i].labels?.feature;
-    const controlName = fields[i].labels?.control;
-    if (featureName == null || controlName == null) {
-      continue;
-    }
-    const feature = mappedFeatures.get(featureName);
-    if (feature == null) {
+  const length = columns.time.values.length;
+
+  // Build timeseries data grouped by characteristic_id
+  const timeseriesMap = new Map<string, { times: number[]; values: any[] }>();
+
+  for (let i = 0; i < length; i++) {
+    const characteristicId = columns.characteristic_id.values[i];
+    const timeValue = columns.time.values[i];
+    const measurementValue = columns.value.values[i];
+
+    if (characteristicId == null) {
       continue;
     }
 
-    // NEW: Store Field references directly, no filtering yet
-    feature.characteristics[controlName] = {
-      ...(feature.characteristics?.[controlName] ?? {}),
-      timeseries: {
-        timeField,
-        valueField: fields[i],
-        // validIndices computed lazily on first access
-      },
-    };
-    if (meta != null && Object.keys(meta).length > 0) {
-      feature.meta = { ...(feature.meta ?? {}), ...meta };
+    const key = `${characteristicId}`;
+    if (!timeseriesMap.has(key)) {
+      timeseriesMap.set(key, { times: [], values: [] });
+    }
+    const series = timeseriesMap.get(key)!;
+    series.times.push(timeValue);
+    series.values.push(measurementValue);
+  }
+
+  // Apply timeseries data to all features that have matching characteristic_id
+  for (const feature of mappedFeatures.values()) {
+    for (const [characteristicId, series] of timeseriesMap) {
+      if (feature.characteristics[characteristicId]) {
+        // Add timeseries to existing characteristic
+        feature.characteristics[characteristicId] = {
+          ...feature.characteristics[characteristicId],
+          timeseries: {
+            timeField: {
+              name: 'Time',
+              type: columns.time.type,
+              config: columns.time.config ?? {},
+              values: series.times,
+            },
+            valueField: {
+              name: feature.characteristics[characteristicId].displayName || characteristicId,
+              type: columns.value.type,
+              config: columns.value.config ?? {},
+              values: series.values,
+            },
+          },
+        };
+
+        if (meta != null && Object.keys(meta).length > 0) {
+          feature.meta = { ...(feature.meta ?? {}), ...meta };
+        }
+      }
     }
   }
 }

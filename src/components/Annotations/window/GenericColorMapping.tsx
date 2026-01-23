@@ -34,16 +34,16 @@ export function GenericColorMapping({ update, rows, constLeftSide }: Props) {
   const availableColumns = useAvailableColumns();
 
   const characteristicOptions = React.useMemo(() => {
-    return sortBy(Object.keys(availableColumns)).map((ch) => ({
-      value: ch,
-      label: ch,
+    return sortBy(Object.entries(availableColumns), ([_, char]) => char.displayName).map(([chId, char]) => ({
+      value: chId,
+      label: char.displayName,
     }));
   }, [availableColumns]);
 
   const characteristicColumnsOptions = React.useMemo(() => {
     const set = new Set<string>();
-    Object.values(availableColumns).forEach((columns) => {
-      columns.forEach((column) => set.add(column));
+    Object.values(availableColumns).forEach((char) => {
+      char.columns.forEach((column: string) => set.add(column));
     });
     return sortBy([...set]).map((ch) => ({
       value: ch,
@@ -63,14 +63,14 @@ export function GenericColorMapping({ update, rows, constLeftSide }: Props) {
                 </div>
               ) : (
                 <>
-                  <InlineField label="Control" grow>
+                  <InlineField label="Characteristic" grow>
                     <Select
-                      value={colorParams.control}
+                      value={colorParams.characteristic_id}
                       options={characteristicOptions}
                       placeholder=""
                       onChange={(newValue) => {
                         if (newValue.value != null) {
-                          colorParams.control = newValue.value;
+                          colorParams.characteristic_id = newValue.value;
                           update(rows);
                         }
                       }}
@@ -89,7 +89,7 @@ export function GenericColorMapping({ update, rows, constLeftSide }: Props) {
                         }
                       }}
                       allowCustomValue
-                      noOptionsMessage={'Select a Control'}
+                      noOptionsMessage={'Select a Characteristic'}
                     />
                   </InlineField>
                 </>
@@ -130,9 +130,9 @@ export function GenericColorMapping({ update, rows, constLeftSide }: Props) {
             <div className={styles.rightSide}>
               {colorParams.isStatic === false ? (
                 <>
-                  <InlineField label="Control" grow>
+                  <InlineField label="Characteristic" grow>
                     <Select
-                      value={colorParams.value.dynamic?.control}
+                      value={colorParams.value.dynamic?.characteristic_id}
                       options={characteristicOptions}
                       placeholder=""
                       onChange={(newValue) => {
@@ -140,7 +140,7 @@ export function GenericColorMapping({ update, rows, constLeftSide }: Props) {
                           colorParams.value = {
                             static: colorParams.value.static,
                             dynamic: {
-                              control: newValue.value,
+                              characteristic_id: newValue.value,
                               column: colorParams.value.dynamic?.column ?? '',
                             },
                           };
@@ -160,7 +160,7 @@ export function GenericColorMapping({ update, rows, constLeftSide }: Props) {
                           colorParams.value = {
                             static: colorParams.value.static,
                             dynamic: {
-                              control: colorParams.value.dynamic?.control ?? '',
+                              characteristic_id: colorParams.value.dynamic?.characteristic_id ?? '',
                               column: newValue.value,
                             },
                           };
@@ -168,7 +168,7 @@ export function GenericColorMapping({ update, rows, constLeftSide }: Props) {
                         }
                       }}
                       allowCustomValue
-                      noOptionsMessage={'Select a Control'}
+                      noOptionsMessage={'Select a Characteristic'}
                     />
                   </InlineField>
                 </>

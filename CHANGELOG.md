@@ -13,6 +13,9 @@ Initial release.
 - Refactored data loading to use DataFrame-centric architecture
   - 60-80% memory reduction by eliminating data duplication
   - 30-50% faster initial load by removing data copying during parse
+- Refactored data queries to use `characteristic_id` instead of characteristic names
+  - Minimum required columns: `feature`, `characteristic_id`, `nominal`
+
 
 ### Bug Fixes
 

@@ -8,7 +8,7 @@ export type ViewComponentKey = TableComponentKey | TimeseriesComponentKey | Grid
 
 export type TableSettings = {
   columns?: string[];
-  rows?: string[]; //Array<control names>
+  rows?: string[]; //Array<characteristic_id>
   decimals?: number;
 };
 
@@ -29,7 +29,7 @@ export type LimitConfig = {
 };
 
 export type TimeseriesSettings = {
-  controlName: string;
+  characteristicId: string;
   limitConfig?: LimitConfig;
   constantsConfig?: Array<{
     name: string;
@@ -46,7 +46,7 @@ export type TimeseriesSettings = {
 
 export const defaultTimeseriesSettingsColor = 'rgb(31, 96, 196)';
 export const defaultTimeseriesSettings = {
-  controlName: '',
+  characteristicId: '',
   fill: 0,
   lineWidth: 2,
   pointSize: 6,
@@ -61,7 +61,7 @@ export type GridCell = {
   staticText: boolean;
   value: {
     dynamic?: {
-      control: string;
+      characteristic_id: string;
       column: string;
     };
     static?: string;

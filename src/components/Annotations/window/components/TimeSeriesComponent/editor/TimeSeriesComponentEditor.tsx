@@ -19,9 +19,9 @@ export function TimeSeriesComponentEditor({ viewComponent, setViewComponent }: P
   const availableColumns = useAvailableColumns();
 
   const characteristicOptions = React.useMemo(() => {
-    return sortBy(Object.keys(availableColumns)).map((ch) => ({
-      value: ch,
-      label: ch,
+    return sortBy(Object.entries(availableColumns), ([_, char]) => char.displayName).map(([chId, char]) => ({
+      value: chId,
+      label: char.displayName,
     }));
   }, [availableColumns]);
 
@@ -38,20 +38,21 @@ export function TimeSeriesComponentEditor({ viewComponent, setViewComponent }: P
   );
 
   const availableFields = React.useMemo(() => {
-    return [...(availableColumns?.[settings.controlName] ?? [])];
-  }, [availableColumns, settings.controlName]);
+    const char = availableColumns?.[settings.characteristicId];
+    return [...(char?.columns ?? [])];
+  }, [availableColumns, settings.characteristicId]);
 
   return (
     <div className={styles.container}>
-      <Field label="Control">
+      <Field label="Characteristic">
         <Select
-          value={settings.controlName}
+          value={settings.characteristicId}
           width={10}
           options={characteristicOptions}
           placeholder=""
           onChange={(newValue) => {
             if (newValue.value != null) {
-              setSettings({ ...settings, controlName: newValue.value });
+              setSettings({ ...settings, characteristicId: newValue.value });
             }
           }}
           allowCustomValue

@@ -49,7 +49,7 @@ type DynamicCellProps = {
 
 function DynamicCell({ settings, featureModel, formatters }: DynamicCellProps) {
   const value = React.useMemo(() => {
-    const charData = featureModel.feature.characteristics?.[settings.control];
+    const charData = featureModel.feature.characteristics?.[settings.characteristic_id];
     if (charData == null) {
       return undefined;
     }
@@ -65,7 +65,7 @@ function DynamicCell({ settings, featureModel, formatters }: DynamicCellProps) {
     }
 
     return value;
-  }, [featureModel.feature.characteristics, formatters, settings.column, settings.control]);
+  }, [featureModel.feature.characteristics, formatters, settings.column, settings.characteristic_id]);
 
   return <>{value}</>;
 }
