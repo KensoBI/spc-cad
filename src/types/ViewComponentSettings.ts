@@ -30,6 +30,7 @@ export type LimitConfig = {
 
 export type TimeseriesSettings = {
   characteristicId: string;
+  characteristicName?: string
   limitConfig?: LimitConfig;
   constantsConfig?: Array<{
     name: string;
@@ -47,6 +48,7 @@ export type TimeseriesSettings = {
 export const defaultTimeseriesSettingsColor = 'rgb(31, 96, 196)';
 export const defaultTimeseriesSettings = {
   characteristicId: '',
+  characteristicName: '',
   fill: 0,
   lineWidth: 2,
   pointSize: 6,

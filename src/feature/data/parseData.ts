@@ -1,4 +1,4 @@
-import { DataFrame, FieldType } from '@grafana/data';
+import { DataFrame, FieldType, isTimeSeriesFrame } from '@grafana/data';
 import { loadCadLinks, loadFeaturesByControl, loadScanLinks, loadTimeseries, MappedFeatures } from './loadDataFrames';
 import { Feature, findCharacteristicByName } from 'types/Feature';
 import { CadDsEntity, ScanItem, FeatureOverridesMap } from 'types/CadSettings';
@@ -7,10 +7,6 @@ import { PositionMode } from 'types/PositionMode';
 import { CharacteristicAccessor } from 'types/CharacteristicData';
 function setUid(feature: Feature) {
   feature.uid = [feature.id].join('');
-}
-
-function isTimeseries(df: DataFrame) {
-  return df.meta?.type === 'timeseries-wide' && df.fields?.[0]?.type === FieldType.time;
 }
 
 function hasColumn(df: DataFrame, name: string) {
@@ -29,6 +25,27 @@ function isScanTable(df: DataFrame) {
   return df.name === 'scans' && hasColumn(df, 'links') && hasColumn(df, 'times');
 }
 
+/**
+ * Detects long-format time series data (e.g., characteristic_id, value, time columns)
+ * Unlike Grafana's isTimeSeriesFrame which requires strictly ascending time values,
+ * this allows duplicate timestamps which are common in long-format data.
+ */
+function isLongFormatTimeSeries(df: DataFrame) {
+  // Must have at least 3 columns: time, identifier, and value
+  if (df.fields.length < 3) {
+    return false;
+  }
+
+  const hasTimeField = df.fields.some((field) => field.type === FieldType.time);
+  const hasNumberField = df.fields.some((field) => field.type === FieldType.number);
+
+  // Check for typical long-format columns: characteristic/characteristic_id + value + time
+  const hasCharacteristicColumn = hasColumn(df, 'characteristic') || hasColumn(df, 'characteristic_id');
+  const hasValueColumn = hasColumn(df, 'value');
+
+  return hasTimeField && hasNumberField && hasCharacteristicColumn && hasValueColumn;
+}
+
 function groupDataFrames(data: DataFrame[]) {
   const tables: DataFrame[] = [];
   const timeseries: DataFrame[] = [];
@@ -38,7 +55,7 @@ function groupDataFrames(data: DataFrame[]) {
     if (df.refId == null) {
       continue;
     }
-    if (isTimeseries(df)) {
+    if (isTimeSeriesFrame(df) || isLongFormatTimeSeries(df)) {
       timeseries.push(df);
     } else if (isFeaturesTable(df)) {
       tables.push(df);
@@ -105,7 +122,7 @@ export function parseData(data: DataFrame[], overrides: FeatureOverridesMap): Pa
     loadFeaturesByControl(df.fields, df.refId as string, mappedFeatures, df);
   }
   for (const df of timeseries) {
-    loadTimeseries(df.fields, df.refId as string, mappedFeatures, df.meta);
+    loadTimeseries(df.fields, df.refId as string, mappedFeatures, df, df.meta);
   }
 
   const unpositionedFeatures: Feature[] = [];

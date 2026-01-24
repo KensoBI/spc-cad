@@ -8,6 +8,7 @@ import { css } from 'emotion';
 import { ConstantsList } from './ConstrantsList';
 import { Thresholds } from './Thresholds';
 import { TimeSeriesSimpleParams } from './TimeSeriesSimpleParams';
+import { devLog } from 'utils/devLogger';
 
 type Props = {
   viewComponent: ViewComponent;
@@ -19,11 +20,19 @@ export function TimeSeriesComponentEditor({ viewComponent, setViewComponent }: P
   const availableColumns = useAvailableColumns();
 
   const characteristicOptions = React.useMemo(() => {
-    return sortBy(Object.entries(availableColumns), ([_, char]) => char.displayName).map(([chId, char]) => ({
+    const options = sortBy(Object.entries(availableColumns), ([_, char]) => char.displayName).map(([chId, char]) => ({
       value: chId,
       label: char.displayName,
     }));
-  }, [availableColumns]);
+
+    devLog.log('📋 TimeSeriesComponentEditor:', {
+      availableColumns,
+      characteristicOptions: options,
+      currentSettings: viewComponent?.settings?.timeseries,
+    });
+
+    return options;
+  }, [availableColumns, viewComponent?.settings?.timeseries]);
 
   const settings = React.useMemo(() => {
     const s = viewComponent?.settings?.timeseries;
@@ -32,6 +41,10 @@ export function TimeSeriesComponentEditor({ viewComponent, setViewComponent }: P
 
   const setSettings = React.useCallback(
     (newSettings: TimeseriesSettings) => {
+      devLog.log('💾 TimeSeriesComponentEditor: Saving settings', {
+        oldSettings: viewComponent?.settings?.timeseries,
+        newSettings,
+      });
       setViewComponent({ ...viewComponent, settings: { ...(viewComponent.settings ?? {}), timeseries: newSettings } });
     },
     [setViewComponent, viewComponent]
@@ -42,6 +55,9 @@ export function TimeSeriesComponentEditor({ viewComponent, setViewComponent }: P
     return [...(char?.columns ?? [])];
   }, [availableColumns, settings.characteristicId]);
 
+
+  //todo fix depiicated warning for Select
+  //todo. We need to set characteristic ID here not name
   return (
     <div className={styles.container}>
       <Field label="Characteristic">
@@ -51,6 +67,7 @@ export function TimeSeriesComponentEditor({ viewComponent, setViewComponent }: P
           options={characteristicOptions}
           placeholder=""
           onChange={(newValue) => {
+            devLog.log('🔄 Characteristic changed:', { oldValue: settings.characteristicId, newValue });
             if (newValue.value != null) {
               setSettings({ ...settings, characteristicId: newValue.value });
             }

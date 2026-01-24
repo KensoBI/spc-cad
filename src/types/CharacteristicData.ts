@@ -13,11 +13,13 @@ export type CharacteristicData = {
   // Display name for UI labels (fallback to characteristic_id if not provided)
   displayName?: string;
 
-  // Timeseries data - direct Field references with lazy filtering
+  // Timeseries data - DataFrame references with lazy filtering
   timeseries?: {
-    timeField: Field<number>;
-    valueField: Field<any>;
-    validIndices?: number[]; // Computed lazily, cached
+    dataFrame: DataFrame;       // Reference to source DataFrame
+    timeFieldIndex: number;     // Index of time column in dataFrame.fields
+    valueFieldIndex: number;    // Index of value column in dataFrame.fields
+    rowIndices: number[];       // Which rows in DataFrame belong to this characteristic
+    validIndices?: number[];    // Lazy cache for null-filtered indices
   };
 };
 
@@ -85,31 +87,41 @@ export class CharacteristicAccessor {
       return undefined;
     }
 
-    const { timeField, valueField } = this.data.timeseries;
+    const { dataFrame, timeFieldIndex, valueFieldIndex, rowIndices } = this.data.timeseries;
 
-    // Lazy computation of valid indices (nulls filtered out)
+    // Get Field references from DataFrame
+    const timeField = dataFrame.fields[timeFieldIndex];
+    const valueField = dataFrame.fields[valueFieldIndex];
+
+    // Lazy computation of valid indices (nulls filtered out from rowIndices)
     if (!this.data.timeseries.validIndices) {
       const indices: number[] = [];
-      for (let i = 0; i < timeField.values.length; i++) {
-        if (timeField.values[i] != null && valueField.values[i] != null) {
-          indices.push(i);
+      for (const rowIdx of rowIndices) {
+        if (timeField.values[rowIdx] != null && valueField.values[rowIdx] != null) {
+          indices.push(rowIdx);
         }
       }
       this.data.timeseries.validIndices = indices;
     }
 
-    const indices = this.data.timeseries.validIndices;
+    const validIndices = this.data.timeseries.validIndices;
 
-    // Create filtered Fields preserving metadata
+    // Create new Field objects with filtered values
+    // We need to properly clone the Field structure including config
+    const filteredTimeValues = validIndices.map((rowIdx) => timeField.values[rowIdx]);
+    const filteredValueValues = validIndices.map((rowIdx) => valueField.values[rowIdx]);
+
     return {
       time: {
         ...timeField,
-        values: indices.map((i) => timeField.values[i]),
-      },
+        config: timeField.config ? { ...timeField.config } : {},
+        values: filteredTimeValues,
+      } as Field<number>,
       values: {
         ...valueField,
-        values: indices.map((i) => valueField.values[i]),
-      },
+        config: valueField.config ? { ...valueField.config } : {},
+        values: filteredValueValues,
+      } as Field<any>,
     };
   }
 }

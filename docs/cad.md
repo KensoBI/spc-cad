@@ -105,32 +105,35 @@ Your query should return a table with these columns:
 | Column | Type | Required | Description |
 |--------|------|----------|-------------|
 | `feature` | string | Yes | Unique feature identifier (e.g., "CIRCLE_01") |
-| `control` | string | Yes | Characteristic name (e.g., "Diameter", "x", "y", "z") |
+| `characteristic_id` | string/number | Yes | Unique identifier for the characteristic (e.g., "1", "2", "3") |
 | `nominal` | number | Yes | Nominal value for the characteristic |
+| `characteristic_name` | string | No | Display name for the characteristic (e.g., "Diameter", "x", "y", "z") |
 
 ### Position from Characteristics
 
-Feature positions are determined by characteristics named `x`, `y`, and `z`. The `nominal` value of each characteristic becomes the coordinate. A feature must have all three characteristics (`x`, `y`, `z`) with valid numeric `nominal` values to be positioned on the CAD model.
+Feature positions are determined by characteristics with **display names** `x`, `y`, and `z` (case-insensitive). The `nominal` value of each characteristic becomes the coordinate. A feature must have all three characteristics (`x`, `y`, `z`) with valid numeric `nominal` values to be positioned on the CAD model.
 
 **Example: Feature with position and measurement**
 
 ```sql
--- Position characteristics (x, y, z)
-SELECT 'HOLE_01' as feature, 'x' as control, 100.0 as nominal
+-- Position characteristics (x, y, z) - matched by characteristic_name
+SELECT 'HOLE_01' as feature, '1' as characteristic_id, 'x' as characteristic_name, 100.0 as nominal
 UNION ALL
-SELECT 'HOLE_01' as feature, 'y' as control, 50.0 as nominal
+SELECT 'HOLE_01' as feature, '2' as characteristic_id, 'y' as characteristic_name, 50.0 as nominal
 UNION ALL
-SELECT 'HOLE_01' as feature, 'z' as control, 25.0 as nominal
+SELECT 'HOLE_01' as feature, '3' as characteristic_id, 'z' as characteristic_name, 25.0 as nominal
 UNION ALL
 -- Measurement characteristic
-SELECT 'HOLE_01' as feature, 'Diameter' as control, 10.0 as nominal
+SELECT 'HOLE_01' as feature, '4' as characteristic_id, 'Diameter' as characteristic_name, 10.0 as nominal
 ```
+
+**Important:** Position characteristics are matched by their `characteristic_name` field (x, y, z), not by `characteristic_id`. The `characteristic_id` can be any unique value.
 
 Features without valid `x`, `y`, `z` characteristics are listed separately as unpositioned features.
 
 ### Additional Columns
 
-You can include additional columns in your query. All columns (except `feature`, `control`, `partid`, `featuretype`) become part of the characteristic data and are available in annotation views:
+You can include additional columns in your query. All columns (except `feature`, `characteristic_id`, `characteristic_name`, `partid`, `featuretype`) become part of the characteristic data and are available in annotation views:
 
 | Column | Type | Description |
 |--------|------|-------------|
@@ -145,14 +148,17 @@ You can include additional columns in your query. All columns (except `feature`,
 
 ```sql
 SELECT
-  feature_name as feature,
-  characteristic as control,
-  nominal_value as nominal,
-  measured_value as actual,
-  measured_value - nominal_value as deviation,
-  feature_type as featuretype
-FROM measurements
-WHERE inspection_id = '${inspection}'
+  f.name as feature,
+  c.id as characteristic_id,
+  c.name as characteristic_name,
+  c.nominal_value as nominal,
+  m.measured_value as actual,
+  m.measured_value - c.nominal_value as deviation,
+  f.type as featuretype
+FROM measurements m
+JOIN characteristics c ON m.characteristic_id = c.id
+JOIN features f ON c.feature_id = f.id
+WHERE m.inspection_id = '${inspection}'
 ```
 
 ## Measurement Time Series
@@ -161,25 +167,50 @@ To display measurement history charts in annotation windows, you need a separate
 
 ### Time Series Data Structure
 
-The time series query must return data in Grafana's `timeseries-wide` format:
+The time series query must return data in **long format** with these required columns:
 
-- First field must be named `Time` with type `time`
-- Each additional field represents a measurement series
-- Fields must have labels that link them to features
+| Column | Type | Required | Description |
+|--------|------|----------|-------------|
+| `time` | time | Yes | Timestamp of the measurement |
+| `characteristic_id` | string/number | Yes | Characteristic identifier (must match `characteristic_id` from features query) |
+| `value` | number | Yes | Measured value at this timestamp |
+
+**Example SQL Query:**
+
+```sql
+SELECT
+  measurement_time as time,
+  characteristic_id,
+  measured_value as value
+FROM measurement_history
+WHERE inspection_id = '${inspection}'
+  AND measurement_time > NOW() - INTERVAL '30 days'
+ORDER BY time ASC
+```
 
 ### Linking to Features
 
-Time series fields are linked to feature characteristics using **field labels**. Each field must have two labels:
+Time series data is linked to feature characteristics using the `characteristic_id` column:
 
-| Label | Description |
-|-------|-------------|
-| `feature` | The feature identifier (must match `feature` column in features query) |
-| `control` | The characteristic name (must match `control` column in features query) |
+1. The `characteristic_id` in the time series query must match the `characteristic_id` from the features query
+2. When a characteristic is selected in the TimeSeries view component, the panel filters time series data by that `characteristic_id`
+3. Multiple measurements over time for the same characteristic are automatically grouped
 
-**Example: Time series query linking to HOLE_01 Diameter**
+**Example: Complete data setup for HOLE_01 with time series**
 
-The query should produce fields with labels like:
-- Field name: `value`, Labels: `{feature: "HOLE_01", control: "Diameter"}`
+Features query returns:
+```sql
+SELECT 'HOLE_01' as feature, '4' as characteristic_id, 'Diameter' as characteristic_name, 10.0 as nominal
+```
+
+Time series query returns:
+```sql
+SELECT '2024-01-15 10:00:00' as time, '4' as characteristic_id, 10.02 as value
+UNION ALL
+SELECT '2024-01-15 11:00:00' as time, '4' as characteristic_id, 10.01 as value
+UNION ALL
+SELECT '2024-01-15 12:00:00' as time, '4' as characteristic_id, 10.03 as value
+```
 
 When configured correctly, the TimeSeries view in annotations will display the measurement history chart for the selected characteristic.
 

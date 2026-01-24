@@ -53,15 +53,17 @@ export function transferableFeature(feature: Feature) {
     characteristics: {
       ...Object.entries(feature.characteristics).reduce((acc, [characteristic, charData]) => {
         if (charData.timeseries) {
+          const timeField = charData.timeseries.dataFrame.fields[charData.timeseries.timeFieldIndex];
+          const valueField = charData.timeseries.dataFrame.fields[charData.timeseries.valueFieldIndex];
           acc[characteristic] = {
             timeseries: {
               time: {
-                name: charData.timeseries.timeField.name,
-                type: charData.timeseries.timeField.type,
+                name: timeField.name,
+                type: timeField.type,
               },
               values: {
-                name: charData.timeseries.valueField.name,
-                type: charData.timeseries.valueField.type,
+                name: valueField.name,
+                type: valueField.type,
               },
             },
           };

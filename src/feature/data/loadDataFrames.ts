@@ -2,6 +2,7 @@ import { DataFrame, Field } from '@grafana/data';
 import { Dictionary, keyBy } from 'lodash';
 import { CadDsEntity, ScanItem } from 'types/CadSettings';
 import { Feature } from 'types/Feature';
+import { devLog } from 'utils/devLogger';
 
 type ColumnsDict = {
   feature?: Field;
@@ -90,6 +91,7 @@ export function loadTimeseries(
   fields: Field[],
   refId: string,
   mappedFeatures: MappedFeatures,
+  dataFrame: DataFrame,
   meta?: Dictionary<any>
 ) {
   const columns: ColumnsDict = keyBy(fields, (column) => column.name.toLowerCase());
@@ -101,55 +103,87 @@ export function loadTimeseries(
 
   const length = columns.time.values.length;
 
-  // Build timeseries data grouped by characteristic_id
-  const timeseriesMap = new Map<string, { times: number[]; values: any[] }>();
+  // Find field indices once
+  const timeFieldIndex = fields.findIndex((f) => f.name.toLowerCase() === 'time');
+  const valueFieldIndex = fields.findIndex((f) => f.name.toLowerCase() === 'value');
+
+  if (timeFieldIndex === -1 || valueFieldIndex === -1) {
+    console.warn('alert-danger', [`Time or Value field not found in ${refId}.`]);
+    return;
+  }
+
+  // Build map of characteristic_id → row indices (instead of copied arrays)
+  const rowIndicesMap = new Map<string, number[]>();
 
   for (let i = 0; i < length; i++) {
     const characteristicId = columns.characteristic_id.values[i];
-    const timeValue = columns.time.values[i];
-    const measurementValue = columns.value.values[i];
 
     if (characteristicId == null) {
       continue;
     }
 
     const key = `${characteristicId}`;
-    if (!timeseriesMap.has(key)) {
-      timeseriesMap.set(key, { times: [], values: [] });
+    if (!rowIndicesMap.has(key)) {
+      rowIndicesMap.set(key, []);
     }
-    const series = timeseriesMap.get(key)!;
-    series.times.push(timeValue);
-    series.values.push(measurementValue);
+    rowIndicesMap.get(key)!.push(i); // Store row index, not data
   }
 
-  // Apply timeseries data to all features that have matching characteristic_id
+  // Build set of all characteristic IDs that exist across all loaded features
+  const loadedCharacteristicIds = new Set<string>();
   for (const feature of mappedFeatures.values()) {
-    for (const [characteristicId, series] of timeseriesMap) {
+    for (const charId of Object.keys(feature.characteristics)) {
+      loadedCharacteristicIds.add(charId);
+    }
+  }
+
+  // Apply timeseries data to characteristics that exist in loaded features
+  const matchedIds = new Set<string>();
+  const timeseriesIds = Array.from(rowIndicesMap.keys());
+
+  for (const feature of mappedFeatures.values()) {
+    for (const [characteristicId, rowIndices] of rowIndicesMap) {
       if (feature.characteristics[characteristicId]) {
         // Add timeseries to existing characteristic
         feature.characteristics[characteristicId] = {
           ...feature.characteristics[characteristicId],
           timeseries: {
-            timeField: {
-              name: 'Time',
-              type: columns.time.type,
-              config: columns.time.config ?? {},
-              values: series.times,
-            },
-            valueField: {
-              name: feature.characteristics[characteristicId].displayName || characteristicId,
-              type: columns.value.type,
-              config: columns.value.config ?? {},
-              values: series.values,
-            },
+            dataFrame,
+            timeFieldIndex,
+            valueFieldIndex,
+            rowIndices,
           },
         };
+        matchedIds.add(characteristicId);
 
         if (meta != null && Object.keys(meta).length > 0) {
           feature.meta = { ...(feature.meta ?? {}), ...meta };
         }
       }
     }
+  }
+
+  const unmatchedIds = timeseriesIds.filter(id => !matchedIds.has(id));
+  const unmatchedMeasurementCount = unmatchedIds.reduce((sum, id) => sum + (rowIndicesMap.get(id)?.length ?? 0), 0);
+  const matchedMeasurementCount = Array.from(matchedIds).reduce((sum, id) => sum + (rowIndicesMap.get(id)?.length ?? 0), 0);
+
+  devLog.log(`📊 loadTimeseries for ${refId}:`, {
+    loadedCharacteristics: loadedCharacteristicIds.size,
+    timeseriesCharacteristics: timeseriesIds.length,
+    matched: {
+      characteristics: matchedIds.size,
+      ids: Array.from(matchedIds).sort((a, b) => Number(a) - Number(b)).slice(0, 10),
+      measurements: matchedMeasurementCount,
+    },
+    discarded: {
+      characteristics: unmatchedIds.length,
+      ids: unmatchedIds.sort((a, b) => Number(a) - Number(b)).slice(0, 10),
+      measurements: unmatchedMeasurementCount,
+    },
+  });
+
+  if (matchedIds.size === 0 && timeseriesIds.length > 0) {
+    devLog.warn(`⚠️ NO characteristics matched! Loaded: [${Array.from(loadedCharacteristicIds).join(', ')}], Timeseries: [${timeseriesIds.slice(0, 10).join(', ')}]`);
   }
 }
 
