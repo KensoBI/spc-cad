@@ -27,10 +27,18 @@ export function TableComponent({ featureModel, settings }: Props) {
   const dataFrame = React.useMemo(() => {
     // Collect all unique columns across all characteristics
     const dataColumns = new Set<string>();
-    const characteristicIdsArray = Object.keys(featureModel.feature.characteristics);
+    const characteristicsArray = Object.values(featureModel.feature.characteristics);
 
-    for (const characteristicId of characteristicIdsArray) {
-      const charData = featureModel.feature.characteristics[characteristicId];
+    // Build array with displayName for each characteristic
+    const characteristicsWithDisplayName = characteristicsArray.map((charData) => {
+      const accessor = new CharacteristicAccessor(charData);
+      return {
+        charData,
+        displayName: accessor.getDisplayName() || '',
+      };
+    });
+
+    for (const { charData } of characteristicsWithDisplayName) {
       const accessor = new CharacteristicAccessor(charData);
       const columns = accessor.getColumns();
 
@@ -48,20 +56,17 @@ export function TableComponent({ featureModel, settings }: Props) {
       {
         name: 'characteristic',
         type: FieldType.string,
-        values: characteristicIdsArray.filter(visibleRow).map((characteristicId) => {
-          const charData = featureModel.feature.characteristics[characteristicId];
-          const accessor = new CharacteristicAccessor(charData);
-          return accessor.getDisplayName() || characteristicId;
-        }),
+        values: characteristicsWithDisplayName
+          .filter(({ displayName }) => visibleRow(displayName))
+          .map(({ displayName }) => displayName),
         config: {},
       },
       ...dataColumnsArray.map((columnKey) => ({
         name: columnKey,
         type: FieldType.number,
-        values: characteristicIdsArray
-          .filter(visibleRow)
-          .map((characteristicId) => {
-            const charData = featureModel.feature.characteristics[characteristicId];
+        values: characteristicsWithDisplayName
+          .filter(({ displayName }) => visibleRow(displayName))
+          .map(({ charData }) => {
             const accessor = new CharacteristicAccessor(charData);
             const value = accessor.get(columnKey);
             return !isNaN(value) ? value : '';

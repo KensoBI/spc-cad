@@ -8,7 +8,6 @@ import { css } from 'emotion';
 import { ConstantsList } from './ConstrantsList';
 import { Thresholds } from './Thresholds';
 import { TimeSeriesSimpleParams } from './TimeSeriesSimpleParams';
-import { devLog } from 'utils/devLogger';
 
 type Props = {
   viewComponent: ViewComponent;
@@ -20,19 +19,11 @@ export function TimeSeriesComponentEditor({ viewComponent, setViewComponent }: P
   const availableColumns = useAvailableColumns();
 
   const characteristicOptions = React.useMemo(() => {
-    const options = sortBy(Object.entries(availableColumns), ([_, char]) => char.displayName).map(([chId, char]) => ({
-      value: chId,
-      label: char.displayName,
+    return sortBy(Object.keys(availableColumns)).map((ch) => ({
+      value: ch,
+      label: ch,
     }));
-
-    devLog.log('📋 TimeSeriesComponentEditor:', {
-      availableColumns,
-      characteristicOptions: options,
-      currentSettings: viewComponent?.settings?.timeseries,
-    });
-
-    return options;
-  }, [availableColumns, viewComponent?.settings?.timeseries]);
+  }, [availableColumns]);
 
   const settings = React.useMemo(() => {
     const s = viewComponent?.settings?.timeseries;
@@ -41,35 +32,26 @@ export function TimeSeriesComponentEditor({ viewComponent, setViewComponent }: P
 
   const setSettings = React.useCallback(
     (newSettings: TimeseriesSettings) => {
-      devLog.log('💾 TimeSeriesComponentEditor: Saving settings', {
-        oldSettings: viewComponent?.settings?.timeseries,
-        newSettings,
-      });
       setViewComponent({ ...viewComponent, settings: { ...(viewComponent.settings ?? {}), timeseries: newSettings } });
     },
     [setViewComponent, viewComponent]
   );
 
   const availableFields = React.useMemo(() => {
-    const char = availableColumns?.[settings.characteristicId];
-    return [...(char?.columns ?? [])];
-  }, [availableColumns, settings.characteristicId]);
+    return [...(availableColumns?.[settings.characteristicName] ?? [])];
+  }, [availableColumns, settings.characteristicName]);
 
-
-  //todo fix depiicated warning for Select
-  //todo. We need to set characteristic ID here not name
   return (
     <div className={styles.container}>
       <Field label="Characteristic">
         <Select
-          value={settings.characteristicId}
+          value={settings.characteristicName}
           width={10}
           options={characteristicOptions}
           placeholder=""
           onChange={(newValue) => {
-            devLog.log('🔄 Characteristic changed:', { oldValue: settings.characteristicId, newValue });
             if (newValue.value != null) {
-              setSettings({ ...settings, characteristicId: newValue.value });
+              setSettings({ ...settings, characteristicName: newValue.value });
             }
           }}
           allowCustomValue

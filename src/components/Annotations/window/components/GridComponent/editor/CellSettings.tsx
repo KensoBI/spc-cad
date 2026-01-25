@@ -167,9 +167,9 @@ function CheracteristicSelectors({ cell, setCell }: CharacteristicSelectorsProps
   const availableColumns = useAvailableColumns();
 
   const characteristicOptions = React.useMemo(() => {
-    return sortBy(Object.entries(availableColumns), ([_, char]) => char.displayName).map(([chId, char]) => ({
-      value: chId,
-      label: char.displayName,
+    return sortBy(Object.keys(availableColumns)).map((ch) => ({
+      value: ch,
+      label: ch,
     }));
   }, [availableColumns]);
 
@@ -177,8 +177,8 @@ function CheracteristicSelectors({ cell, setCell }: CharacteristicSelectorsProps
     if (cell.value.dynamic?.characteristic_id == null) {
       return [];
     }
-    const char = availableColumns?.[cell.value.dynamic.characteristic_id];
-    return [...(char?.columns ?? [])].map((key) => ({
+    const columns = availableColumns?.[cell.value.dynamic.characteristic_id];
+    return [...(columns ?? [])].map((key) => ({
       value: key,
       label: key,
     }));

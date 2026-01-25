@@ -49,7 +49,12 @@ type DynamicCellProps = {
 
 function DynamicCell({ settings, featureModel, formatters }: DynamicCellProps) {
   const value = React.useMemo(() => {
-    const charData = featureModel.feature.characteristics?.[settings.characteristic_id];
+    // Find characteristic by displayName (characteristic_id now stores displayName)
+    const charData = Object.values(featureModel.feature.characteristics).find((char) => {
+      const accessor = new CharacteristicAccessor(char);
+      return accessor.getDisplayName() === settings.characteristic_id;
+    });
+
     if (charData == null) {
       return undefined;
     }

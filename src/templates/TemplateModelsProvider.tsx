@@ -2,11 +2,10 @@ import { Dictionary } from 'lodash';
 import React from 'react';
 import { TemplatesMap } from 'types/Annotation';
 import { FeatureModel } from 'types/AnnotationModel';
-import { AvailableCharacteristic } from 'feature/data/getAvailableColumns';
 
 type ContextType = {
   templateModels: TemplatesMap;
-  availableColumns: Dictionary<AvailableCharacteristic>;
+  availableColumns: Dictionary<Set<string>>;
   editedWindow?: string;
   editedTemplateId?: number;
   setEditedWindow: (windowUid?: string) => void;

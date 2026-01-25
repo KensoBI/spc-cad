@@ -7,12 +7,18 @@ export function getFeatureColor(feature: Feature, colorMapping?: ConditionalStyl
   if (colorMapping) {
     for (const cs of colorMapping) {
       if (cs && (cs.column || staticLeftValue)) {
-        // NEW: Use accessor with characteristic_id
-        const charData = feature.characteristics?.[cs.characteristic_id];
+        // Find characteristic by displayName (characteristic_id now stores displayName)
+        const charData = Object.values(feature.characteristics ?? {}).find((char) => {
+          const accessor = new CharacteristicAccessor(char);
+          return accessor.getDisplayName() === cs.characteristic_id;
+        });
         const accessor = charData ? new CharacteristicAccessor(charData) : undefined;
         const leftValue = staticLeftValue ?? accessor?.get(cs.column);
 
-        const rightCharData = feature.characteristics?.[cs.value.dynamic?.characteristic_id ?? ''];
+        const rightCharData = Object.values(feature.characteristics ?? {}).find((char) => {
+          const accessor = new CharacteristicAccessor(char);
+          return accessor.getDisplayName() === cs.value.dynamic?.characteristic_id;
+        });
         const rightAccessor = rightCharData ? new CharacteristicAccessor(rightCharData) : undefined;
         const rightValue = !cs.isStatic
           ? rightAccessor?.get(cs.value.dynamic?.column ?? '')

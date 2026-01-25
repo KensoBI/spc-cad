@@ -34,16 +34,16 @@ export function GenericColorMapping({ update, rows, constLeftSide }: Props) {
   const availableColumns = useAvailableColumns();
 
   const characteristicOptions = React.useMemo(() => {
-    return sortBy(Object.entries(availableColumns), ([_, char]) => char.displayName).map(([chId, char]) => ({
-      value: chId,
-      label: char.displayName,
+    return sortBy(Object.keys(availableColumns)).map((ch) => ({
+      value: ch,
+      label: ch,
     }));
   }, [availableColumns]);
 
   const characteristicColumnsOptions = React.useMemo(() => {
     const set = new Set<string>();
-    Object.values(availableColumns).forEach((char) => {
-      char.columns.forEach((column: string) => set.add(column));
+    Object.values(availableColumns).forEach((columns) => {
+      columns.forEach((column: string) => set.add(column));
     });
     return sortBy([...set]).map((ch) => ({
       value: ch,

@@ -2,30 +2,32 @@ import { Dictionary } from 'lodash';
 import { FeatureModel } from 'types/AnnotationModel';
 import { CharacteristicAccessor } from 'types/CharacteristicData';
 
-export type AvailableCharacteristic = {
-  columns: Set<string>;
-  displayName: string;
-};
-
 export function getAvailableColumns(featureModels: FeatureModel[]) {
-  const characteristics: Dictionary<AvailableCharacteristic> = {};
+  const characteristics: Dictionary<Set<string>> = {};
   for (const model of featureModels) {
-    for (const chId of Object.keys(model.feature.characteristics)) {
-      const charData = model.feature.characteristics[chId];
-      const accessor = new CharacteristicAccessor(charData);
+    for (const chName of Object.keys(model.feature.characteristics)) {
+      const charData = model.feature.characteristics[chName];
 
-      if (!(chId in characteristics)) {
-        characteristics[chId] = {
-          columns: new Set(),
-          displayName: accessor.getDisplayName() || chId,
-        };
+      if(!charData.displayName){
+          return characteristics;
+      }
+      
+      if (!(chName in characteristics)) {
+        characteristics[charData.displayName] = new Set();
       }
 
+      const characteristicSet = characteristics[charData.displayName];
+      
+
+      // NEW: Use accessor to get columns
+      const accessor = new CharacteristicAccessor(charData);
       const columns = accessor.getColumns();
+
       for (const columnName of columns) {
-        characteristics[chId].columns.add(columnName);
+        characteristicSet.add(columnName);
       }
     }
   }
   return characteristics;
 }
+

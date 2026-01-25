@@ -16,16 +16,16 @@ export function TableComponentEditor({ viewComponent, setViewComponent }: Props)
   const characteristics = useAvailableColumns();
 
   const characteristicRowsOptions = React.useMemo(() => {
-    return sortBy(Object.entries(characteristics), ([_, char]) => char.displayName).map(([chId, char]) => ({
-      value: chId,
-      label: char.displayName,
+    return sortBy(Object.keys(characteristics)).map((ch) => ({
+      value: ch,
+      label: ch,
     }));
   }, [characteristics]);
 
   const characteristicColumnsOptions = React.useMemo(() => {
     const set = new Set<string>();
-    Object.values(characteristics).forEach((char) => {
-      char.columns.forEach((column: string) => set.add(column));
+    Object.values(characteristics).forEach((columns) => {
+      columns.forEach((column: string) => set.add(column));
     });
     return sortBy([...set]).map((ch) => ({
       value: ch,
