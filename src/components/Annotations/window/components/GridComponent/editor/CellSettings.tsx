@@ -19,7 +19,7 @@ const DYNAMIC_VALUE = 'DYNAMIC';
 
 const staticDynamicOptions = [
   { label: 'Text', value: STATIC_VALUE, icon: 'pen' },
-  { label: 'Control', value: DYNAMIC_VALUE, icon: 'download-alt' },
+  { label: 'Characteristic', value: DYNAMIC_VALUE, icon: 'download-alt' },
 ];
 
 type Tabs = 'basic' | 'styling' | 'display';

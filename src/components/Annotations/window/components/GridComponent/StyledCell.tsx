@@ -5,6 +5,7 @@ import { FeatureModelAnnotated } from 'types/AnnotationModel';
 import { GridCell } from 'types/ViewComponentSettings';
 import { GrafanaTheme2 } from '@grafana/data';
 import { css } from 'emotion';
+import { ensureUrlProtocol } from 'utils/urlUtils';
 
 type Props = React.HTMLAttributes<HTMLDivElement> & {
   featureModel: FeatureModelAnnotated;
@@ -46,7 +47,7 @@ export function StyledCell({ children, featureModel, gridCell, className }: Reac
         return (
           <a
             className={styles.link}
-            href={gridCell.link?.url ?? '#'}
+            href={ensureUrlProtocol(gridCell.link?.url ?? '#')}
             target={newTab ? '_blank' : '_self'}
             rel="noopener noreferrer"
           >

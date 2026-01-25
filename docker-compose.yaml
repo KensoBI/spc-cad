@@ -5,7 +5,9 @@ services:
       service: grafana
     volumes:
       - grafana_storage:/var/lib/grafana
-  
+    networks:
+      - app-network
+
   postgres:
     image: kensobi/postgres
     restart: unless-stopped
@@ -22,7 +24,13 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./provisioning/sql-init:/docker-entrypoint-initdb.d
+    networks:
+      - app-network
 
 volumes:
   postgres_data:
   grafana_storage:
+
+networks:
+  app-network:
+    driver: bridge

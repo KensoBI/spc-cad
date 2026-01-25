@@ -8,7 +8,7 @@ datasources:
     url: postgres:5432
     user: kensobi
     secureJsonData:
-      password: kensobiuser
+      password: kensobi
     jsonData:
       database: kensobi
       sslmode: 'disable'

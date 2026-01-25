@@ -1,0 +1,806 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "postgres-spc-demo"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 20,
+        "w": 22,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "annotations": [
+          {
+            "display": "hide",
+            "isEditing": false,
+            "titleColumn": "Corner 3",
+            "uid": "Corner 3"
+          },
+          {
+            "display": "hide",
+            "isEditing": false,
+            "titleColumn": "Corner 1",
+            "uid": "Corner 1"
+          },
+          {
+            "activeViewId": "z1zuo",
+            "display": "window",
+            "gridPos": {
+              "h": 7,
+              "i": "Corner 6",
+              "moved": false,
+              "static": false,
+              "w": 6,
+              "x": 8,
+              "y": 11
+            },
+            "isEditing": false,
+            "titleColumn": "Corner 6",
+            "uid": "Corner 6"
+          },
+          {
+            "activeViewId": "z1zuo",
+            "display": "hide",
+            "isEditing": false,
+            "titleColumn": "Corner 4",
+            "uid": "Corner 4"
+          },
+          {
+            "activeViewId": "z1zuo",
+            "display": "window",
+            "gridPos": {
+              "h": 8,
+              "i": "Corner 8",
+              "moved": false,
+              "static": false,
+              "w": 7,
+              "x": 1,
+              "y": 1
+            },
+            "isEditing": false,
+            "templateId": 1,
+            "titleColumn": "Corner 8",
+            "uid": "Corner 8"
+          },
+          {
+            "display": "hide",
+            "isEditing": false,
+            "titleColumn": "Corner 5",
+            "uid": "Corner 5"
+          },
+          {
+            "activeViewId": "z1zuo",
+            "display": "window",
+            "gridPos": {
+              "h": 7,
+              "i": "Corner 2",
+              "moved": false,
+              "static": false,
+              "w": 7,
+              "x": 16,
+              "y": 2
+            },
+            "isEditing": false,
+            "link": {
+              "openInNewTab": true,
+              "url": "/d/adjxsdq/cube-and-features"
+            },
+            "titleColumn": "Corner 2",
+            "uid": "Corner 2"
+          },
+          {
+            "display": "label",
+            "isEditing": false,
+            "titleColumn": "Corner 7",
+            "uid": "Corner 7"
+          }
+        ],
+        "boxTemplates": [
+          {
+            "activeViewId": "1",
+            "headerColors": [
+              {
+                "backgroundColor": "#FF9830",
+                "characteristic_id": "x",
+                "column": "nominal",
+                "isStatic": true,
+                "operator": ">",
+                "textColor": "white",
+                "value": {
+                  "dynamic": {
+                    "characteristic_id": "x",
+                    "column": "nominal"
+                  },
+                  "static": "0"
+                }
+              }
+            ],
+            "id": 1,
+            "link": {
+              "openInNewTab": true,
+              "url": ""
+            },
+            "pinned": false,
+            "templateName": "Generic",
+            "templateType": "generic",
+            "titleColumn": "feature",
+            "useTemplates": true,
+            "views": [
+              {
+                "components": [
+                  {
+                    "id": "5e4tn",
+                    "settings": {
+                      "grid": {
+                        "cells": [
+                          {
+                            "colorMapping": [
+                              {
+                                "backgroundColor": "#56A64B",
+                                "characteristic_id": "",
+                                "column": "",
+                                "isStatic": true,
+                                "operator": ">",
+                                "textColor": "white",
+                                "value": {
+                                  "static": "99"
+                                }
+                              }
+                            ],
+                            "id": "hm4t8j",
+                            "link": {
+                              "openInNewTab": true,
+                              "url": "kensobi.com"
+                            },
+                            "name": "Nominal",
+                            "staticText": false,
+                            "value": {
+                              "dynamic": {
+                                "characteristic_id": "x",
+                                "column": "nominal"
+                              },
+                              "static": ""
+                            }
+                          },
+                          {
+                            "colorMapping": [
+                              {
+                                "backgroundColor": "#1F60C4",
+                                "characteristic_id": "",
+                                "column": "",
+                                "isStatic": true,
+                                "operator": ">",
+                                "textColor": "white",
+                                "value": {
+                                  "static": ""
+                                }
+                              }
+                            ],
+                            "id": "eo8vdg",
+                            "name": "LSL",
+                            "staticText": false,
+                            "value": {
+                              "dynamic": {
+                                "characteristic_id": "x",
+                                "column": "lsl"
+                              },
+                              "static": ""
+                            }
+                          },
+                          {
+                            "colorMapping": [],
+                            "id": "d1spv",
+                            "name": "USL",
+                            "staticText": false,
+                            "value": {
+                              "dynamic": {
+                                "characteristic_id": "x",
+                                "column": "usl"
+                              },
+                              "static": ""
+                            }
+                          }
+                        ],
+                        "showHeaders": true
+                      }
+                    },
+                    "title": "X Grid",
+                    "type": "grid"
+                  },
+                  {
+                    "id": "g6i13",
+                    "settings": {
+                      "timeseries": {
+                        "characteristicId": "",
+                        "characteristicName": "x",
+                        "constantsConfig": [
+                          {
+                            "color": "rgb(196, 22, 42)",
+                            "name": "nominal",
+                            "title": "nominal"
+                          }
+                        ],
+                        "decimals": 2,
+                        "fill": 0,
+                        "limitConfig": {
+                          "down": {
+                            "color": "rgb(196, 22, 42)",
+                            "name": "lsl"
+                          },
+                          "up": {
+                            "color": "rgb(196, 22, 42)",
+                            "name": "usl"
+                          }
+                        },
+                        "lineColor": "rgb(31, 96, 196)",
+                        "lineWidth": 2,
+                        "pointSize": 6,
+                        "showLegend": false
+                      }
+                    },
+                    "title": "X chart",
+                    "type": "timeseries"
+                  }
+                ],
+                "id": "z1zuo",
+                "title": "X"
+              },
+              {
+                "components": [
+                  {
+                    "id": "r4dgkf",
+                    "settings": {
+                      "grid": {
+                        "cells": [
+                          {
+                            "colorMapping": [],
+                            "id": "hm4t8j",
+                            "name": "Nominal",
+                            "staticText": false,
+                            "value": {
+                              "dynamic": {
+                                "characteristic_id": "y",
+                                "column": "nominal"
+                              },
+                              "static": ""
+                            }
+                          },
+                          {
+                            "colorMapping": [],
+                            "id": "eo8vdg",
+                            "name": "LSL",
+                            "staticText": false,
+                            "value": {
+                              "dynamic": {
+                                "characteristic_id": "y",
+                                "column": "lsl"
+                              },
+                              "static": ""
+                            }
+                          },
+                          {
+                            "colorMapping": [],
+                            "id": "d1spv",
+                            "name": "USL",
+                            "staticText": false,
+                            "value": {
+                              "dynamic": {
+                                "characteristic_id": "y",
+                                "column": "usl"
+                              },
+                              "static": ""
+                            }
+                          }
+                        ],
+                        "showHeaders": true
+                      }
+                    },
+                    "title": "Y Grid",
+                    "type": "grid"
+                  },
+                  {
+                    "id": "stghg",
+                    "settings": {
+                      "timeseries": {
+                        "characteristicId": "",
+                        "characteristicName": "y",
+                        "constantsConfig": [
+                          {
+                            "color": "rgb(196, 22, 42)",
+                            "name": "nominal",
+                            "title": "nominal"
+                          }
+                        ],
+                        "decimals": 2,
+                        "fill": 0,
+                        "limitConfig": {
+                          "down": {
+                            "color": "rgb(196, 22, 42)",
+                            "name": "lsl"
+                          },
+                          "up": {
+                            "color": "rgb(196, 22, 42)",
+                            "name": "usl"
+                          }
+                        },
+                        "lineColor": "#56A64B",
+                        "lineWidth": 2,
+                        "pointSize": 6,
+                        "showLegend": false
+                      }
+                    },
+                    "title": "Y chart",
+                    "type": "timeseries"
+                  }
+                ],
+                "id": "3",
+                "title": "Y"
+              },
+              {
+                "components": [
+                  {
+                    "id": "00reh",
+                    "settings": {
+                      "grid": {
+                        "cells": [
+                          {
+                            "colorMapping": [],
+                            "id": "hm4t8j",
+                            "name": "Nominal",
+                            "staticText": false,
+                            "value": {
+                              "dynamic": {
+                                "characteristic_id": "z",
+                                "column": "nominal"
+                              },
+                              "static": ""
+                            }
+                          },
+                          {
+                            "colorMapping": [],
+                            "id": "eo8vdg",
+                            "name": "LSL",
+                            "staticText": false,
+                            "value": {
+                              "dynamic": {
+                                "characteristic_id": "z",
+                                "column": "lsl"
+                              },
+                              "static": ""
+                            }
+                          },
+                          {
+                            "colorMapping": [],
+                            "id": "d1spv",
+                            "name": "USL",
+                            "staticText": false,
+                            "value": {
+                              "dynamic": {
+                                "characteristic_id": "z",
+                                "column": "usl"
+                              },
+                              "static": ""
+                            }
+                          }
+                        ],
+                        "showHeaders": true
+                      }
+                    },
+                    "title": "Z Grid",
+                    "type": "grid"
+                  },
+                  {
+                    "id": "hpj46",
+                    "settings": {
+                      "timeseries": {
+                        "characteristicId": "",
+                        "characteristicName": "z",
+                        "constantsConfig": [
+                          {
+                            "color": "rgb(196, 22, 42)",
+                            "name": "nominal",
+                            "title": "nominal"
+                          }
+                        ],
+                        "decimals": 2,
+                        "fill": 0,
+                        "limitConfig": {
+                          "down": {
+                            "color": "rgb(196, 22, 42)",
+                            "name": "lsl"
+                          },
+                          "up": {
+                            "color": "rgb(196, 22, 42)",
+                            "name": "usl"
+                          }
+                        },
+                        "lineColor": "#FADE2A",
+                        "lineWidth": 2,
+                        "pointSize": 6,
+                        "showLegend": false
+                      }
+                    },
+                    "title": "Z chart",
+                    "type": "timeseries"
+                  }
+                ],
+                "id": "4",
+                "title": "Z"
+              }
+            ]
+          },
+          {
+            "activeViewId": "1",
+            "headerColors": [],
+            "id": 14,
+            "link": {
+              "openInNewTab": true,
+              "url": ""
+            },
+            "pinned": false,
+            "templateName": "Custom template",
+            "templateType": "Corner 8",
+            "titleColumn": "feature",
+            "useTemplates": true,
+            "views": [
+              {
+                "components": [
+                  {
+                    "id": "g6i13",
+                    "settings": {
+                      "timeseries": {
+                        "characteristicId": "",
+                        "characteristicName": "x",
+                        "constantsConfig": [
+                          {
+                            "color": "rgb(196, 22, 42)",
+                            "name": "nominal",
+                            "title": "nominal"
+                          }
+                        ],
+                        "decimals": 2,
+                        "fill": 0,
+                        "limitConfig": {
+                          "down": {
+                            "color": "rgb(196, 22, 42)",
+                            "name": "lsl"
+                          },
+                          "up": {
+                            "color": "rgb(196, 22, 42)",
+                            "name": "usl"
+                          }
+                        },
+                        "lineColor": "rgb(31, 96, 196)",
+                        "lineWidth": 2,
+                        "pointSize": 6,
+                        "showLegend": false
+                      }
+                    },
+                    "title": "X chart",
+                    "type": "timeseries"
+                  },
+                  {
+                    "id": "stghg",
+                    "settings": {
+                      "timeseries": {
+                        "characteristicId": "",
+                        "characteristicName": "y",
+                        "constantsConfig": [
+                          {
+                            "color": "rgb(196, 22, 42)",
+                            "name": "nominal",
+                            "title": "nominal"
+                          }
+                        ],
+                        "decimals": 2,
+                        "fill": 0,
+                        "limitConfig": {
+                          "down": {
+                            "color": "rgb(196, 22, 42)",
+                            "name": "lsl"
+                          },
+                          "up": {
+                            "color": "rgb(196, 22, 42)",
+                            "name": "usl"
+                          }
+                        },
+                        "lineColor": "#56A64B",
+                        "lineWidth": 2,
+                        "pointSize": 6,
+                        "showLegend": false
+                      }
+                    },
+                    "title": "Y chart",
+                    "type": "timeseries"
+                  },
+                  {
+                    "id": "hpj46",
+                    "settings": {
+                      "timeseries": {
+                        "characteristicId": "",
+                        "characteristicName": "z",
+                        "constantsConfig": [
+                          {
+                            "color": "rgb(196, 22, 42)",
+                            "name": "nominal",
+                            "title": "nominal"
+                          }
+                        ],
+                        "decimals": 2,
+                        "fill": 0,
+                        "limitConfig": {
+                          "down": {
+                            "color": "rgb(196, 22, 42)",
+                            "name": "lsl"
+                          },
+                          "up": {
+                            "color": "rgb(196, 22, 42)",
+                            "name": "usl"
+                          }
+                        },
+                        "lineColor": "#FADE2A",
+                        "lineWidth": 2,
+                        "pointSize": 6,
+                        "showLegend": false
+                      }
+                    },
+                    "title": "Z chart",
+                    "type": "timeseries"
+                  }
+                ],
+                "id": "z1zuo",
+                "title": "X"
+              },
+              {
+                "components": [
+                  {
+                    "id": "r4dgkf",
+                    "settings": {
+                      "grid": {
+                        "cells": [
+                          {
+                            "colorMapping": [],
+                            "id": "hm4t8j",
+                            "name": "Nominal",
+                            "staticText": false,
+                            "value": {
+                              "dynamic": {
+                                "characteristic_id": "y",
+                                "column": "nominal"
+                              },
+                              "static": ""
+                            }
+                          },
+                          {
+                            "colorMapping": [],
+                            "id": "eo8vdg",
+                            "name": "LSL",
+                            "staticText": false,
+                            "value": {
+                              "dynamic": {
+                                "characteristic_id": "y",
+                                "column": "lsl"
+                              },
+                              "static": ""
+                            }
+                          },
+                          {
+                            "colorMapping": [],
+                            "id": "d1spv",
+                            "name": "USL",
+                            "staticText": false,
+                            "value": {
+                              "dynamic": {
+                                "characteristic_id": "y",
+                                "column": "usl"
+                              },
+                              "static": ""
+                            }
+                          }
+                        ],
+                        "showHeaders": true
+                      }
+                    },
+                    "title": "Y Grid",
+                    "type": "grid"
+                  }
+                ],
+                "id": "3",
+                "title": "Y"
+              },
+              {
+                "components": [
+                  {
+                    "id": "00reh",
+                    "settings": {
+                      "grid": {
+                        "cells": [
+                          {
+                            "colorMapping": [],
+                            "id": "hm4t8j",
+                            "name": "Nominal",
+                            "staticText": false,
+                            "value": {
+                              "dynamic": {
+                                "characteristic_id": "z",
+                                "column": "nominal"
+                              },
+                              "static": ""
+                            }
+                          },
+                          {
+                            "colorMapping": [],
+                            "id": "eo8vdg",
+                            "name": "LSL",
+                            "staticText": false,
+                            "value": {
+                              "dynamic": {
+                                "characteristic_id": "z",
+                                "column": "lsl"
+                              },
+                              "static": ""
+                            }
+                          },
+                          {
+                            "colorMapping": [],
+                            "id": "d1spv",
+                            "name": "USL",
+                            "staticText": false,
+                            "value": {
+                              "dynamic": {
+                                "characteristic_id": "z",
+                                "column": "usl"
+                              },
+                              "static": ""
+                            }
+                          }
+                        ],
+                        "showHeaders": true
+                      }
+                    },
+                    "title": "Z Grid",
+                    "type": "grid"
+                  }
+                ],
+                "id": "4",
+                "title": "Z"
+              }
+            ]
+          }
+        ],
+        "cadSettings": [
+          {
+            "color": "#5794F2",
+            "fileName": "cube.stl",
+            "id": 1769350353834,
+            "path": "data:application/octet-stream;base64,c29saWQgY3ViZQogIGZhY2V0IG5vcm1hbCAwIDAgLTEKICAgIG91dGVyIGxvb3AKICAgICAgdmVydGV4IDAgMCAwCiAgICAgIHZlcnRleCAxMDAgMTAwIDAKICAgICAgdmVydGV4IDEwMCAwIDAKICAgIGVuZGxvb3AKICBlbmRmYWNldAogIGZhY2V0IG5vcm1hbCAwIDAgLTEKICAgIG91dGVyIGxvb3AKICAgICAgdmVydGV4IDAgMCAwCiAgICAgIHZlcnRleCAwIDEwMCAwCiAgICAgIHZlcnRleCAxMDAgMTAwIDAKICAgIGVuZGxvb3AKICBlbmRmYWNldAogIGZhY2V0IG5vcm1hbCAwIDAgMQogICAgb3V0ZXIgbG9vcAogICAgICB2ZXJ0ZXggMCAwIDEwMAogICAgICB2ZXJ0ZXggMTAwIDAgMTAwCiAgICAgIHZlcnRleCAxMDAgMTAwIDEwMAogICAgZW5kbG9vcAogIGVuZGZhY2V0CiAgZmFjZXQgbm9ybWFsIDAgMCAxCiAgICBvdXRlciBsb29wCiAgICAgIHZlcnRleCAwIDAgMTAwCiAgICAgIHZlcnRleCAxMDAgMTAwIDEwMAogICAgICB2ZXJ0ZXggMCAxMDAgMTAwCiAgICBlbmRsb29wCiAgZW5kZmFjZXQKICBmYWNldCBub3JtYWwgMCAtMSAwCiAgICBvdXRlciBsb29wCiAgICAgIHZlcnRleCAwIDAgMAogICAgICB2ZXJ0ZXggMTAwIDAgMAogICAgICB2ZXJ0ZXggMTAwIDAgMTAwCiAgICBlbmRsb29wCiAgZW5kZmFjZXQKICBmYWNldCBub3JtYWwgMCAtMSAwCiAgICBvdXRlciBsb29wCiAgICAgIHZlcnRleCAwIDAgMAogICAgICB2ZXJ0ZXggMTAwIDAgMTAwCiAgICAgIHZlcnRleCAwIDAgMTAwCiAgICBlbmRsb29wCiAgZW5kZmFjZXQKICBmYWNldCBub3JtYWwgMCAxIDAKICAgIG91dGVyIGxvb3AKICAgICAgdmVydGV4IDAgMTAwIDAKICAgICAgdmVydGV4IDEwMCAxMDAgMTAwCiAgICAgIHZlcnRleCAxMDAgMTAwIDAKICAgIGVuZGxvb3AKICBlbmRmYWNldAogIGZhY2V0IG5vcm1hbCAwIDEgMAogICAgb3V0ZXIgbG9vcAogICAgICB2ZXJ0ZXggMCAxMDAgMAogICAgICB2ZXJ0ZXggMCAxMDAgMTAwCiAgICAgIHZlcnRleCAxMDAgMTAwIDEwMAogICAgZW5kbG9vcAogIGVuZGZhY2V0CiAgZmFjZXQgbm9ybWFsIC0xIDAgMAogICAgb3V0ZXIgbG9vcAogICAgICB2ZXJ0ZXggMCAwIDAKICAgICAgdmVydGV4IDAgMCAxMDAKICAgICAgdmVydGV4IDAgMTAwIDEwMAogICAgZW5kbG9vcAogIGVuZGZhY2V0CiAgZmFjZXQgbm9ybWFsIC0xIDAgMAogICAgb3V0ZXIgbG9vcAogICAgICB2ZXJ0ZXggMCAwIDAKICAgICAgdmVydGV4IDAgMTAwIDEwMAogICAgICB2ZXJ0ZXggMCAxMDAgMAogICAgZW5kbG9vcAogIGVuZGZhY2V0CiAgZmFjZXQgbm9ybWFsIDEgMCAwCiAgICBvdXRlciBsb29wCiAgICAgIHZlcnRleCAxMDAgMCAwCiAgICAgIHZlcnRleCAxMDAgMTAwIDAKICAgICAgdmVydGV4IDEwMCAxMDAgMTAwCiAgICBlbmRsb29wCiAgZW5kZmFjZXQKICBmYWNldCBub3JtYWwgMSAwIDAKICAgIG91dGVyIGxvb3AKICAgICAgdmVydGV4IDEwMCAwIDAKICAgICAgdmVydGV4IDEwMCAxMDAgMTAwCiAgICAgIHZlcnRleCAxMDAgMCAxMDAKICAgIGVuZGxvb3AKICBlbmRmYWNldAplbmRzb2xpZCBjdWJlCg==",
+            "source": "base64"
+          }
+        ],
+        "featureSettings": {
+          "color": "#73BF69",
+          "size": 7
+        },
+        "sceneSettings": {
+          "cameraX": 2136.475025333519,
+          "cameraY": 612.5549101505214,
+          "cameraZ": 640.5575578391957,
+          "targetX": 29.915815470906125,
+          "targetY": -23.384464250418166,
+          "targetZ": 40.084775095088474,
+          "upX": -0.4539507694020104,
+          "upY": 0.8823499754619627,
+          "upZ": -0.12275812332178365
+        }
+      },
+      "pluginVersion": "3.0.0",
+      "targets": [
+        {
+          "dataset": "kensobi",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "postgres-spc-demo"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "select \r\nf.name as feature, \r\nc.name as characteristic_name,\r\nc.id as characteristic_id,\r\nnominal,\r\nc.usl as usl,\r\nc.lsl as lsl\r\nfrom public.characteristic c\r\nleft join public.feature f on f.id = c.feature_id\r\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "dataset": "kensobi",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "postgres-spc-demo"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "select characteristic_id, value, time from measurement",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Feature annotation views",
+      "type": "kensobi-spccad-panel"
+    }
+  ],
+  "preload": false,
+  "schemaVersion": 42,
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Color mapping",
+  "uid": "adxthcq",
+  "version": 3
+}

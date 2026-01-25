@@ -13,6 +13,7 @@ import { useSameCoordsClick } from 'utils/sameCoordsClick';
 import { useFocusedViewGetters, useFocusedViewSetters } from './FocusProvider';
 import { TITLE_BAR_HEIGHT } from 'constants/global';
 import { PositionModeButton } from './PositionModeButton';
+import { ensureUrlProtocol } from 'utils/urlUtils';
 
 type BasicTitleProps = {
   title: string;
@@ -30,7 +31,7 @@ function LinkTitle({ title, link, titleColor }: LinkTitleProps) {
   return (
     <a
       className={`${styles.title} link`}
-      href={link.url}
+      href={ensureUrlProtocol(link.url)}
       rel="noreferrer"
       target={link.openInNewTab ? '_blank' : '_self'}
       style={{

@@ -1,0 +1,712 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "postgres-spc-demo"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 14,
+        "w": 11,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "annotations": [
+          {
+            "display": "hide",
+            "isEditing": false,
+            "titleColumn": "Corner 3",
+            "uid": "Corner 3"
+          }
+        ],
+        "cadSettings": [
+          {
+            "color": "#5794F2",
+            "fileName": "cube.stl",
+            "id": 1769350353834,
+            "path": "data:application/octet-stream;base64,c29saWQgY3ViZQogIGZhY2V0IG5vcm1hbCAwIDAgLTEKICAgIG91dGVyIGxvb3AKICAgICAgdmVydGV4IDAgMCAwCiAgICAgIHZlcnRleCAxMDAgMTAwIDAKICAgICAgdmVydGV4IDEwMCAwIDAKICAgIGVuZGxvb3AKICBlbmRmYWNldAogIGZhY2V0IG5vcm1hbCAwIDAgLTEKICAgIG91dGVyIGxvb3AKICAgICAgdmVydGV4IDAgMCAwCiAgICAgIHZlcnRleCAwIDEwMCAwCiAgICAgIHZlcnRleCAxMDAgMTAwIDAKICAgIGVuZGxvb3AKICBlbmRmYWNldAogIGZhY2V0IG5vcm1hbCAwIDAgMQogICAgb3V0ZXIgbG9vcAogICAgICB2ZXJ0ZXggMCAwIDEwMAogICAgICB2ZXJ0ZXggMTAwIDAgMTAwCiAgICAgIHZlcnRleCAxMDAgMTAwIDEwMAogICAgZW5kbG9vcAogIGVuZGZhY2V0CiAgZmFjZXQgbm9ybWFsIDAgMCAxCiAgICBvdXRlciBsb29wCiAgICAgIHZlcnRleCAwIDAgMTAwCiAgICAgIHZlcnRleCAxMDAgMTAwIDEwMAogICAgICB2ZXJ0ZXggMCAxMDAgMTAwCiAgICBlbmRsb29wCiAgZW5kZmFjZXQKICBmYWNldCBub3JtYWwgMCAtMSAwCiAgICBvdXRlciBsb29wCiAgICAgIHZlcnRleCAwIDAgMAogICAgICB2ZXJ0ZXggMTAwIDAgMAogICAgICB2ZXJ0ZXggMTAwIDAgMTAwCiAgICBlbmRsb29wCiAgZW5kZmFjZXQKICBmYWNldCBub3JtYWwgMCAtMSAwCiAgICBvdXRlciBsb29wCiAgICAgIHZlcnRleCAwIDAgMAogICAgICB2ZXJ0ZXggMTAwIDAgMTAwCiAgICAgIHZlcnRleCAwIDAgMTAwCiAgICBlbmRsb29wCiAgZW5kZmFjZXQKICBmYWNldCBub3JtYWwgMCAxIDAKICAgIG91dGVyIGxvb3AKICAgICAgdmVydGV4IDAgMTAwIDAKICAgICAgdmVydGV4IDEwMCAxMDAgMTAwCiAgICAgIHZlcnRleCAxMDAgMTAwIDAKICAgIGVuZGxvb3AKICBlbmRmYWNldAogIGZhY2V0IG5vcm1hbCAwIDEgMAogICAgb3V0ZXIgbG9vcAogICAgICB2ZXJ0ZXggMCAxMDAgMAogICAgICB2ZXJ0ZXggMCAxMDAgMTAwCiAgICAgIHZlcnRleCAxMDAgMTAwIDEwMAogICAgZW5kbG9vcAogIGVuZGZhY2V0CiAgZmFjZXQgbm9ybWFsIC0xIDAgMAogICAgb3V0ZXIgbG9vcAogICAgICB2ZXJ0ZXggMCAwIDAKICAgICAgdmVydGV4IDAgMCAxMDAKICAgICAgdmVydGV4IDAgMTAwIDEwMAogICAgZW5kbG9vcAogIGVuZGZhY2V0CiAgZmFjZXQgbm9ybWFsIC0xIDAgMAogICAgb3V0ZXIgbG9vcAogICAgICB2ZXJ0ZXggMCAwIDAKICAgICAgdmVydGV4IDAgMTAwIDEwMAogICAgICB2ZXJ0ZXggMCAxMDAgMAogICAgZW5kbG9vcAogIGVuZGZhY2V0CiAgZmFjZXQgbm9ybWFsIDEgMCAwCiAgICBvdXRlciBsb29wCiAgICAgIHZlcnRleCAxMDAgMCAwCiAgICAgIHZlcnRleCAxMDAgMTAwIDAKICAgICAgdmVydGV4IDEwMCAxMDAgMTAwCiAgICBlbmRsb29wCiAgZW5kZmFjZXQKICBmYWNldCBub3JtYWwgMSAwIDAKICAgIG91dGVyIGxvb3AKICAgICAgdmVydGV4IDEwMCAwIDAKICAgICAgdmVydGV4IDEwMCAxMDAgMTAwCiAgICAgIHZlcnRleCAxMDAgMCAxMDAKICAgIGVuZGxvb3AKICBlbmRmYWNldAplbmRzb2xpZCBjdWJlCg==",
+            "source": "base64"
+          }
+        ],
+        "featureSettings": {
+          "color": "#73BF69",
+          "size": 7
+        },
+        "sceneSettings": {
+          "cameraX": 1124.4968183340939,
+          "cameraY": 525.2493948124327,
+          "cameraZ": 1071.499187382242,
+          "targetX": 0,
+          "targetY": 0,
+          "targetZ": 0,
+          "upX": 0.004491500292402651,
+          "upY": 0.8961497750960249,
+          "upZ": -0.4437503261927814
+        }
+      },
+      "pluginVersion": "3.0.0",
+      "targets": [
+        {
+          "dataset": "kensobi",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "postgres-spc-demo"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "select \r\nf.name as feature, \r\nc.name as characteristic_name,\r\nc.id as characteristic_id,\r\nnominal from public.characteristic c \r\nleft join public.feature f on f.id = c.feature_id\r\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Cube features no measurements",
+      "type": "kensobi-spccad-panel"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "postgres-spc-demo"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 14,
+        "w": 13,
+        "x": 11,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "annotations": [
+          {
+            "display": "label",
+            "isEditing": false,
+            "titleColumn": "Corner 3",
+            "uid": "Corner 3"
+          },
+          {
+            "display": "label",
+            "isEditing": false,
+            "titleColumn": "Corner 1",
+            "uid": "Corner 1"
+          },
+          {
+            "display": "label",
+            "isEditing": false,
+            "titleColumn": "Corner 6",
+            "uid": "Corner 6"
+          },
+          {
+            "display": "label",
+            "isEditing": false,
+            "titleColumn": "Corner 4",
+            "uid": "Corner 4"
+          },
+          {
+            "display": "label",
+            "isEditing": false,
+            "titleColumn": "Corner 8",
+            "uid": "Corner 8"
+          },
+          {
+            "display": "label",
+            "isEditing": false,
+            "titleColumn": "Corner 5",
+            "uid": "Corner 5"
+          },
+          {
+            "display": "label",
+            "isEditing": false,
+            "titleColumn": "Corner 2",
+            "uid": "Corner 2"
+          },
+          {
+            "display": "label",
+            "isEditing": false,
+            "titleColumn": "Corner 7",
+            "uid": "Corner 7"
+          }
+        ],
+        "cadSettings": [
+          {
+            "color": "#5794F2",
+            "fileName": "cube.stl",
+            "id": 1769350353834,
+            "path": "data:application/octet-stream;base64,c29saWQgY3ViZQogIGZhY2V0IG5vcm1hbCAwIDAgLTEKICAgIG91dGVyIGxvb3AKICAgICAgdmVydGV4IDAgMCAwCiAgICAgIHZlcnRleCAxMDAgMTAwIDAKICAgICAgdmVydGV4IDEwMCAwIDAKICAgIGVuZGxvb3AKICBlbmRmYWNldAogIGZhY2V0IG5vcm1hbCAwIDAgLTEKICAgIG91dGVyIGxvb3AKICAgICAgdmVydGV4IDAgMCAwCiAgICAgIHZlcnRleCAwIDEwMCAwCiAgICAgIHZlcnRleCAxMDAgMTAwIDAKICAgIGVuZGxvb3AKICBlbmRmYWNldAogIGZhY2V0IG5vcm1hbCAwIDAgMQogICAgb3V0ZXIgbG9vcAogICAgICB2ZXJ0ZXggMCAwIDEwMAogICAgICB2ZXJ0ZXggMTAwIDAgMTAwCiAgICAgIHZlcnRleCAxMDAgMTAwIDEwMAogICAgZW5kbG9vcAogIGVuZGZhY2V0CiAgZmFjZXQgbm9ybWFsIDAgMCAxCiAgICBvdXRlciBsb29wCiAgICAgIHZlcnRleCAwIDAgMTAwCiAgICAgIHZlcnRleCAxMDAgMTAwIDEwMAogICAgICB2ZXJ0ZXggMCAxMDAgMTAwCiAgICBlbmRsb29wCiAgZW5kZmFjZXQKICBmYWNldCBub3JtYWwgMCAtMSAwCiAgICBvdXRlciBsb29wCiAgICAgIHZlcnRleCAwIDAgMAogICAgICB2ZXJ0ZXggMTAwIDAgMAogICAgICB2ZXJ0ZXggMTAwIDAgMTAwCiAgICBlbmRsb29wCiAgZW5kZmFjZXQKICBmYWNldCBub3JtYWwgMCAtMSAwCiAgICBvdXRlciBsb29wCiAgICAgIHZlcnRleCAwIDAgMAogICAgICB2ZXJ0ZXggMTAwIDAgMTAwCiAgICAgIHZlcnRleCAwIDAgMTAwCiAgICBlbmRsb29wCiAgZW5kZmFjZXQKICBmYWNldCBub3JtYWwgMCAxIDAKICAgIG91dGVyIGxvb3AKICAgICAgdmVydGV4IDAgMTAwIDAKICAgICAgdmVydGV4IDEwMCAxMDAgMTAwCiAgICAgIHZlcnRleCAxMDAgMTAwIDAKICAgIGVuZGxvb3AKICBlbmRmYWNldAogIGZhY2V0IG5vcm1hbCAwIDEgMAogICAgb3V0ZXIgbG9vcAogICAgICB2ZXJ0ZXggMCAxMDAgMAogICAgICB2ZXJ0ZXggMCAxMDAgMTAwCiAgICAgIHZlcnRleCAxMDAgMTAwIDEwMAogICAgZW5kbG9vcAogIGVuZGZhY2V0CiAgZmFjZXQgbm9ybWFsIC0xIDAgMAogICAgb3V0ZXIgbG9vcAogICAgICB2ZXJ0ZXggMCAwIDAKICAgICAgdmVydGV4IDAgMCAxMDAKICAgICAgdmVydGV4IDAgMTAwIDEwMAogICAgZW5kbG9vcAogIGVuZGZhY2V0CiAgZmFjZXQgbm9ybWFsIC0xIDAgMAogICAgb3V0ZXIgbG9vcAogICAgICB2ZXJ0ZXggMCAwIDAKICAgICAgdmVydGV4IDAgMTAwIDEwMAogICAgICB2ZXJ0ZXggMCAxMDAgMAogICAgZW5kbG9vcAogIGVuZGZhY2V0CiAgZmFjZXQgbm9ybWFsIDEgMCAwCiAgICBvdXRlciBsb29wCiAgICAgIHZlcnRleCAxMDAgMCAwCiAgICAgIHZlcnRleCAxMDAgMTAwIDAKICAgICAgdmVydGV4IDEwMCAxMDAgMTAwCiAgICBlbmRsb29wCiAgZW5kZmFjZXQKICBmYWNldCBub3JtYWwgMSAwIDAKICAgIG91dGVyIGxvb3AKICAgICAgdmVydGV4IDEwMCAwIDAKICAgICAgdmVydGV4IDEwMCAxMDAgMTAwCiAgICAgIHZlcnRleCAxMDAgMCAxMDAKICAgIGVuZGxvb3AKICBlbmRmYWNldAplbmRzb2xpZCBjdWJlCg==",
+            "source": "base64"
+          }
+        ],
+        "featureSettings": {
+          "color": "#73BF69",
+          "size": 7
+        },
+        "sceneSettings": {
+          "cameraX": 1459.5125129142323,
+          "cameraY": 789.6496338863651,
+          "cameraZ": -371.54530618283474,
+          "targetX": 14.154337060071121,
+          "targetY": 3.1634305032582493,
+          "targetZ": 41.41381686206789,
+          "upX": -0.6418443396110337,
+          "upY": 0.7247510499453619,
+          "upZ": -0.25045178413844726
+        }
+      },
+      "pluginVersion": "3.0.0",
+      "targets": [
+        {
+          "dataset": "kensobi",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "postgres-spc-demo"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "select \r\nf.name as feature, \r\nc.name as characteristic_name,\r\nc.id as characteristic_id,\r\nnominal from public.characteristic c \r\nleft join public.feature f on f.id = c.feature_id\r\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Feature labels",
+      "type": "kensobi-spccad-panel"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "postgres-spc-demo"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 18,
+        "w": 11,
+        "x": 0,
+        "y": 14
+      },
+      "id": 4,
+      "options": {
+        "annotations": [
+          {
+            "display": "hide",
+            "isEditing": false,
+            "titleColumn": "Corner 3",
+            "uid": "Corner 3"
+          },
+          {
+            "display": "hide",
+            "isEditing": false,
+            "titleColumn": "Corner 1",
+            "uid": "Corner 1"
+          },
+          {
+            "activeViewId": "2",
+            "display": "window",
+            "gridPos": {
+              "h": 5,
+              "i": "Corner 6",
+              "moved": false,
+              "static": false,
+              "w": 11,
+              "x": 0,
+              "y": 10
+            },
+            "isEditing": false,
+            "titleColumn": "Corner 6",
+            "uid": "Corner 6"
+          },
+          {
+            "activeViewId": "4",
+            "display": "window",
+            "gridPos": {
+              "h": 5,
+              "i": "Corner 4",
+              "moved": false,
+              "static": false,
+              "w": 8,
+              "x": 16,
+              "y": 0
+            },
+            "isEditing": false,
+            "titleColumn": "Corner 4",
+            "uid": "Corner 4"
+          },
+          {
+            "activeViewId": "3",
+            "display": "window",
+            "gridPos": {
+              "h": 5,
+              "i": "Corner 8",
+              "moved": false,
+              "static": false,
+              "w": 10,
+              "x": 0,
+              "y": 0
+            },
+            "isEditing": false,
+            "titleColumn": "Corner 8",
+            "uid": "Corner 8"
+          },
+          {
+            "display": "hide",
+            "isEditing": false,
+            "titleColumn": "Corner 5",
+            "uid": "Corner 5"
+          },
+          {
+            "display": "window",
+            "gridPos": {
+              "h": 5,
+              "i": "Corner 2",
+              "moved": false,
+              "static": false,
+              "w": 9,
+              "x": 14,
+              "y": 10
+            },
+            "isEditing": false,
+            "titleColumn": "Corner 2",
+            "uid": "Corner 2"
+          },
+          {
+            "display": "hide",
+            "isEditing": false,
+            "titleColumn": "Corner 7",
+            "uid": "Corner 7"
+          }
+        ],
+        "boxTemplates": [
+          {
+            "activeViewId": "1",
+            "headerColors": [],
+            "id": 1,
+            "link": {
+              "openInNewTab": true,
+              "url": ""
+            },
+            "pinned": false,
+            "templateName": "Generic",
+            "templateType": "generic",
+            "titleColumn": "feature",
+            "useTemplates": true,
+            "views": [
+              {
+                "components": [
+                  {
+                    "id": "main-1",
+                    "settings": {
+                      "table": {}
+                    },
+                    "title": "Main 1",
+                    "type": "table"
+                  }
+                ],
+                "id": "1",
+                "title": "Main"
+              },
+              {
+                "components": [
+                  {
+                    "id": "x-1",
+                    "settings": {
+                      "timeseries": {
+                        "characteristicId": "",
+                        "characteristicName": "x",
+                        "decimals": 2,
+                        "fill": 0,
+                        "lineColor": "rgb(31, 96, 196)",
+                        "lineWidth": 2,
+                        "pointSize": 6,
+                        "showLegend": false
+                      }
+                    },
+                    "title": "x 1",
+                    "type": "timeseries"
+                  }
+                ],
+                "id": "2",
+                "title": "X"
+              },
+              {
+                "components": [
+                  {
+                    "id": "y-1",
+                    "settings": {
+                      "timeseries": {
+                        "characteristicId": "",
+                        "characteristicName": "y",
+                        "decimals": 2,
+                        "fill": 0,
+                        "lineColor": "rgb(31, 96, 196)",
+                        "lineWidth": 2,
+                        "pointSize": 6,
+                        "showLegend": false
+                      }
+                    },
+                    "title": "y 1",
+                    "type": "timeseries"
+                  }
+                ],
+                "id": "3",
+                "title": "Y"
+              },
+              {
+                "components": [
+                  {
+                    "id": "z-1",
+                    "settings": {
+                      "timeseries": {
+                        "characteristicId": "",
+                        "characteristicName": "z",
+                        "decimals": 2,
+                        "fill": 0,
+                        "lineColor": "rgb(31, 96, 196)",
+                        "lineWidth": 2,
+                        "pointSize": 6,
+                        "showLegend": false
+                      }
+                    },
+                    "title": "z 1",
+                    "type": "timeseries"
+                  }
+                ],
+                "id": "4",
+                "title": "Z"
+              }
+            ]
+          }
+        ],
+        "cadSettings": [
+          {
+            "color": "#5794F2",
+            "fileName": "cube.stl",
+            "id": 1769350353834,
+            "path": "data:application/octet-stream;base64,c29saWQgY3ViZQogIGZhY2V0IG5vcm1hbCAwIDAgLTEKICAgIG91dGVyIGxvb3AKICAgICAgdmVydGV4IDAgMCAwCiAgICAgIHZlcnRleCAxMDAgMTAwIDAKICAgICAgdmVydGV4IDEwMCAwIDAKICAgIGVuZGxvb3AKICBlbmRmYWNldAogIGZhY2V0IG5vcm1hbCAwIDAgLTEKICAgIG91dGVyIGxvb3AKICAgICAgdmVydGV4IDAgMCAwCiAgICAgIHZlcnRleCAwIDEwMCAwCiAgICAgIHZlcnRleCAxMDAgMTAwIDAKICAgIGVuZGxvb3AKICBlbmRmYWNldAogIGZhY2V0IG5vcm1hbCAwIDAgMQogICAgb3V0ZXIgbG9vcAogICAgICB2ZXJ0ZXggMCAwIDEwMAogICAgICB2ZXJ0ZXggMTAwIDAgMTAwCiAgICAgIHZlcnRleCAxMDAgMTAwIDEwMAogICAgZW5kbG9vcAogIGVuZGZhY2V0CiAgZmFjZXQgbm9ybWFsIDAgMCAxCiAgICBvdXRlciBsb29wCiAgICAgIHZlcnRleCAwIDAgMTAwCiAgICAgIHZlcnRleCAxMDAgMTAwIDEwMAogICAgICB2ZXJ0ZXggMCAxMDAgMTAwCiAgICBlbmRsb29wCiAgZW5kZmFjZXQKICBmYWNldCBub3JtYWwgMCAtMSAwCiAgICBvdXRlciBsb29wCiAgICAgIHZlcnRleCAwIDAgMAogICAgICB2ZXJ0ZXggMTAwIDAgMAogICAgICB2ZXJ0ZXggMTAwIDAgMTAwCiAgICBlbmRsb29wCiAgZW5kZmFjZXQKICBmYWNldCBub3JtYWwgMCAtMSAwCiAgICBvdXRlciBsb29wCiAgICAgIHZlcnRleCAwIDAgMAogICAgICB2ZXJ0ZXggMTAwIDAgMTAwCiAgICAgIHZlcnRleCAwIDAgMTAwCiAgICBlbmRsb29wCiAgZW5kZmFjZXQKICBmYWNldCBub3JtYWwgMCAxIDAKICAgIG91dGVyIGxvb3AKICAgICAgdmVydGV4IDAgMTAwIDAKICAgICAgdmVydGV4IDEwMCAxMDAgMTAwCiAgICAgIHZlcnRleCAxMDAgMTAwIDAKICAgIGVuZGxvb3AKICBlbmRmYWNldAogIGZhY2V0IG5vcm1hbCAwIDEgMAogICAgb3V0ZXIgbG9vcAogICAgICB2ZXJ0ZXggMCAxMDAgMAogICAgICB2ZXJ0ZXggMCAxMDAgMTAwCiAgICAgIHZlcnRleCAxMDAgMTAwIDEwMAogICAgZW5kbG9vcAogIGVuZGZhY2V0CiAgZmFjZXQgbm9ybWFsIC0xIDAgMAogICAgb3V0ZXIgbG9vcAogICAgICB2ZXJ0ZXggMCAwIDAKICAgICAgdmVydGV4IDAgMCAxMDAKICAgICAgdmVydGV4IDAgMTAwIDEwMAogICAgZW5kbG9vcAogIGVuZGZhY2V0CiAgZmFjZXQgbm9ybWFsIC0xIDAgMAogICAgb3V0ZXIgbG9vcAogICAgICB2ZXJ0ZXggMCAwIDAKICAgICAgdmVydGV4IDAgMTAwIDEwMAogICAgICB2ZXJ0ZXggMCAxMDAgMAogICAgZW5kbG9vcAogIGVuZGZhY2V0CiAgZmFjZXQgbm9ybWFsIDEgMCAwCiAgICBvdXRlciBsb29wCiAgICAgIHZlcnRleCAxMDAgMCAwCiAgICAgIHZlcnRleCAxMDAgMTAwIDAKICAgICAgdmVydGV4IDEwMCAxMDAgMTAwCiAgICBlbmRsb29wCiAgZW5kZmFjZXQKICBmYWNldCBub3JtYWwgMSAwIDAKICAgIG91dGVyIGxvb3AKICAgICAgdmVydGV4IDEwMCAwIDAKICAgICAgdmVydGV4IDEwMCAxMDAgMTAwCiAgICAgIHZlcnRleCAxMDAgMCAxMDAKICAgIGVuZGxvb3AKICBlbmRmYWNldAplbmRzb2xpZCBjdWJlCg==",
+            "source": "base64"
+          }
+        ],
+        "featureSettings": {
+          "color": "#73BF69",
+          "size": 7
+        },
+        "sceneSettings": {
+          "cameraX": 1569.4463593378905,
+          "cameraY": 1355.5031448158743,
+          "cameraZ": 819.444044173026,
+          "targetX": 14.154337060071121,
+          "targetY": 3.1634305032582493,
+          "targetZ": 41.41381686206789,
+          "upX": -0.6308560308029847,
+          "upY": 0.6879482693770217,
+          "upZ": -0.35865692125650217
+        }
+      },
+      "pluginVersion": "3.0.0",
+      "targets": [
+        {
+          "dataset": "kensobi",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "postgres-spc-demo"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "select \r\nf.name as feature, \r\nc.name as characteristic_name,\r\nc.id as characteristic_id,\r\nnominal from public.characteristic c \r\nleft join public.feature f on f.id = c.feature_id\r\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        },
+        {
+          "dataset": "kensobi",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "postgres-spc-demo"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "select characteristic_id, value, time from measurement",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Feature annotations with measurements",
+      "type": "kensobi-spccad-panel"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "postgres-spc-demo"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 18,
+        "w": 13,
+        "x": 11,
+        "y": 14
+      },
+      "id": 3,
+      "options": {
+        "annotations": [
+          {
+            "display": "label",
+            "isEditing": false,
+            "titleColumn": "Corner 3",
+            "uid": "Corner 3"
+          },
+          {
+            "display": "label",
+            "isEditing": false,
+            "titleColumn": "Corner 1",
+            "uid": "Corner 1"
+          },
+          {
+            "display": "window",
+            "gridPos": {
+              "h": 5,
+              "i": "Corner 6",
+              "moved": false,
+              "static": false,
+              "w": 7,
+              "x": 1,
+              "y": 8
+            },
+            "isEditing": false,
+            "titleColumn": "Corner 6",
+            "uid": "Corner 6"
+          },
+          {
+            "display": "window",
+            "gridPos": {
+              "h": 5,
+              "i": "Corner 4",
+              "moved": false,
+              "static": false,
+              "w": 7,
+              "x": 17,
+              "y": 1
+            },
+            "isEditing": false,
+            "titleColumn": "Corner 4",
+            "uid": "Corner 4"
+          },
+          {
+            "display": "window",
+            "gridPos": {
+              "h": 5,
+              "i": "Corner 8",
+              "moved": false,
+              "static": false,
+              "w": 7,
+              "x": 1,
+              "y": 1
+            },
+            "isEditing": false,
+            "titleColumn": "Corner 8",
+            "uid": "Corner 8"
+          },
+          {
+            "display": "label",
+            "isEditing": false,
+            "titleColumn": "Corner 5",
+            "uid": "Corner 5"
+          },
+          {
+            "display": "window",
+            "gridPos": {
+              "h": 5,
+              "i": "Corner 2",
+              "moved": false,
+              "static": false,
+              "w": 7,
+              "x": 16,
+              "y": 9
+            },
+            "isEditing": false,
+            "titleColumn": "Corner 2",
+            "uid": "Corner 2"
+          },
+          {
+            "display": "label",
+            "isEditing": false,
+            "titleColumn": "Corner 7",
+            "uid": "Corner 7"
+          }
+        ],
+        "cadSettings": [
+          {
+            "color": "#5794F2",
+            "fileName": "cube.stl",
+            "id": 1769350353834,
+            "path": "data:application/octet-stream;base64,c29saWQgY3ViZQogIGZhY2V0IG5vcm1hbCAwIDAgLTEKICAgIG91dGVyIGxvb3AKICAgICAgdmVydGV4IDAgMCAwCiAgICAgIHZlcnRleCAxMDAgMTAwIDAKICAgICAgdmVydGV4IDEwMCAwIDAKICAgIGVuZGxvb3AKICBlbmRmYWNldAogIGZhY2V0IG5vcm1hbCAwIDAgLTEKICAgIG91dGVyIGxvb3AKICAgICAgdmVydGV4IDAgMCAwCiAgICAgIHZlcnRleCAwIDEwMCAwCiAgICAgIHZlcnRleCAxMDAgMTAwIDAKICAgIGVuZGxvb3AKICBlbmRmYWNldAogIGZhY2V0IG5vcm1hbCAwIDAgMQogICAgb3V0ZXIgbG9vcAogICAgICB2ZXJ0ZXggMCAwIDEwMAogICAgICB2ZXJ0ZXggMTAwIDAgMTAwCiAgICAgIHZlcnRleCAxMDAgMTAwIDEwMAogICAgZW5kbG9vcAogIGVuZGZhY2V0CiAgZmFjZXQgbm9ybWFsIDAgMCAxCiAgICBvdXRlciBsb29wCiAgICAgIHZlcnRleCAwIDAgMTAwCiAgICAgIHZlcnRleCAxMDAgMTAwIDEwMAogICAgICB2ZXJ0ZXggMCAxMDAgMTAwCiAgICBlbmRsb29wCiAgZW5kZmFjZXQKICBmYWNldCBub3JtYWwgMCAtMSAwCiAgICBvdXRlciBsb29wCiAgICAgIHZlcnRleCAwIDAgMAogICAgICB2ZXJ0ZXggMTAwIDAgMAogICAgICB2ZXJ0ZXggMTAwIDAgMTAwCiAgICBlbmRsb29wCiAgZW5kZmFjZXQKICBmYWNldCBub3JtYWwgMCAtMSAwCiAgICBvdXRlciBsb29wCiAgICAgIHZlcnRleCAwIDAgMAogICAgICB2ZXJ0ZXggMTAwIDAgMTAwCiAgICAgIHZlcnRleCAwIDAgMTAwCiAgICBlbmRsb29wCiAgZW5kZmFjZXQKICBmYWNldCBub3JtYWwgMCAxIDAKICAgIG91dGVyIGxvb3AKICAgICAgdmVydGV4IDAgMTAwIDAKICAgICAgdmVydGV4IDEwMCAxMDAgMTAwCiAgICAgIHZlcnRleCAxMDAgMTAwIDAKICAgIGVuZGxvb3AKICBlbmRmYWNldAogIGZhY2V0IG5vcm1hbCAwIDEgMAogICAgb3V0ZXIgbG9vcAogICAgICB2ZXJ0ZXggMCAxMDAgMAogICAgICB2ZXJ0ZXggMCAxMDAgMTAwCiAgICAgIHZlcnRleCAxMDAgMTAwIDEwMAogICAgZW5kbG9vcAogIGVuZGZhY2V0CiAgZmFjZXQgbm9ybWFsIC0xIDAgMAogICAgb3V0ZXIgbG9vcAogICAgICB2ZXJ0ZXggMCAwIDAKICAgICAgdmVydGV4IDAgMCAxMDAKICAgICAgdmVydGV4IDAgMTAwIDEwMAogICAgZW5kbG9vcAogIGVuZGZhY2V0CiAgZmFjZXQgbm9ybWFsIC0xIDAgMAogICAgb3V0ZXIgbG9vcAogICAgICB2ZXJ0ZXggMCAwIDAKICAgICAgdmVydGV4IDAgMTAwIDEwMAogICAgICB2ZXJ0ZXggMCAxMDAgMAogICAgZW5kbG9vcAogIGVuZGZhY2V0CiAgZmFjZXQgbm9ybWFsIDEgMCAwCiAgICBvdXRlciBsb29wCiAgICAgIHZlcnRleCAxMDAgMCAwCiAgICAgIHZlcnRleCAxMDAgMTAwIDAKICAgICAgdmVydGV4IDEwMCAxMDAgMTAwCiAgICBlbmRsb29wCiAgZW5kZmFjZXQKICBmYWNldCBub3JtYWwgMSAwIDAKICAgIG91dGVyIGxvb3AKICAgICAgdmVydGV4IDEwMCAwIDAKICAgICAgdmVydGV4IDEwMCAxMDAgMTAwCiAgICAgIHZlcnRleCAxMDAgMCAxMDAKICAgIGVuZGxvb3AKICBlbmRmYWNldAplbmRzb2xpZCBjdWJlCg==",
+            "source": "base64"
+          }
+        ],
+        "featureSettings": {
+          "color": "#73BF69",
+          "size": 7
+        },
+        "sceneSettings": {
+          "cameraX": 1959.5360129263986,
+          "cameraY": 1071.5104390597105,
+          "cameraZ": -487.65469050822685,
+          "targetX": 15.894632279698722,
+          "targetY": 13.795174159843963,
+          "targetZ": 67.74457801467611,
+          "upX": -0.6418443396110337,
+          "upY": 0.7247510499453619,
+          "upZ": -0.25045178413844726
+        }
+      },
+      "pluginVersion": "3.0.0",
+      "targets": [
+        {
+          "dataset": "kensobi",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "postgres-spc-demo"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "select \r\nf.name as feature, \r\nc.name as characteristic_name,\r\nc.id as characteristic_id,\r\nnominal from public.characteristic c \r\nleft join public.feature f on f.id = c.feature_id\r\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Feature labels and annotations",
+      "type": "kensobi-spccad-panel"
+    }
+  ],
+  "preload": false,
+  "schemaVersion": 42,
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Cube and features",
+  "uid": "adjxsdq",
+  "version": 6
+}
