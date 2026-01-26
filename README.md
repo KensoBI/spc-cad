@@ -1,4 +1,4 @@
-# KensoBI SPC CAD Panel
+# SPC CAD Panel
 
 [![License](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](./LICENSE)
 [![Grafana](https://img.shields.io/badge/Grafana-11.0%2B-orange.svg)](https://grafana.com)
@@ -48,11 +48,60 @@ A Grafana panel plugin for visualizing 3D CAD models, point clouds, and metrolog
 
 ## Development
 
+### Prerequisites
+
+- Node.js (LTS version recommended)
+- npm or yarn
+- Grafana 11.0 or higher
+
+### Setup
+
+1. Clone the repository:
+```bash
+git clone https://github.com/KensoBI/spc-cad.git
+cd spc-cad
+```
+
+2. Install dependencies:
+```bash
+yarn install
+```
+
+### Development Workflow
+
+1. Start the development server with watch mode:
+```bash
+yarn run dev
+```
+
+2. In another terminal, start the development environment with Docker Compose:
+```bash
+docker compose up
+```
+
+This will start:
+- Grafana on `http://localhost:3000` with the plugin pre-loaded
+- PostgreSQL database on port `5444` with sample data
+
+3. Access Grafana at `http://localhost:3000` and the panel will be automatically provisioned with dashboards and datasources
+
+To stop the environment:
+```bash
+docker compose down
+```
+
+### Building
+
+Build the plugin for production:
+```bash
+yarn build
+```
+
 
 ## Getting Help
 
 - [KensoBI Discord](https://discord.gg/cVKKh7trXU) - Community support
-- [Email Support](mailto:support@kensobi.com) - Bug reports and feature requests
+- Create an [issue](https://github.com/KensoBI/spc-cad/issues) to report bugs, issues, and feature suggestions.
 - [KensoBI docs](https://docs.kensobi.com) - Documentation and resources
 
 ## License

@@ -1,29 +1,54 @@
-# KensoBI SPC CAD Panel
+# SPC CAD Panel
 
-Welcome to KensoBI SPC CAD Panel! This plugin lets you add CAD objects to your dashboards and enhance them with features and annotations.
+A Grafana panel plugin for visualizing 3D CAD models, point clouds, and metrology data within Grafana dashboards. Designed for quality control, manufacturing inspection, and metrology data visualization workflows.
+
+![SPC CAD Panel](https://raw.githubusercontent.com/KensoBI/spc-cad/refs/heads/main/src/img/color-mapping.png)
 
 ## Features
-- **Import CAD Objects:** Add STL and 3MF files to your dashboards.
-- **Point Cloud Support:** Use point clouds with CAD data sources.
-- **Custom Annotations:** Add characters, tables, and grids to your CAD objects.
-- **Custom Views:** Create unique views for each feature.
-- **Color Coding:** Apply different colors to features for easy identification.
-- **Feature Templates:** Customize feature annotations based on feature types.
 
+- **Import CAD Models** - Load STL, 3MF, and PLY files directly into dashboards
+- **Feature Annotations** - Add labels, tables, and time-series charts to geometric features
+- **Template System** - 13 built-in templates for different feature types (point, circle, cylinder, etc.)
+- **Color Coding** - Apply conditional colors to features based on measurement data
+- **Interactive 3D View** - Rotate, pan, and zoom with trackball camera controls
+
+## Quick Start
+
+1. Install the plugin in your Grafana instance
+2. Create a new panel and select "CAD" visualization
+3. Add a CAD model path in panel options
+4. Configure your data query with feature positions
+5. Click features to create annotations
+
+## Supported File Formats
+
+| Format | Extension | Description |
+|--------|-----------|-------------|
+| STL | `.stl` | Stereolithography (binary/ASCII) |
+| 3MF | `.3mf` | 3D Manufacturing Format |
+| PLY | `.ply` | Polygon File Format |
+| ASC | `.asc` | ASCII Point Cloud |
+
+## Documentation
+
+- Adding CAD models (from URL or data source)
+- Supported file formats (STL, 3MF, PLY, ASC)
+- Features and characteristics configuration
+- Annotations and the annotation editor
+- Built-in templates (13 feature types)
+- Point clouds and scan timelines
+- 3D navigation and panel options
 
 ## Getting Help
 
-If you have any questions or feedback, you can:
-
-- Ask a question on the [KensoBI Discord channel](https://discord.gg/cVKKh7trXU).
-- [Send an email](mailto:support@kensobi.com)  to report bugs, issues, and feature suggestions.
-
-Your feedback is always welcome!
+- [KensoBI Discord](https://discord.gg/cVKKh7trXU) - Community support
+- Create an [issue](https://github.com/KensoBI/spc-cad/issues) to report bugs, issues, and feature suggestions
+- [KensoBI docs](https://docs.kensobi.com) - Documentation and resources
 
 ## License
 
-This software is distributed under the [AGPL-3.0-only](../LICENSE).
+This software is distributed under the [GNU Affero General Public License v3.0](../LICENSE).
 
-## Notes
+## Copyright
 
 Copyright (c) 2026 [Kenso Software](https://kensobi.com)
