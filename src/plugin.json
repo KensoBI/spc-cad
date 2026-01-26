@@ -4,7 +4,7 @@
   "name": "SPC CAD",
   "id": "kensobi-spccad-panel",
   "info": {
-    "description": "KensoBI SPC CAD panel",
+    "description": "Perform statistical analysis on 3D CAD model features. ",
     "author": {
       "name": "Kenso Software",
       "url": "https://kensobi.com"
@@ -18,16 +18,33 @@
     },
     "links": [
       {
-        "name": "Website",
+        "name": "Project site",
+        "url": "https://github.com/KensoBI/spc-cad"
+      },
+      {
+        "name": "Documentation",
+        "url": "https://docs.kensobi.com/panels/cad/"
+      },
+      {
+        "name": "License",
+        "url": "https://github.com/KensoBI/spc-cad/blob/main/LICENSE"
+      },
+      {
+        "name": "Author's site",
         "url": "https://kensobi.com"
       }
     ],
-    "screenshots": [],
+    "screenshots": [
+      { "name": "Color mapping", "path": "img/color-mapping.png" }, 
+      { "name": "Annotations", "path": "img/annotations.png" },
+      { "name": "Cube features", "path": "img/cube-features.png" },
+      { "name": "Custom feature templates", "path": "img/custom-templates.png" }
+    ],
     "version": "%VERSION%",
     "updated": "%TODAY%"
   },
   "dependencies": {
-    "grafanaDependency": ">=7.0.0",
+    "grafanaDependency": ">=11.0.0",
     "plugins": []
   }
 }
