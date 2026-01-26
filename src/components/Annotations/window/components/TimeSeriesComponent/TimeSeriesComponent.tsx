@@ -1,0 +1,200 @@
+import { GrafanaTheme2 } from '@grafana/data';
+import { useStyles2 } from '@grafana/ui';
+import React from 'react';
+import { FeatureModelAnnotated } from 'types/AnnotationModel';
+import { css } from 'emotion';
+import { SpcChart } from './SpcChart';
+import { defaultTimeseriesSettings, TimeseriesSettings } from 'types/ViewComponentSettings';
+import { defaults } from 'lodash';
+import {
+  useCurrentViewComponentIndexes,
+  ViewComponentIds,
+} from '../../settings/view-settings/EditedViewComponentProvider';
+import { useFindViewComponentByIndexes, useSetViewComponent } from '../../settings/useUpdateAnnotationTemplate';
+import { TemplateModel } from 'types/Annotation';
+import { TIMESERIES_SAMPLE_LABEL } from 'constants/global';
+import { CharacteristicAccessor } from 'types/CharacteristicData';
+import { devLog } from 'utils/devLogger';
+import { findCharacteristicByName } from 'types/Feature';
+
+type Props = {
+  featureModel: FeatureModelAnnotated;
+  settings: TimeseriesSettings;
+  viewComponentIds: ViewComponentIds;
+  templateModel: TemplateModel;
+};
+
+export function TimeSeriesComponent({ featureModel, settings, viewComponentIds, templateModel }: Props) {
+  const styles = useStyles2(getStyles);
+
+  const settingsWithDefaults = React.useMemo(() => defaults(settings, defaultTimeseriesSettings), [settings]);
+
+  const characteristicId = settingsWithDefaults.characteristicId;
+  const characteristicName = settingsWithDefaults.characteristicName;
+  const constantsConfig = settingsWithDefaults.constantsConfig;
+  const limitConfig = settingsWithDefaults.limitConfig;
+  const lineWidth = settingsWithDefaults.lineWidth;
+  const pointSize = settingsWithDefaults.pointSize;
+  const fill = settingsWithDefaults.fill;
+  const lineColor = settingsWithDefaults.lineColor as string;
+  const showLegend = settingsWithDefaults.showLegend;
+  const decimals = settingsWithDefaults.decimals;
+
+  const characteristic = React.useMemo(() => {
+    // First try to find by characteristicId if it's set
+    if (characteristicId) {
+      return featureModel.feature.characteristics[characteristicId];
+    }
+
+    // Fallback to characteristicName if characteristicId is not set
+    if (characteristicName) {
+      return findCharacteristicByName(featureModel.feature, characteristicName);
+    }
+
+    return undefined;
+  }, [characteristicId, characteristicName, featureModel.feature]);
+
+  const accessor = React.useMemo(
+    () => (characteristic ? new CharacteristicAccessor(characteristic) : undefined),
+    [characteristic]
+  );
+
+  const limits = React.useMemo(
+    () => ({
+      up:
+        limitConfig?.up != null && accessor
+          ? { value: accessor.get(limitConfig.up.name), color: limitConfig.up.color }
+          : undefined,
+      down:
+        limitConfig?.down != null && accessor
+          ? { value: accessor.get(limitConfig.down.name), color: limitConfig.down.color }
+          : undefined,
+    }),
+    [accessor, limitConfig]
+  );
+
+  const constants = React.useMemo(() => {
+    if (!accessor) {
+      return undefined;
+    }
+    return constantsConfig
+      ?.map((config) => ({
+        title: config.title,
+        value: accessor.get(config.name),
+        color: config.color,
+      }))
+      ?.filter((c) => c.value != null);
+  }, [accessor, constantsConfig]);
+
+  const [containerRef, setContainerRef] = React.useState<HTMLElement | null>(null);
+
+  const [height, setHeight] = React.useState<number | undefined>();
+  const [width, setWidth] = React.useState<number | undefined>();
+
+  React.useEffect(() => {
+    if (containerRef == null) {
+      return;
+    }
+
+    const ro = new ResizeObserver((entry) => {
+      const rect = entry?.[0]?.contentRect;
+      if (rect) {
+        setWidth(rect.width);
+        setHeight(rect.height);
+      }
+    });
+    ro.observe(containerRef);
+
+    return () => {
+      ro.disconnect();
+    };
+  }, [containerRef]);
+
+  const viewComponentIndexes = useCurrentViewComponentIndexes(viewComponentIds, templateModel);
+  const setViewComponent = useSetViewComponent(viewComponentIndexes, templateModel);
+  const viewComponent = useFindViewComponentByIndexes(viewComponentIndexes, templateModel);
+  const setSettings = React.useCallback(
+    (newSettings: TimeseriesSettings) => {
+      if (viewComponent) {
+        setViewComponent({
+          ...viewComponent,
+          settings: { ...(viewComponent.settings ?? {}), timeseries: newSettings },
+        });
+      }
+    },
+    [setViewComponent, viewComponent]
+  );
+
+  const onSeriesColorChange = React.useCallback(
+    (label: string, color: string) => {
+      if (label === TIMESERIES_SAMPLE_LABEL) {
+        setSettings({ ...settings, lineColor: color });
+      }
+      if (settings.constantsConfig != null) {
+        for (const constant of settings.constantsConfig) {
+          if (constant.name === label) {
+            constant.color = color;
+            setSettings({ ...settings });
+            break;
+          }
+        }
+      }
+    },
+    [setSettings, settings]
+  );
+
+  const timeseriesFields = React.useMemo(() => {
+    const fields = accessor?.getTimeseriesFields();
+    if (!fields && characteristicId) {
+      const allChars = Object.keys(featureModel.feature.characteristics || {});
+      const charsWithTimeseries = allChars.filter(id => featureModel.feature.characteristics[id]?.timeseries != null);
+
+      devLog.warn('⚠️ TimeSeriesComponent: No timeseries data available', {
+        characteristicId,
+        characteristicExists: !!characteristic,
+        hasTimeseriesData: !!characteristic?.timeseries,
+        availableCharacteristics: allChars,
+        characteristicsWithTimeseries: charsWithTimeseries,
+        hint: charsWithTimeseries.length > 0
+          ? `Configure this component to use one of: [${charsWithTimeseries.join(', ')}]`
+          : 'No characteristics have timeseries data. Check your timeseries query filters.',
+      });
+    }
+    return fields;
+  }, [accessor, characteristicId, characteristic, featureModel.feature.characteristics]);
+
+  return (
+    <div ref={setContainerRef} className={`timeseries-container ${styles.container}`}>
+      {width && height ? (
+        <SpcChart
+          dataFrameName={characteristicId}
+          timeField={timeseriesFields?.time}
+          valueField={timeseriesFields?.values}
+          calculationType={featureModel.feature.meta?.calculationType}
+          limits={limits}
+          constants={constants}
+          lineWidth={lineWidth}
+          pointSize={pointSize}
+          fill={fill}
+          width={width}
+          height={height}
+          lineColor={lineColor}
+          showLegend={showLegend}
+          decimals={decimals}
+          onSeriesColorChange={onSeriesColorChange}
+        />
+      ) : (
+        <></>
+      )}
+    </div>
+  );
+}
+
+const getStyles = (theme: GrafanaTheme2) => {
+  return {
+    container: css`
+      padding: 10px;
+      height: 100%;
+    `,
+  };
+};

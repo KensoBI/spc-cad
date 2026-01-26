@@ -1,0 +1,50 @@
+{
+  "$schema": "https://raw.githubusercontent.com/grafana/grafana/master/docs/sources/developers/plugins/plugin.schema.json",
+  "type": "panel",
+  "name": "SPC CAD",
+  "id": "kensobi-spccad-panel",
+  "info": {
+    "description": "Perform statistical analysis on 3D CAD model features. ",
+    "author": {
+      "name": "Kenso Software",
+      "url": "https://kensobi.com"
+    },
+    "keywords": [
+      "CAD","KensoBI", "SPC", "Metrology","pointcloud","characteristic", "feature", "model", "3d", "stl", "3mf"
+    ],
+    "logos": {
+      "small": "img/logo.svg",
+      "large": "img/logo.svg"
+    },
+    "links": [
+      {
+        "name": "Project site",
+        "url": "https://github.com/KensoBI/spc-cad"
+      },
+      {
+        "name": "Documentation",
+        "url": "https://docs.kensobi.com/panels/cad/"
+      },
+      {
+        "name": "License",
+        "url": "https://github.com/KensoBI/spc-cad/blob/main/LICENSE"
+      },
+      {
+        "name": "Author's site",
+        "url": "https://kensobi.com"
+      }
+    ],
+    "screenshots": [
+      { "name": "Color mapping", "path": "img/color-mapping.png" }, 
+      { "name": "Annotations", "path": "img/annotations.png" },
+      { "name": "Cube features", "path": "img/cube-features.png" },
+      { "name": "Custom feature templates", "path": "img/custom-templates.png" }
+    ],
+    "version": "%VERSION%",
+    "updated": "%TODAY%"
+  },
+  "dependencies": {
+    "grafanaDependency": ">=11.0.0",
+    "plugins": []
+  }
+}

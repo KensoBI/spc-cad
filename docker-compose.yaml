@@ -1,0 +1,39 @@
+services:
+  grafana:
+    extends:
+      file: .config/docker-compose-base.yaml
+      service: grafana
+    build:
+      args:
+        grafana_version: latest
+    volumes:
+      - grafana_storage:/var/lib/grafana
+    networks:
+      - app-network
+
+  postgres:
+    image: kensobi/postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=kensobi
+      - POSTGRES_PASSWORD=kensobi
+      - POSTGRES_DB=kensobi
+    logging:
+      options:
+        max-size: 10m
+        max-file: "3"
+    ports:
+      - "5444:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./provisioning/sql-init:/docker-entrypoint-initdb.d
+    networks:
+      - app-network
+
+volumes:
+  postgres_data:
+  grafana_storage:
+
+networks:
+  app-network:
+    driver: bridge
