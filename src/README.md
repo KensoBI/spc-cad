@@ -55,7 +55,7 @@ Surface_comparison_cube 5.000000 5.000000 0.000000 0.000000 0.000000 -1.000000 -
 
 ## License
 
-This software is distributed under the [GNU Affero General Public License v3.0](../LICENSE).
+This software is distributed under the [GNU Affero General Public License v3.0](https://raw.githubusercontent.com/KensoBI/spc-cad/refs/heads/main/LICENSE).
 
 ## Copyright
 
