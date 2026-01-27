@@ -1,8 +1,6 @@
 # Changelog
 
-## 3.0.0 (Unreleased)
-
-Initial release.
+## 3.0.0
 
 ### Features
 
