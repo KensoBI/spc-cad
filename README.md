@@ -17,15 +17,7 @@ A Grafana panel plugin for visualizing 3D CAD models, point clouds, and metrolog
 
 ## Documentation
 
-- Adding CAD models (from URL or data source)
-- Supported file formats (STL, 3MF, PLY, ASC)
-- Features and characteristics configuration
-- Annotations and the annotation editor
-- Built-in templates (13 feature types)
-- Point clouds and scan timelines
-- 3D navigation and panel options
-
-![SPC CAD Panel](src/img/custom-templates.png)
+For complete documentation see [SPC CAD docs](https://docs.kensobi.com/panels/cad/).
 
 ## Prerequisites
 
@@ -33,11 +25,22 @@ A Grafana panel plugin for visualizing 3D CAD models, point clouds, and metrolog
 
 ## Quick Start
 
-1. Install the plugin (see [Installation](./docs/cad-panel/installation.md))
-2. Create a new panel and select "CAD" visualization
-3. Add a CAD model path in panel options
-4. Configure your data query with feature positions
-5. Click features to create annotations
+Start the demo environment with Docker Compose:
+
+```bash
+docker-compose up -d
+```
+
+This automatically provisions:
+- PostgreSQL database with complete schema and sample data
+- Grafana with the SPC CAD plugin
+- PostgreSQL datasource configuration
+- Four pre-configured test dashboards
+
+**Access the demo:**
+- URL: `http://localhost:3000`
+- Default credentials: `admin` / `admin`
+
 
 ## Supported File Formats
 
@@ -108,12 +111,11 @@ Build the plugin for production:
 yarn build
 ```
 
-
 ## Getting Help
 
+- [SPC CAD docs](https://docs.kensobi.com/panels/cad/) - Documentation
 - [KensoBI Discord](https://discord.gg/cVKKh7trXU) - Community support
-- Create an [issue](https://github.com/KensoBI/spc-cad/issues) to report bugs, issues, and feature suggestions.
-- [KensoBI docs](https://docs.kensobi.com) - Documentation and resources
+- Create an [issue](https://github.com/KensoBI/spc-cad/issues) to report bugs, issues, and feature suggestions
 
 ## License
 
