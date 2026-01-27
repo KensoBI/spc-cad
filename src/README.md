@@ -2,7 +2,7 @@
 
 A Grafana panel plugin for visualizing 3D CAD models, point clouds, and metrology data within Grafana dashboards. Designed for quality control, manufacturing inspection, and metrology data visualization workflows.
 
-![SPC CAD Panel](https://raw.githubusercontent.com/KensoBI/spc-cad/refs/heads/main/src/img/point-cloud.png)
+![SPC CAD Panel](https://raw.githubusercontent.com/KensoBI/spc-cad/refs/heads/main/src/img/pointcloud.png)
 
 ## Features
 
@@ -60,3 +60,4 @@ This software is distributed under the [GNU Affero General Public License v3.0](
 ## Copyright
 
 Copyright (c) 2026 [Kenso Software](https://kensobi.com)
+
