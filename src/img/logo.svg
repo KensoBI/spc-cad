@@ -8,7 +8,14 @@
 	.st2{fill:#4A9F40;}
 	.st3{fill:#73BF69;}
 	.st4{fill:#9DD695;}
+	.node-outer{fill:#2D3436;}
+	.node-red{fill:#FF3B30;}
+	.node-green{fill:#34C759;}
+	.node-blue{fill:rgb(255, 152, 48);}
 </style>
+
+
+
 <path class="st0" d="M500.6,140v232.4c-0.1,1.8-0.6,3.6-1.5,5.1c-0.9,1.4-2.1,2.6-3.6,3.5l0,0L261.1,510.8c-1.5,0.8-3.2,1.2-4.9,1.2
 	V269.2l154-85.3h0l88.8-49.2C500,136.2,500.6,138.1,500.6,140z"/>
 <path class="st1" d="M499,377.5c-0.9,1.4-2.1,2.6-3.6,3.5l0,0L261.1,510.8c-1.5,0.8-3.2,1.2-4.9,1.2v-88.8l88.1-48.8l65.9-36.5
@@ -27,11 +34,40 @@
 <g>
 	<path class="st4" d="M412,183l-156,86.4L100,183c0.9-1.6,2.3-2.9,4-3.8l146.9-81.4c3.1-1.7,6.8-1.7,9.9-0.2L365,155.3l43.1,23.9
 		C409.7,180,411.1,181.4,412,183z"/>
-	<path class="st4" d="M365.9,337.6c-2.8,0-5.5-1.5-7-4.1c-2.1-3.8-0.7-8.7,3.1-10.8l18.7-10.4c3.8-2.1,8.7-0.7,10.8,3.1
-		c2.1,3.8,0.7,8.7-3.1,10.8l-18.7,10.4C368.5,337.2,367.2,337.6,365.9,337.6z"/>
-	<path class="st4" d="M365.9,315c-2.8,0-5.5-1.5-7-4.1c-2.1-3.8-0.7-8.7,3.1-10.8l18.7-10.4c3.8-2.1,8.7-0.7,10.8,3.1
-		s0.7,8.7-3.1,10.8L369.7,314C368.5,314.7,367.2,315,365.9,315z"/>
+
 </g>
-<path class="st4" d="M365.9,292c-2.8,0-5.5-1.5-7-4.1c-2.1-3.8-0.7-8.7,3.1-10.8l18.7-10.4c3.8-2.1,8.7-0.7,10.8,3.1
-	s0.7,8.7-3.1,10.8L369.7,291C368.5,291.7,367.2,292,365.9,292z"/>
+
+
+<!-- RGB Node Points at Cube Vertices  -->
+<g id="rgb-nodes">
+	<!-- Top vertex (red) -->
+	<circle class="node-outer" cx="256" cy="98" r="18"/>
+	<circle class="node-red" cx="256" cy="98" r="11"/>
+
+	<!-- Front top left (green) -->
+	<circle class="node-outer" cx="102" cy="184" r="18"/>
+	<circle class="node-green" cx="102" cy="184" r="11"/>
+
+	<!-- Front top right (blue) -->
+	<circle class="node-outer" cx="410" cy="184" r="18"/>
+	<circle class="node-blue" cx="410" cy="184" r="11"/>
+
+	<!-- Front center (red) -->
+	<circle class="node-outer" cx="256" cy="269" r="18"/>
+	<circle class="node-red" cx="256" cy="269" r="11"/>
+
+	<!-- Back bottom left (blue) -->
+	<circle class="node-outer" cx="102" cy="338" r="18"/>
+	<circle class="node-blue" cx="102" cy="338" r="11"/>
+
+	<!-- Back bottom right (green) -->
+	<circle class="node-outer" cx="410" cy="338" r="18"/>
+	<circle class="node-green" cx="410" cy="338" r="11"/>
+
+	<!-- Bottom vertex (blue) -->
+	<circle class="node-outer" cx="256" cy="425" r="18"/>
+	<circle class="node-blue" cx="256" cy="425" r="11"/>
+
+
+</g>
 </svg>
