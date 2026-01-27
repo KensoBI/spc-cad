@@ -5,7 +5,7 @@
 
 A Grafana panel plugin for visualizing 3D CAD models, point clouds, and metrology data within Grafana dashboards. Designed for quality control, manufacturing inspection, and metrology data visualization workflows.
 
-![SPC CAD Panel](src/img/color-mapping.png)
+![SPC CAD Panel](src/img/cad-demo-small.gif)
 
 ## Features
 
@@ -24,6 +24,8 @@ A Grafana panel plugin for visualizing 3D CAD models, point clouds, and metrolog
 - Built-in templates (13 feature types)
 - Point clouds and scan timelines
 - 3D navigation and panel options
+
+![SPC CAD Panel](src/img/custom-templates.png)
 
 ## Prerequisites
 
@@ -45,6 +47,15 @@ A Grafana panel plugin for visualizing 3D CAD models, point clouds, and metrolog
 | 3MF | `.3mf` | 3D Manufacturing Format |
 | PLY | `.ply` | Polygon File Format |
 | ASC | `.asc` | ASCII Point Cloud |
+
+
+### ASC Deviation File Format
+
+The application requires deviation data in ASC format, where each line represents a single measurement point with space-separated values. The format for each line is: `Name X Y Z Nx Ny Nz DevX DevY DevZ DevTotal`, where `Name` is a string identifier for the surface comparison, `X Y Z` are the coordinates of the measurement point, `Nx Ny Nz` are the components of the surface normal vector at that point, `DevX DevY DevZ` are the deviation components along each axis, and `DevTotal` is the absolute magnitude of the total deviation. All numeric values should be floating-point numbers with six decimal places. The file should contain no header row - each line contains point data only.
+
+```
+Surface_comparison_cube 5.000000 5.000000 0.000000 0.000000 0.000000 -1.000000 -0.000000 -0.000000 0.080942 0.080942
+```
 
 ## Development
 

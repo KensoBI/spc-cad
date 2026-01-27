@@ -62,12 +62,12 @@ export function GradientLegend({ range, currentValue }: GradientLegendProps) {
 const getStyles = (theme: GrafanaTheme2) => ({
   container: css`
     position: absolute;
-    right: 20px;
+    left: 20px;
     top: 20px;
     bottom: 20px;
     width: 60px;
     display: flex;
-    flex-direction: row;
+    flex-direction: row-reverse;
   `,
   gradient: css`
     background: linear-gradient(

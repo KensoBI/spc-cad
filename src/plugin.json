@@ -35,6 +35,8 @@
       }
     ],
     "screenshots": [
+      { "name": "CAD demo", "path": "img/pointcloud.png" }, 
+      { "name": "CAD ", "path": "img/cad-demo-small.gif" }, 
       { "name": "Color mapping", "path": "img/color-mapping.png" }, 
       { "name": "Annotations", "path": "img/annotations.png" },
       { "name": "Cube features", "path": "img/cube-features.png" },

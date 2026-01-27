@@ -5,6 +5,7 @@ import { getTextColorForBackground, useStyles2 } from '@grafana/ui';
 import { useOnCloseAnnotation } from '../useOnCloseAnnotation';
 import { useOnPin } from '../useOnPin';
 import { useDefaultColor } from '../useDefaultColor';
+import { useSameCoordsClick } from 'utils/sameCoordsClick';
 
 export type LabelProps = {
   title?: string;
@@ -42,6 +43,9 @@ export function Label({ uid, color, isEditing, icon, title }: LabelProps) {
 
   const onPin = useOnPin(uid);
 
+  const onPinMouseEvents = useSameCoordsClick(onPin);
+  const onCloseClickMouseEvents = useSameCoordsClick(onCloseAnnotation);
+
   return (
     <div className={containerClassNames}>
       <div style={headerStyle} className={styles.labelHeader} aria-label="Box Title">
@@ -51,11 +55,11 @@ export function Label({ uid, color, isEditing, icon, title }: LabelProps) {
           </div>
         )}
 
-        <div className={styles.boxHeaderName} onClick={onPin}>
+        <div className={styles.boxHeaderName} {...onPinMouseEvents}>
           <span className="panel-title">{title}</span>
         </div>
         <div className={styles.boxHeaderTools}>
-          <i onClick={onCloseAnnotation} className={`panel-menu-toggle fa fa-times ${styles.closeLink}`} />
+          <i {...onCloseClickMouseEvents} className={`fa fa-times close-link onHover`} />
         </div>
       </div>
     </div>
@@ -77,6 +81,18 @@ const getStyles = (theme: GrafanaTheme2) => {
       align-items: center;
       border-radius: ${theme.spacing(0.5)};
 
+      &:not(:hover) .onHover {
+        visibility: hidden;
+      }
+
+      .onHover {
+        cursor: pointer;
+        visibility: visible;
+        &:hover {
+          color: rgba(255, 255, 255, 0.6);
+        }
+      }
+
       &:hover {
         -webkit-transition: background-color 0.1s ease-in-out;
         -o-transition: background-color 0.1s ease-in-out;
@@ -94,14 +110,11 @@ const getStyles = (theme: GrafanaTheme2) => {
       display: flex;
       cursor: pointer;
       white-space: nowrap;
-      margin-left: 5px;
+      margin-left: 8px;
       margin-right: 10px;
     `,
-    boxTitle: css`
-      display: flex;
-    `,
     boxHeaderTools: css`
-      margin-right: 15px;
+      margin-right: 8px;
       vertical-align: middle;
       horiz-align: center;
       flex-basis: 0;
@@ -118,14 +131,6 @@ const getStyles = (theme: GrafanaTheme2) => {
       -webkit-align-items: center;
       -ms-flex-align: center;
       align-items: center;
-    `,
-    closeLink: css`
-      display: flex;
-      align-items: center;
-      &:hover {
-        color: #bd2130;
-        cursor: pointer;
-      }
     `,
   };
 };
