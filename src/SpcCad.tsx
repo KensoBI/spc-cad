@@ -18,6 +18,7 @@ import { getAvailableColumns } from 'feature/data/getAvailableColumns';
 import { CadLoadingProgressCallback } from 'types/SpcCadOptions';
 import { usePointCloudState } from 'components/pointCloudState';
 import { transferableFeature } from 'types/Feature';
+import { devLog } from 'utils/devLogger';
 
 export function SpcCad(props: SpcCadProps) {
   const { width, height, data, options, onOptionsChange } = props;
@@ -81,7 +82,7 @@ export function SpcCad(props: SpcCadProps) {
       const annotationExist = annotations?.find((p) => p.uid === uid);
 
       if (annotationExist) {
-        console.info('clicked on existing feature');
+        devLog.info('clicked on existing feature');
         annotationExist.display = 'label';
         onOptionsChange({
           ...options,
@@ -92,7 +93,7 @@ export function SpcCad(props: SpcCadProps) {
 
       const feature = features.find((p) => p.uid === uid);
       if (!feature) {
-        console.warn('Clicked on stale feature.');
+        devLog.warn('Clicked on stale feature.');
         return;
       }
 

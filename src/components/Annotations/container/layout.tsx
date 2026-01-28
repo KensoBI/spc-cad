@@ -1,3 +1,5 @@
+import { devLog } from 'utils/devLogger';
+
 export type LayoutItem = {
   w: number;
   h: number;
@@ -422,6 +424,5 @@ function log(...args: string[]) {
   if (!DEBUG) {
     return;
   }
-  // eslint-disable-next-line no-console
-  console.log(...args);
+  devLog.log(...args);
 }
