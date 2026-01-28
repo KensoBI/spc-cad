@@ -5,7 +5,7 @@ services:
       service: grafana
     build:
       args:
-        grafana_version: latest
+        grafana_version: ${GRAFANA_VERSION:-latest}
     volumes:
       - grafana_storage:/var/lib/grafana
     networks:

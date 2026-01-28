@@ -1,0 +1,153 @@
+name: E2E Tests
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+  push:
+    branches:
+      - main
+      - develop
+
+jobs:
+  resolve-versions:
+    name: Resolve Grafana versions
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    outputs:
+      matrix: ${{ steps.resolve-versions.outputs.matrix }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve Grafana E2E versions
+        id: resolve-versions
+        uses: grafana/plugin-actions/e2e-version@main
+        with:
+          version-resolver-type: version-support-policy
+
+  playwright-tests:
+    name: E2E tests (${{ matrix.GRAFANA_IMAGE.NAME }}@${{ matrix.GRAFANA_IMAGE.VERSION }})
+    needs: resolve-versions
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        GRAFANA_IMAGE: ${{ fromJson(needs.resolve-versions.outputs.matrix) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --immutable --prefer-offline
+
+      - name: Build plugin
+        run: yarn build
+
+      - name: Install Playwright Browsers
+        run: yarn dlx playwright install --with-deps chromium
+
+      - name: Start Grafana with specific version
+        run: |
+          docker compose up -d
+        env:
+          GRAFANA_VERSION: ${{ matrix.GRAFANA_IMAGE.VERSION }}
+          GRAFANA_IMAGE: ${{ matrix.GRAFANA_IMAGE.NAME }}
+
+      - name: Wait for Grafana to be ready
+        uses: grafana/plugin-actions/wait-for-grafana@main
+        with:
+          grafana-url: http://localhost:3000
+
+      - name: Run Playwright tests
+        id: run-tests
+        run: yarn dlx playwright test
+        env:
+          GRAFANA_VERSION: ${{ matrix.GRAFANA_IMAGE.VERSION }}
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-${{ matrix.GRAFANA_IMAGE.NAME }}-${{ matrix.GRAFANA_IMAGE.VERSION }}
+          path: playwright-report/
+          retention-days: 30
+
+      - name: Upload trace
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-trace-${{ matrix.GRAFANA_IMAGE.NAME }}-${{ matrix.GRAFANA_IMAGE.VERSION }}
+          path: playwright/.auth/
+          retention-days: 30
+
+  # Separate job for testing specific versions 11, 12
+  test-major-versions:
+    name: Test Grafana v${{ matrix.grafana-version }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        grafana-version:
+          - '11.5.0'   # Latest Grafana 11
+          - '12.1.0'   # Grafana 12
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --immutable --prefer-offline
+
+      - name: Build plugin
+        run: yarn build
+
+      - name: Install Playwright Browsers
+        run: yarn dlx playwright install --with-deps chromium
+
+      - name: Start Grafana ${{ matrix.grafana-version }}
+        run: |
+          docker compose up -d
+        env:
+          GRAFANA_VERSION: ${{ matrix.grafana-version }}
+
+      - name: Wait for Grafana to be ready
+        uses: grafana/plugin-actions/wait-for-grafana@main
+        with:
+          grafana-url: http://localhost:3000
+
+      - name: Run Playwright tests
+        id: run-tests
+        run: yarn dlx playwright test
+        env:
+          GRAFANA_VERSION: ${{ matrix.grafana-version }}
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-v${{ matrix.grafana-version }}
+          path: playwright-report/
+          retention-days: 30
+
+      - name: Upload trace
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-trace-v${{ matrix.grafana-version }}
+          path: playwright/.auth/
+          retention-days: 30
