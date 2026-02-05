@@ -1,5 +1,3 @@
-import { devLog } from 'utils/devLogger';
-
 export type LayoutItem = {
   w: number;
   h: number;
@@ -13,8 +11,6 @@ export type LayoutItem = {
 };
 export type Layout = LayoutItem[];
 export type CompactType = 'horizontal' | 'vertical';
-
-const DEBUG = false;
 
 /**
  * Given two layoutitems, check if they collide.
@@ -61,7 +57,6 @@ export function moveElement(
     return layout;
   }
 
-  log(`Moving element ${l.i} to [${String(x)},${String(y)}] from [${l.x},${l.y}]`);
   const oldX = l.x;
   const oldY = l.y;
 
@@ -92,7 +87,6 @@ export function moveElement(
 
   // There was a collision; abort
   if (preventCollision && collisions.length) {
-    log(`Collision prevented on ${l.i}, reverting.`);
     l.x = oldX;
     l.y = oldY;
     l.moved = false;
@@ -102,7 +96,6 @@ export function moveElement(
   // Move each item that collides away from this element.
   for (let i = 0, len = collisions.length; i < len; i++) {
     const collision = collisions[i];
-    log(`Resolving collision between ${l.i} at [${l.x},${l.y}] and ${collision.i} at [${collision.x},${collision.y}]`);
 
     // Short circuit so we can't infinite loop
     if (collision.moved) {
@@ -181,21 +174,6 @@ export function moveElementAwayFromCollision(
       meshX: -1,
       meshY: -1,
     };
-
-    // No collision? If so, we can go up there; otherwise, we'll end up moving down as normal
-    if (!getFirstCollision(layout, fakeItem)) {
-      log(`Doing reverse collision on ${itemToMove.i} up to [${fakeItem.x},${fakeItem.y}].`);
-      return moveElement(
-        layout,
-        itemToMove,
-        compactH ? fakeItem.x : undefined,
-        compactV ? fakeItem.y : undefined,
-        isUserAction,
-        preventCollision,
-        compactType
-        //cols
-      );
-    }
   }
 
   return moveElement(
@@ -418,11 +396,4 @@ export function compact(
   }
 
   return out;
-}
-
-function log(...args: string[]) {
-  if (!DEBUG) {
-    return;
-  }
-  devLog.log(...args);
 }
