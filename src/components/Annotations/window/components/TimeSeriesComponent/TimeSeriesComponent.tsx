@@ -14,7 +14,6 @@ import { useFindViewComponentByIndexes, useSetViewComponent } from '../../settin
 import { TemplateModel } from 'types/Annotation';
 import { TIMESERIES_SAMPLE_LABEL } from 'constants/global';
 import { CharacteristicAccessor } from 'types/CharacteristicData';
-import { devLog } from 'utils/devLogger';
 import { findCharacteristicByName } from 'types/Feature';
 
 type Props = {
@@ -145,21 +144,6 @@ export function TimeSeriesComponent({ featureModel, settings, viewComponentIds, 
 
   const timeseriesFields = React.useMemo(() => {
     const fields = accessor?.getTimeseriesFields();
-    if (!fields && characteristicId) {
-      const allChars = Object.keys(featureModel.feature.characteristics || {});
-      const charsWithTimeseries = allChars.filter(id => featureModel.feature.characteristics[id]?.timeseries != null);
-
-      devLog.warn('⚠️ TimeSeriesComponent: No timeseries data available', {
-        characteristicId,
-        characteristicExists: !!characteristic,
-        hasTimeseriesData: !!characteristic?.timeseries,
-        availableCharacteristics: allChars,
-        characteristicsWithTimeseries: charsWithTimeseries,
-        hint: charsWithTimeseries.length > 0
-          ? `Configure this component to use one of: [${charsWithTimeseries.join(', ')}]`
-          : 'No characteristics have timeseries data. Check your timeseries query filters.',
-      });
-    }
     return fields;
   }, [accessor, characteristicId, characteristic, featureModel.feature.characteristics]);
 

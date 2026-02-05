@@ -2,7 +2,6 @@ import { DataFrame, Field } from '@grafana/data';
 import { Dictionary, keyBy } from 'lodash';
 import { CadDsEntity, ScanItem } from 'types/CadSettings';
 import { Feature } from 'types/Feature';
-import { devLog } from 'utils/devLogger';
 
 type ColumnsDict = {
   feature?: Field;
@@ -47,7 +46,6 @@ export function loadFeaturesByControl(
   const columns: ColumnsDict = keyBy(fields, (column) => column.name.toLowerCase());
 
   if (!columns.feature || !columns.characteristic_id || !columns.nominal) {
-    console.warn('alert-danger', [`Feature or Characteristic_id or Nominal column is missing in query ${refId}.`]);
     return;
   }
 
@@ -97,7 +95,6 @@ export function loadTimeseries(
   const columns: ColumnsDict = keyBy(fields, (column) => column.name.toLowerCase());
 
   if (!columns.time || !columns.characteristic_id || !columns.value) {
-    console.warn('alert-danger', [`Time or Characteristic_id or Value column is missing in timeseries query ${refId}.`]);
     return;
   }
 
@@ -108,7 +105,6 @@ export function loadTimeseries(
   const valueFieldIndex = fields.findIndex((f) => f.name.toLowerCase() === 'value');
 
   if (timeFieldIndex === -1 || valueFieldIndex === -1) {
-    console.warn('alert-danger', [`Time or Value field not found in ${refId}.`]);
     return;
   }
 
@@ -162,45 +158,19 @@ export function loadTimeseries(
       }
     }
   }
-
-  const unmatchedIds = timeseriesIds.filter(id => !matchedIds.has(id));
-  const unmatchedMeasurementCount = unmatchedIds.reduce((sum, id) => sum + (rowIndicesMap.get(id)?.length ?? 0), 0);
-  const matchedMeasurementCount = Array.from(matchedIds).reduce((sum, id) => sum + (rowIndicesMap.get(id)?.length ?? 0), 0);
-
-  devLog.log(`📊 loadTimeseries for ${refId}:`, {
-    loadedCharacteristics: loadedCharacteristicIds.size,
-    timeseriesCharacteristics: timeseriesIds.length,
-    matched: {
-      characteristics: matchedIds.size,
-      ids: Array.from(matchedIds).sort((a, b) => Number(a) - Number(b)).slice(0, 10),
-      measurements: matchedMeasurementCount,
-    },
-    discarded: {
-      characteristics: unmatchedIds.length,
-      ids: unmatchedIds.sort((a, b) => Number(a) - Number(b)).slice(0, 10),
-      measurements: unmatchedMeasurementCount,
-    },
-  });
-
-  if (matchedIds.size === 0 && timeseriesIds.length > 0) {
-    devLog.warn(`⚠️ NO characteristics matched! Loaded: [${Array.from(loadedCharacteristicIds).join(', ')}], Timeseries: [${timeseriesIds.slice(0, 10).join(', ')}]`);
-  }
 }
 
 export function loadCadLinks(fields: Field[], refId: string) {
   const linksField = fields.find((field) => field.name === 'links');
   if (linksField == null) {
-    console.warn('alert-danger', [`CadLinks data - missing 'links' field in ${refId}.`]);
     return [];
   }
 
   const colorsField = fields.find((field) => field.name === 'colors');
   if (colorsField == null) {
-    console.warn('alert-danger', [`CadLinks data - missing 'colors' field in ${refId}.`]);
     return [];
   }
   if (colorsField.values.length !== linksField.values.length) {
-    console.warn('alert-danger', [`CadLinks data - fields: 'colors' & 'links' are not even; in ${refId}.`]);
     return [];
   }
 
@@ -222,17 +192,14 @@ export function loadCadLinks(fields: Field[], refId: string) {
 export function loadScanLinks(fields: Field[], refId: string) {
   const linksField = fields.find((field) => field.name === 'links');
   if (linksField == null) {
-    console.warn('alert-danger', [`ScanLinks data - missing 'links' field in ${refId}.`]);
     return [];
   }
 
   const timesField = fields.find((field) => field.name === 'times');
   if (timesField == null) {
-    console.warn('alert-danger', [`ScanLinks data - missing 'times' field in ${refId}.`]);
     return [];
   }
   if (timesField.values.length !== linksField.values.length) {
-    console.warn('alert-danger', [`ScanLinks data - fields: 'times' & 'links' are not even; in ${refId}.`]);
     return [];
   }
 
@@ -253,7 +220,7 @@ export function loadScanLinks(fields: Field[], refId: string) {
         time: new Date(time), //"time" field has format: 2006-01-02T15:04:05Z
       });
     } catch (e) {
-      console.warn('alert-danger', [`ScanLinks data - invalid time format in ${refId}.`]);
+      continue;
     }
   }
 
