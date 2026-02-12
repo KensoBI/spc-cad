@@ -65,11 +65,13 @@ export const AnnotationsPlugin: React.FC<AnnotationsPluginProps> = ({ annotation
   const [tooltip, setTooltip] = React.useState<TooltipState | null>(null);
 
   const plotInstance = React.useRef<uPlot>();
-  const annotationsRef = React.useRef<AnnotationEntity[]>();
+  const annotationsRef = React.useRef<AnnotationEntity[]>(annotations);
 
-  // Update annotations views when new annotations came
-  React.useEffect(() => {
-    annotationsRef.current = annotations.sort((a, b) => typeToValue(b.type) - typeToValue(a.type));
+  // Update annotations ref before any uPlot draw cycle.
+  // Must be useLayoutEffect (not useEffect) so the ref is current
+  // when uPlot's draw hook fires during its own useLayoutEffect init.
+  React.useLayoutEffect(() => {
+    annotationsRef.current = [...annotations].sort((a, b) => typeToValue(b.type) - typeToValue(a.type));
   }, [annotations]);
 
   React.useLayoutEffect(() => {
