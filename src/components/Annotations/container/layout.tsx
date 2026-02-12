@@ -164,16 +164,16 @@ export function moveElementAwayFromCollision(
     // Reset isUserAction flag because we're not in the main collision anymore.
     isUserAction = false;
 
-    // Make a mock item so we don't modify the item here, only modify in moveElement.
-    const fakeItem: LayoutItem = {
-      x: compactH ? Math.max(collidesWith.x - itemToMove.w, 0) : itemToMove.x,
-      y: compactV ? Math.max(collidesWith.y - itemToMove.h, 0) : itemToMove.y,
-      w: itemToMove.w,
-      h: itemToMove.h,
-      i: '-1',
-      meshX: -1,
-      meshY: -1,
-    };
+    // TODO: use mock item to check if there is space above the collision
+    // const fakeItem: LayoutItem = {
+    //   x: compactH ? Math.max(collidesWith.x - itemToMove.w, 0) : itemToMove.x,
+    //   y: compactV ? Math.max(collidesWith.y - itemToMove.h, 0) : itemToMove.y,
+    //   w: itemToMove.w,
+    //   h: itemToMove.h,
+    //   i: '-1',
+    //   meshX: -1,
+    //   meshY: -1,
+    // };
   }
 
   return moveElement(

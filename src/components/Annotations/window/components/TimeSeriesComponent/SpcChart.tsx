@@ -31,6 +31,14 @@ import { usePanelProps } from 'utils/PanelPropsProvider';
 import { AnnotationsPlugin, isAnnotationEntityArray } from './AnnotationPlugin';
 import { AxisPropsReflection } from './AxisPropsReflection';
 
+const FORECAST_LOWER_FIELD = 'forecast-lower';
+const FORECAST_UPPER_FIELD = 'forecast-upper';
+
+type ForecastBoundsFields = {
+  upper: { time: Field<number>; values: Field<any> };
+  lower: { time: Field<number>; values: Field<any> };
+};
+
 type Props = {
   dataFrameName: string;
   timeField?: Field<number>;
@@ -60,6 +68,7 @@ type Props = {
   decimals: number;
   calculationType?: string;
   onSeriesColorChange: (label: string, color: string) => void;
+  forecastBounds?: ForecastBoundsFields;
 };
 
 export function SpcChart(props: Props) {
@@ -79,6 +88,7 @@ export function SpcChart(props: Props) {
     decimals,
     calculationType,
     onSeriesColorChange,
+    forecastBounds,
   } = props;
   const { timeZone, timeRange } = usePanelProps();
   const theme = useTheme2();
@@ -189,6 +199,64 @@ export function SpcChart(props: Props) {
 
     fields.push(valField); //on-top rendering (after constants)
 
+    // Add forecast confidence bounds as a filled band
+    if (forecastBounds) {
+      // Build a time→value lookup for each bound
+      const buildTimeMap = (boundFields: { time: Field<number>; values: Field<any> }) => {
+        const map = new Map<number, number>();
+        for (let i = 0; i < boundFields.time.values.length; i++) {
+          map.set(boundFields.time.values[i], boundFields.values.values[i]);
+        }
+        return map;
+      };
+
+      const lowerMap = buildTimeMap(forecastBounds.lower);
+      const upperMap = buildTimeMap(forecastBounds.upper);
+
+      // Align bounds to the main time axis (null for timestamps without bound data)
+      const lowerAligned: Array<number | null> = timeField.values.map((t) => lowerMap.get(t) ?? null);
+      const upperAligned: Array<number | null> = timeField.values.map((t) => upperMap.get(t) ?? null);
+
+      const boundsColor = lineColor;
+
+      const boundsCustom: GraphFieldConfig = {
+        lineWidth: 1,
+        lineInterpolation: LineInterpolation.Smooth,
+        pointSize: 0,
+        fillOpacity: 0,
+        lineStyle: { fill: 'dash', dash: [4, 4] },
+        hideFrom: { legend: true, tooltip: false, viz: false },
+      };
+
+      // Lower bound field
+      fields.push({
+        name: FORECAST_LOWER_FIELD,
+        values: lowerAligned as any,
+        config: {
+          displayName: 'lower bound',
+          color: { mode: FieldColorModeId.Fixed, fixedColor: boundsColor },
+          custom: { ...boundsCustom },
+        },
+        type: FieldType.number,
+      });
+
+      // Upper bound field — fillBelowTo creates the shaded band down to the lower bound
+      fields.push({
+        name: FORECAST_UPPER_FIELD,
+        values: upperAligned as any,
+        config: {
+          displayName: 'upper bound',
+          color: { mode: FieldColorModeId.Fixed, fixedColor: boundsColor },
+          custom: {
+            ...boundsCustom,
+            fillBelowTo: FORECAST_LOWER_FIELD,
+            fillOpacity: 10,
+          },
+        },
+        type: FieldType.number,
+      });
+    }
+
     for (const f of fields) {
       if (f) {
         f.display = getDisplayProcessor({
@@ -211,6 +279,7 @@ export function SpcChart(props: Props) {
     dataFrameName,
     decimals,
     fill,
+    forecastBounds,
     limits,
     lineColor,
     lineWidth,
