@@ -1,6 +1,6 @@
 {
   "name": "kensobi-spccad-panel",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "Create interactive 3D dashboards with CAD models, annotations and features.",
   "scripts": {
     "build": "webpack -c ./.config/webpack/webpack.config.ts --env production",
