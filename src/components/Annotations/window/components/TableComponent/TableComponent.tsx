@@ -1,4 +1,4 @@
-import { MutableDataFrame, FieldType, applyFieldOverrides } from '@grafana/data';
+import { FieldType, applyFieldOverrides } from '@grafana/data';
 import { Table, useTheme2 } from '@grafana/ui';
 import React from 'react';
 import { FeatureModelAnnotated } from 'types/AnnotationModel';
@@ -90,7 +90,7 @@ export function TableComponent({ featureModel, settings }: Props) {
       }),
     ];
 
-    const data = new MutableDataFrame({ fields });
+    const data = { fields, length: fields[0]?.values.length ?? 0 };
 
     const frame = applyFieldOverrides({
       data: [data],

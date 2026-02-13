@@ -1,57 +1,79 @@
 # SPC CAD Panel
 
-A Grafana panel plugin for visualizing 3D CAD models, point clouds, and metrology data within Grafana dashboards. Designed for quality control, manufacturing inspection, and metrology data visualization workflows.
+Bring your 3D models to life inside Grafana. Visualize CAD geometry, overlay real measurement data, and spot quality issues at a glance — all from your dashboard.
 
 ![SPC CAD Panel](https://raw.githubusercontent.com/KensoBI/spc-cad/refs/heads/main/src/img/pointcloud.png)
 
-## Features
+## Why SPC CAD?
 
-- **Import CAD Models** - Load STL, 3MF, ASC, and PLY files directly into dashboards
-- **Feature Annotations** - Add labels, tables, and time-series charts to geometric features
-- **Template System** - 13 built-in templates for different feature types (point, circle, cylinder, etc.)
-- **Color Coding** - Apply conditional colors to features based on measurement data
-- **Interactive 3D View** - Rotate, pan, and zoom with trackball camera controls
+Manufacturing quality teams spend hours switching between measurement software, spreadsheets, and reporting tools. SPC CAD Panel puts everything in one place: your 3D model, your data, and your analysis — live, interactive, and shareable across your organization.
 
-## Quick Start
+## Key Features
+
+### Interactive 3D Visualization
+
+Load STL, 3MF, PLY, and ASC files directly into your dashboard. Rotate, pan, and zoom with intuitive trackball controls. Display multiple models side by side for assembly-level inspection.
+
+### Feature Annotations
+
+Click any measurement feature on your model to see its data. Annotations combine tables, time-series charts, and custom grid layouts — all populated from your Grafana queries in real time.
+
+![Feature Annotations](https://raw.githubusercontent.com/KensoBI/spc-cad/refs/heads/main/src/img/annotations.png)
+
+### Forecasting
+
+See where your process is heading. When paired with the [KensoBI SPC Feature datasource](https://grafana.com/grafana/plugins/kensobi-spcfeature-datasource/), the panel displays forecast trends with upper and lower confidence bands directly on feature charts — helping you act before problems occur.
+
+![Forecasting](https://raw.githubusercontent.com/KensoBI/spc-cad/refs/heads/main/src/img/forecasting.png)
+
+### Point Cloud Deviation Analysis
+
+Overlay scan data on your CAD model with automatic deviation color mapping. A blue-to-red gradient instantly highlights where your part deviates from nominal.
+
+### Color-Coded Quality Status
+
+Define rules to color features based on measurement values — green for in-spec, red for out-of-tolerance, or any scheme that fits your workflow. Spot problems without reading a single number.
+
+![Color Mapping](https://raw.githubusercontent.com/KensoBI/spc-cad/refs/heads/main/src/img/color-mapping.png)
+
+### 13 Built-in Templates
+
+Pre-configured annotation layouts for common feature types: point, circle, cylinder, sphere, ellipse, line, rectangle, slot, plane, slab, cone, and more. Select a template and your annotation is ready — or customize it to fit your needs.
+
+![Custom Templates](https://raw.githubusercontent.com/KensoBI/spc-cad/refs/heads/main/src/img/custom-templates.png)
+
+### Scan Timeline
+
+Navigate through historical scan data with a built-in timeline slider. Play back inspections over time to track process trends and catch drift early.
+
+## Getting Started
 
 1. Install the plugin in your Grafana instance
-2. Create a new panel and select "CAD" visualization
-3. Add a SPC CAD model path in panel options
-4. Configure your data query with feature positions
-5. Click features to create annotations
+2. Create a new panel and select **SPC CAD** as the visualization
+3. Add a CAD model URL or upload a file (STL, 3MF, PLY, or ASC)
+4. Connect a data query with your feature measurements
+5. Click features on the model to create annotations
 
-## Supported File Formats
+## Supported Formats
 
 | Format | Extension | Description |
 |--------|-----------|-------------|
-| STL | `.stl` | Stereolithography (binary/ASCII) |
+| STL | `.stl` | Stereolithography (binary and ASCII) |
 | 3MF | `.3mf` | 3D Manufacturing Format |
 | PLY | `.ply` | Polygon File Format |
-| ASC | `.asc` | ASCII Point Cloud |
+| ASC | `.asc` | ASCII Point Cloud with deviation data |
 
-### ASC Deviation File Format
-
-The application requires deviation data in ASC format, where each line represents a single measurement point with space-separated values. The format for each line is: `Name X Y Z Nx Ny Nz DevX DevY DevZ DevTotal`, where `Name` is a string identifier for the surface comparison, `X Y Z` are the coordinates of the measurement point, `Nx Ny Nz` are the components of the surface normal vector at that point, `DevX DevY DevZ` are the deviation components along each axis, and `DevTotal` is the absolute magnitude of the total deviation. All numeric values should be floating-point numbers with six decimal places. The file should contain no header row - each line contains point data only.
-
-```
-Surface_comparison_cube 5.000000 5.000000 0.000000 0.000000 0.000000 -1.000000 -0.000000 -0.000000 0.080942 0.080942
-```
+All formats support GZIP compression for faster loading.
 
 ## Documentation
 
-- Adding CAD models (from URL or data source)
-- Supported file formats (STL, 3MF, PLY, ASC)
-- Features and characteristics configuration
-- Annotations and the annotation editor
-- Built-in templates (13 feature types)
-- Point clouds and scan timelines
-- 3D navigation and panel options
+For detailed setup guides, data model requirements, configuration options, and troubleshooting, visit the [full documentation](https://docs.kensobi.com/panels/cad/).
 
 ## Getting Help
 
-- [SPC CAD docs](https://docs.kensobi.com/panels/cad/) - Documentation
-- [KensoBI Discord](https://discord.gg/cVKKh7trXU) - Community support
-- Create an [issue](https://github.com/KensoBI/spc-cad/issues) to report bugs, issues, and feature suggestions
+- [Documentation](https://docs.kensobi.com/panels/cad/) — Setup guides and reference
+- [Discord Community](https://discord.gg/cVKKh7trXU) — Ask questions and share dashboards
+- [GitHub Issues](https://github.com/KensoBI/spc-cad/issues) — Report bugs and request features
 
 ## License
 
@@ -60,4 +82,3 @@ This software is distributed under the [GNU Affero General Public License v3.0](
 ## Copyright
 
 Copyright (c) 2026 [Kenso Software](https://kensobi.com)
-
