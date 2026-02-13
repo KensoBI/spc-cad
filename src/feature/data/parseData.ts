@@ -71,14 +71,18 @@ function groupDataFrames(data: DataFrame[]) {
     if (df.refId == null) {
       continue;
     }
-    if (isTimeSeriesFrame(df) || isLongFormatTimeSeries(df)) {
-      timeseries.push(df);
-    } else if (isFeaturesTable(df)) {
+    // Check specific table types first — they are more specific patterns
+    // and must take priority over generic time series detection.
+    // A features table with a time column (e.g. lastMeasurementDate) would
+    // otherwise be misclassified as a time series by isTimeSeriesFrame().
+    if (isFeaturesTable(df)) {
       tables.push(df);
     } else if (isCadTable(df)) {
       cadFrames.push(df);
     } else if (isScanTable(df)) {
       scanFrames.push(df);
+    } else if (isTimeSeriesFrame(df) || isLongFormatTimeSeries(df)) {
+      timeseries.push(df);
     } else {
       console.warn('Unknown DataFrame');
     }

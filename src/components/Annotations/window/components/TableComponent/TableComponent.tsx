@@ -5,12 +5,14 @@ import { FeatureModelAnnotated } from 'types/AnnotationModel';
 import { defaultTableSettings, TableSettings } from 'types/ViewComponentSettings';
 import { useWindowSize } from '../../../container/Windows';
 import { CharacteristicAccessor } from 'types/CharacteristicData';
+import { usePanelProps } from 'utils/PanelPropsProvider';
 
 type Props = { featureModel: FeatureModelAnnotated; settings: TableSettings };
 
 export function TableComponent({ featureModel, settings }: Props) {
   const { width } = useWindowSize();
   const theme = useTheme2();
+  const { timeZone } = usePanelProps();
 
   const visibleColumn = React.useMemo(() => {
     const columnSet = settings.columns != null ? new Set<string>(settings.columns) : undefined;
@@ -61,18 +63,31 @@ export function TableComponent({ featureModel, settings }: Props) {
           .map(({ displayName }) => displayName),
         config: {},
       },
-      ...dataColumnsArray.map((columnKey) => ({
-        name: columnKey,
-        type: FieldType.number,
-        values: characteristicsWithDisplayName
-          .filter(({ displayName }) => visibleRow(displayName))
-          .map(({ charData }) => {
-            const accessor = new CharacteristicAccessor(charData);
-            const value = accessor.get(columnKey);
-            return !isNaN(value) ? value : '';
-          }),
-        config: {},
-      })),
+      ...dataColumnsArray.map((columnKey) => {
+        // Detect the original field type from the first characteristic that has this column
+        let fieldType = FieldType.number;
+        for (const { charData } of characteristicsWithDisplayName) {
+          const accessor = new CharacteristicAccessor(charData);
+          const field = accessor.getField(columnKey);
+          if (field) {
+            fieldType = field.type;
+            break;
+          }
+        }
+
+        return {
+          name: columnKey,
+          type: fieldType,
+          values: characteristicsWithDisplayName
+            .filter(({ displayName }) => visibleRow(displayName))
+            .map(({ charData }) => {
+              const accessor = new CharacteristicAccessor(charData);
+              const value = accessor.get(columnKey);
+              return !isNaN(value) ? value : '';
+            }),
+          config: {},
+        };
+      }),
     ];
 
     const data = new MutableDataFrame({ fields });
@@ -86,11 +101,12 @@ export function TableComponent({ featureModel, settings }: Props) {
         },
       },
       theme,
+      timeZone,
       replaceVariables: (value: string) => value,
     })[0];
 
     return frame;
-  }, [featureModel.feature.characteristics, settings.decimals, theme, visibleColumn, visibleRow]);
+  }, [featureModel.feature.characteristics, settings.decimals, theme, timeZone, visibleColumn, visibleRow]);
 
   return (
     <div>

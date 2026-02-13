@@ -1,7 +1,8 @@
 import React from 'react';
 import uPlot from 'uplot';
 
-import { colorManipulator, TimeZone } from '@grafana/data';
+import { colorManipulator } from '@grafana/data';
+import { TimeZone } from '@grafana/schema';
 import { getTextColorForBackground, UPlotConfigBuilder, useTheme2 } from '@grafana/ui';
 
 import { DEFAULT_TIMESERIES_FLAG_COLOR } from 'constants/global';
