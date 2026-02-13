@@ -1,5 +1,16 @@
 # Changelog
 
+## 3.1.0
+
+### Features
+
+- Added forecast confidence bounds displayed as a filled band on time series charts
+- Time fields are now formatted as datetime instead of raw numbers in annotation grids and tables
+
+### Bug Fixes
+
+- Fixed forecast region annotation line not appearing consistently on initial render
+
 ## 3.0.0
 
 ### Features
