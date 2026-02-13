@@ -1,5 +1,5 @@
 import { DataFrame, FieldType, isTimeSeriesFrame } from '@grafana/data';
-import { loadCadLinks, loadFeaturesByControl, loadScanLinks, loadTimeseries, MappedFeatures } from './loadDataFrames';
+import { loadCadLinks, loadFeaturesByControl, loadForecastBounds, loadScanLinks, loadTimeseries, MappedFeatures } from './loadDataFrames';
 import { Feature, findCharacteristicByName } from 'types/Feature';
 import { CadDsEntity, ScanItem, FeatureOverridesMap } from 'types/CadSettings';
 import { Position, isPosition } from 'types/Position';
@@ -23,6 +23,10 @@ function isCadTable(df: DataFrame) {
 
 function isScanTable(df: DataFrame) {
   return df.name === 'scans' && hasColumn(df, 'links') && hasColumn(df, 'times');
+}
+
+function getFrameType(df: DataFrame): string | undefined {
+  return (df.meta?.custom as Record<string, unknown>)?.frameType as string | undefined;
 }
 
 /**
@@ -51,18 +55,34 @@ function groupDataFrames(data: DataFrame[]) {
   const timeseries: DataFrame[] = [];
   const cadFrames: DataFrame[] = [];
   const scanFrames: DataFrame[] = [];
+  const forecastUpper: DataFrame[] = [];
+  const forecastLower: DataFrame[] = [];
   for (const df of data) {
+    // Check frameType first — bounds frames may not have refId
+    const frameType = getFrameType(df);
+    if (frameType === 'forecast-upper-bound') {
+      forecastUpper.push(df);
+      continue;
+    }
+    if (frameType === 'forecast-lower-bound') {
+      forecastLower.push(df);
+      continue;
+    }
     if (df.refId == null) {
       continue;
     }
-    if (isTimeSeriesFrame(df) || isLongFormatTimeSeries(df)) {
-      timeseries.push(df);
-    } else if (isFeaturesTable(df)) {
+    // Check specific table types first — they are more specific patterns
+    // and must take priority over generic time series detection.
+    // A features table with a time column (e.g. lastMeasurementDate) would
+    // otherwise be misclassified as a time series by isTimeSeriesFrame().
+    if (isFeaturesTable(df)) {
       tables.push(df);
     } else if (isCadTable(df)) {
       cadFrames.push(df);
     } else if (isScanTable(df)) {
       scanFrames.push(df);
+    } else if (isTimeSeriesFrame(df) || isLongFormatTimeSeries(df)) {
+      timeseries.push(df);
     } else {
       console.warn('Unknown DataFrame');
     }
@@ -72,6 +92,8 @@ function groupDataFrames(data: DataFrame[]) {
     timeseries,
     cadFrames,
     scanFrames,
+    forecastUpper,
+    forecastLower,
   };
 }
 
@@ -114,7 +136,7 @@ export type ParsedData = {
 };
 
 export function parseData(data: DataFrame[], overrides: FeatureOverridesMap): ParsedData {
-  const { tables, timeseries, cadFrames, scanFrames } = groupDataFrames(data);
+  const { tables, timeseries, cadFrames, scanFrames, forecastUpper, forecastLower } = groupDataFrames(data);
 
   const mappedFeatures = new MappedFeatures();
   for (const df of tables) {
@@ -123,6 +145,12 @@ export function parseData(data: DataFrame[], overrides: FeatureOverridesMap): Pa
   }
   for (const df of timeseries) {
     loadTimeseries(df.fields, df.refId as string, mappedFeatures, df, df.meta);
+  }
+  for (const df of forecastUpper) {
+    loadForecastBounds(df.fields, df.refId as string, mappedFeatures, df, 'forecastUpper');
+  }
+  for (const df of forecastLower) {
+    loadForecastBounds(df.fields, df.refId as string, mappedFeatures, df, 'forecastLower');
   }
 
   const unpositionedFeatures: Feature[] = [];

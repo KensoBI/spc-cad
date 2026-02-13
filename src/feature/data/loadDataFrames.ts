@@ -138,7 +138,6 @@ export function loadTimeseries(
 
   // Apply timeseries data to characteristics that exist in loaded features
   const matchedIds = new Set<string>();
-  const timeseriesIds = Array.from(rowIndicesMap.keys());
 
   for (const feature of mappedFeatures.values()) {
     for (const [characteristicId, rowIndices] of rowIndicesMap) {
@@ -158,6 +157,60 @@ export function loadTimeseries(
         if (meta != null && Object.keys(meta).length > 0) {
           feature.meta = { ...(feature.meta ?? {}), ...meta };
         }
+      }
+    }
+  }
+}
+
+export function loadForecastBounds(
+  fields: Field[],
+  refId: string,
+  mappedFeatures: MappedFeatures,
+  dataFrame: DataFrame,
+  boundType: 'forecastUpper' | 'forecastLower'
+) {
+  const columns: ColumnsDict = keyBy(fields, (column) => column.name.toLowerCase());
+
+  if (!columns.time || !columns.characteristic_id || !columns.value) {
+    return;
+  }
+
+  const length = columns.time.values.length;
+
+  const timeFieldIndex = fields.findIndex((f) => f.name.toLowerCase() === 'time');
+  const valueFieldIndex = fields.findIndex((f) => f.name.toLowerCase() === 'value');
+
+  if (timeFieldIndex === -1 || valueFieldIndex === -1) {
+    return;
+  }
+
+  // Build map of characteristic_id → row indices
+  const rowIndicesMap = new Map<string, number[]>();
+  for (let i = 0; i < length; i++) {
+    const characteristicId = columns.characteristic_id.values[i];
+    if (characteristicId == null) {
+      continue;
+    }
+    const key = `${characteristicId}`;
+    if (!rowIndicesMap.has(key)) {
+      rowIndicesMap.set(key, []);
+    }
+    rowIndicesMap.get(key)!.push(i);
+  }
+
+  // Attach forecast bounds to matching characteristics
+  for (const feature of mappedFeatures.values()) {
+    for (const [characteristicId, rowIndices] of rowIndicesMap) {
+      if (feature.characteristics[characteristicId]) {
+        feature.characteristics[characteristicId] = {
+          ...feature.characteristics[characteristicId],
+          [boundType]: {
+            dataFrame,
+            timeFieldIndex,
+            valueFieldIndex,
+            rowIndices,
+          },
+        };
       }
     }
   }

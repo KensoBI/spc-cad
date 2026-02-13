@@ -1,4 +1,4 @@
-import { GrafanaTheme2, toFixed } from '@grafana/data';
+import { dateTimeFormat, FieldType, GrafanaTheme2, toFixed } from '@grafana/data';
 import { useStyles2 } from '@grafana/ui';
 import React from 'react';
 import { FeatureModelAnnotated } from 'types/AnnotationModel';
@@ -8,6 +8,7 @@ import { StyledCell } from './StyledCell';
 import { toNumber } from 'lodash';
 import { GRID_COMPONENT_CELL_HEIGHT, GRID_DEFAULT_DECIMALS, PRINT_COLOR_ADJUST } from 'constants/global';
 import { CharacteristicAccessor } from 'types/CharacteristicData';
+import { usePanelProps } from 'utils/PanelPropsProvider';
 
 type Props = { featureModel: FeatureModelAnnotated; settings: GridSettings };
 
@@ -48,6 +49,8 @@ type DynamicCellProps = {
 };
 
 function DynamicCell({ settings, featureModel, formatters }: DynamicCellProps) {
+  const { timeZone } = usePanelProps();
+
   const value = React.useMemo(() => {
     // Find characteristic by displayName (characteristic_id now stores displayName)
     const charData = Object.values(featureModel.feature.characteristics).find((char) => {
@@ -63,6 +66,12 @@ function DynamicCell({ settings, featureModel, formatters }: DynamicCellProps) {
     const accessor = new CharacteristicAccessor(charData);
     const value = accessor.get(settings.column);
 
+    // Check if this field is a time type - format as datetime instead of number
+    const field = accessor.getField(settings.column);
+    if (field?.type === FieldType.time && value != null) {
+      return dateTimeFormat(value, { timeZone });
+    }
+
     const asNumber = toNumber(value);
 
     if (isFinite(asNumber)) {
@@ -70,7 +79,7 @@ function DynamicCell({ settings, featureModel, formatters }: DynamicCellProps) {
     }
 
     return value;
-  }, [featureModel.feature.characteristics, formatters, settings.column, settings.characteristic_id]);
+  }, [featureModel.feature.characteristics, formatters, settings.column, settings.characteristic_id, timeZone]);
 
   return <>{value}</>;
 }

@@ -148,6 +148,10 @@ export function TimeSeriesComponent({ featureModel, settings, viewComponentIds, 
     return fields;
   }, [accessor, characteristicId, characteristic, featureModel.feature.characteristics]);
 
+  const forecastBounds = React.useMemo(() => {
+    return accessor?.getForecastBoundsFields();
+  }, [accessor, characteristicId, characteristic, featureModel.feature.characteristics]);
+
   return (
     <div ref={setContainerRef} className={`timeseries-container ${styles.container}`}>
       {width && height ? (
@@ -167,6 +171,7 @@ export function TimeSeriesComponent({ featureModel, settings, viewComponentIds, 
           showLegend={showLegend}
           decimals={decimals}
           onSeriesColorChange={onSeriesColorChange}
+          forecastBounds={forecastBounds}
         />
       ) : (
         <></>

@@ -14,13 +14,19 @@ export type CharacteristicData = {
   displayName?: string;
 
   // Timeseries data - DataFrame references with lazy filtering
-  timeseries?: {
-    dataFrame: DataFrame;       // Reference to source DataFrame
-    timeFieldIndex: number;     // Index of time column in dataFrame.fields
-    valueFieldIndex: number;    // Index of value column in dataFrame.fields
-    rowIndices: number[];       // Which rows in DataFrame belong to this characteristic
-    validIndices?: number[];    // Lazy cache for null-filtered indices
-  };
+  timeseries?: TimeseriesRef;
+
+  // Forecast confidence bounds - same structure as timeseries
+  forecastUpper?: TimeseriesRef;
+  forecastLower?: TimeseriesRef;
+};
+
+export type TimeseriesRef = {
+  dataFrame: DataFrame;       // Reference to source DataFrame
+  timeFieldIndex: number;     // Index of time column in dataFrame.fields
+  valueFieldIndex: number;    // Index of value column in dataFrame.fields
+  rowIndices: number[];       // Which rows in DataFrame belong to this characteristic
+  validIndices?: number[];    // Lazy cache for null-filtered indices
 };
 
 /**
@@ -83,31 +89,48 @@ export class CharacteristicAccessor {
    * Returns filtered Field objects with nulls removed.
    */
   getTimeseriesFields(): { time: Field<number>; values: Field<any> } | undefined {
-    if (!this.data.timeseries) {
+    return this.getFilteredFields(this.data.timeseries);
+  }
+
+  /**
+   * Get forecast confidence bounds fields for both upper and lower bounds.
+   * Returns undefined if either bound is missing.
+   */
+  getForecastBoundsFields(): {
+    upper: { time: Field<number>; values: Field<any> };
+    lower: { time: Field<number>; values: Field<any> };
+  } | undefined {
+    const upper = this.getFilteredFields(this.data.forecastUpper);
+    const lower = this.getFilteredFields(this.data.forecastLower);
+    if (!upper || !lower) {
+      return undefined;
+    }
+    return { upper, lower };
+  }
+
+  private getFilteredFields(ref: TimeseriesRef | undefined): { time: Field<number>; values: Field<any> } | undefined {
+    if (!ref) {
       return undefined;
     }
 
-    const { dataFrame, timeFieldIndex, valueFieldIndex, rowIndices } = this.data.timeseries;
+    const { dataFrame, timeFieldIndex, valueFieldIndex, rowIndices } = ref;
 
-    // Get Field references from DataFrame
     const timeField = dataFrame.fields[timeFieldIndex];
     const valueField = dataFrame.fields[valueFieldIndex];
 
     // Lazy computation of valid indices (nulls filtered out from rowIndices)
-    if (!this.data.timeseries.validIndices) {
+    if (!ref.validIndices) {
       const indices: number[] = [];
       for (const rowIdx of rowIndices) {
         if (timeField.values[rowIdx] != null && valueField.values[rowIdx] != null) {
           indices.push(rowIdx);
         }
       }
-      this.data.timeseries.validIndices = indices;
+      ref.validIndices = indices;
     }
 
-    const validIndices = this.data.timeseries.validIndices;
+    const validIndices = ref.validIndices;
 
-    // Create new Field objects with filtered values
-    // We need to properly clone the Field structure including config
     const filteredTimeValues = validIndices.map((rowIdx) => timeField.values[rowIdx]);
     const filteredValueValues = validIndices.map((rowIdx) => valueField.values[rowIdx]);
 

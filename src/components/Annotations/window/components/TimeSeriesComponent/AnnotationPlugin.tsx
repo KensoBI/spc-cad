@@ -1,7 +1,8 @@
 import React from 'react';
 import uPlot from 'uplot';
 
-import { colorManipulator, TimeZone } from '@grafana/data';
+import { colorManipulator } from '@grafana/data';
+import { TimeZone } from '@grafana/schema';
 import { getTextColorForBackground, UPlotConfigBuilder, useTheme2 } from '@grafana/ui';
 
 import { DEFAULT_TIMESERIES_FLAG_COLOR } from 'constants/global';
@@ -65,11 +66,13 @@ export const AnnotationsPlugin: React.FC<AnnotationsPluginProps> = ({ annotation
   const [tooltip, setTooltip] = React.useState<TooltipState | null>(null);
 
   const plotInstance = React.useRef<uPlot>();
-  const annotationsRef = React.useRef<AnnotationEntity[]>();
+  const annotationsRef = React.useRef<AnnotationEntity[]>(annotations);
 
-  // Update annotations views when new annotations came
-  React.useEffect(() => {
-    annotationsRef.current = annotations.sort((a, b) => typeToValue(b.type) - typeToValue(a.type));
+  // Update annotations ref before any uPlot draw cycle.
+  // Must be useLayoutEffect (not useEffect) so the ref is current
+  // when uPlot's draw hook fires during its own useLayoutEffect init.
+  React.useLayoutEffect(() => {
+    annotationsRef.current = [...annotations].sort((a, b) => typeToValue(b.type) - typeToValue(a.type));
   }, [annotations]);
 
   React.useLayoutEffect(() => {

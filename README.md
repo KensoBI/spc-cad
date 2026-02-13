@@ -13,6 +13,7 @@ A Grafana panel plugin for visualizing 3D CAD models, point clouds, and metrolog
 - **Feature Annotations** - Add labels, tables, and time-series charts to geometric features
 - **Template System** - 13 built-in templates for different feature types (point, circle, cylinder, etc.)
 - **Color Coding** - Apply conditional colors to features based on measurement data
+- **Forecasting** - Display forecast trends with confidence bands on feature charts (via [KensoBI SPC Feature datasource](https://grafana.com/grafana/plugins/kensobi-spcfeature-datasource/))
 - **Interactive 3D View** - Rotate, pan, and zoom with trackball camera controls
 
 ## Documentation
