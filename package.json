@@ -98,6 +98,10 @@
     "react-sizeme": "3.0.2",
     "three": "0.182.0"
   },
+  "resolutions": {
+    "flatted": "3.4.2",
+    "serialize-javascript": "7.0.5"
+  },
   "engines": {
     "node": ">= 22 <25"
   },

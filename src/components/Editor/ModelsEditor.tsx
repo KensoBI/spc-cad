@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, ColorPicker, InlineField, Input, useStyles2, Badge, Tooltip } from '@grafana/ui';
+import { Alert, Button, ColorPicker, InlineField, Input, useStyles2, Badge, Tooltip } from '@grafana/ui';
 import { css } from '@emotion/css';
 import { GrafanaTheme2 } from '@grafana/data';
 import { CadSettings } from 'types/CadSettings';
@@ -7,8 +7,10 @@ import { DEFAULT_CAD_COLOR } from 'constants/global';
 
 export function ModelsEditor({ value, onChange }: { value: CadSettings[]; onChange: (v: CadSettings[]) => void }) {
   const styles = useStyles2(getStyles);
+  const [uploadError, setUploadError] = React.useState<string>();
 
   const onAddUrl = () => {
+    setUploadError(undefined);
     onChange([...value, { path: '', color: DEFAULT_CAD_COLOR, id: Date.now(), source: 'url' }]);
   };
 
@@ -20,9 +22,11 @@ export function ModelsEditor({ value, onChange }: { value: CadSettings[]; onChan
 
     const MAX_SIZE = 5 * 1024 * 1024;
     if (file.size > MAX_SIZE) {
-      alert(`File too large (${(file.size / 1024 / 1024).toFixed(2)}MB). Maximum size is 5MB.`);
+      setUploadError(`File too large (${(file.size / 1024 / 1024).toFixed(2)}MB). Maximum size is 5MB.`);
       return;
     }
+
+    setUploadError(undefined);
 
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -40,7 +44,7 @@ export function ModelsEditor({ value, onChange }: { value: CadSettings[]; onChan
     };
 
     reader.onerror = () => {
-      alert('Failed to read file');
+      setUploadError('Failed to read file');
     };
 
     reader.readAsDataURL(file);
@@ -116,6 +120,7 @@ export function ModelsEditor({ value, onChange }: { value: CadSettings[]; onChan
           </Button>
         </Tooltip>
       </div>
+      {uploadError && <Alert className={styles.uploadError} title={uploadError} severity="error" />}
     </div>
   );
 }
@@ -131,6 +136,9 @@ const getStyles = (theme: GrafanaTheme2) => ({
   buttons: css`
     display: flex;
     gap: ${theme.spacing(1)};
+    margin-top: ${theme.spacing(1)};
+  `,
+  uploadError: css`
     margin-top: ${theme.spacing(1)};
   `,
 });
