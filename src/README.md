@@ -22,7 +22,7 @@ Click any measurement feature on your model to see its data. Annotations combine
 
 ### Forecasting
 
-See where your process is heading. When paired with the [KensoBI SPC Feature datasource](https://grafana.com/grafana/plugins/kensobi-spcfeature-datasource/), the panel displays forecast trends with upper and lower confidence bands directly on feature charts — helping you act before problems occur.
+See where your process is heading. When paired with the [KensoBI SPC Characteristic Datasource](https://grafana.com/grafana/plugins/kensobi-spccharacteristic-datasource/), the panel displays forecast trends with upper and lower confidence bands directly on feature charts — helping you act before problems occur.
 
 ![Forecasting](https://raw.githubusercontent.com/KensoBI/spc-cad/refs/heads/main/src/img/forecasting.png)
 
