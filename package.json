@@ -1,6 +1,6 @@
 {
   "name": "kensobi-spccad-panel",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "Create interactive 3D dashboards with CAD models, annotations and features.",
   "scripts": {
     "build": "webpack -c ./.config/webpack/webpack.config.ts --env production",
@@ -8,6 +8,7 @@
     "e2e": "playwright test",
     "lint": "eslint --cache .",
     "lint:fix": "yarn run lint --fix && prettier --write --list-different .",
+    "postinstall": "node scripts/patch-react19-deps.cjs",
     "server": "docker compose up --build",
     "sign": "npx --yes @grafana/sign-plugin@latest",
     "start": "yarn watch",

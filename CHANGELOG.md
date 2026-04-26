@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.1.1
+
+### Compatibility
+
+- Updated the panel so it can run in Grafana environments that use React 19
+
 ## 3.1.0
 
 ### Features
